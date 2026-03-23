@@ -500,7 +500,9 @@
       const { data, error } = await sb.from('hero_slides').select('*').order('display_order');
       document.getElementById('hero-loading').classList.add('hidden');
       if (error) return showToast(error.message, 'error');
-      document.getElementById('hero-tbody').innerHTML = data.map(r => `
+      document.getElementById('hero-tbody').innerHTML = data.length === 0
+        ? '<tr><td colspan="6" class="px-4 py-8 text-center text-gray-400">No slides yet. Click \'Add Slide\' to create one.</td></tr>'
+        : data.map(r => `
         <tr>
           <td class="px-4 py-3">${imgPreview(r.image_url)}</td>
           <td class="px-4 py-3 font-medium">${r.title || ''}</td>
@@ -552,7 +554,9 @@
       const { data, error } = await sb.from('services').select('*').order('display_order');
       document.getElementById('services-loading').classList.add('hidden');
       if (error) return showToast(error.message, 'error');
-      document.getElementById('services-tbody').innerHTML = data.map(r => `
+      document.getElementById('services-tbody').innerHTML = data.length === 0
+        ? '<tr><td colspan="6" class="px-4 py-8 text-center text-gray-400">No services yet. Click \'Add Service\' to create one.</td></tr>'
+        : data.map(r => `
         <tr>
           <td class="px-4 py-3">${imgPreview(r.image_url)}</td>
           <td class="px-4 py-3 font-medium">${r.name}</td>
@@ -608,7 +612,9 @@
       const { data, error } = await query;
       document.getElementById('gallery-loading').classList.add('hidden');
       if (error) return showToast(error.message, 'error');
-      document.getElementById('gallery-grid').innerHTML = data.map(r => `
+      document.getElementById('gallery-grid').innerHTML = data.length === 0
+        ? '<div class="col-span-full text-center py-8 text-gray-400">No gallery images yet. Click \'Add Image\' to create one.</div>'
+        : data.map(r => `
         <div class="relative group rounded-xl overflow-hidden shadow bg-gray-100">
           <img src="${r.image_url}" class="w-full h-48 object-cover" onerror="this.style.display='none'" />
           <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition flex flex-col items-center justify-center text-white text-sm gap-2">
@@ -652,7 +658,9 @@
       const { data, error } = await sb.from('team_members').select('*').order('display_order');
       document.getElementById('team-loading').classList.add('hidden');
       if (error) return showToast(error.message, 'error');
-      document.getElementById('team-tbody').innerHTML = data.map(r => `
+      document.getElementById('team-tbody').innerHTML = data.length === 0
+        ? '<tr><td colspan="6" class="px-4 py-8 text-center text-gray-400">No team members yet. Click \'Add Member\' to create one.</td></tr>'
+        : data.map(r => `
         <tr>
           <td class="px-4 py-3">${imgPreview(r.avatar_url, 'w-10 h-10 rounded-full')}</td>
           <td class="px-4 py-3 font-medium">${r.name}</td>
@@ -710,7 +718,9 @@
       const { data, error } = await sb.from('reviews').select('*').order('created_at', { ascending: false });
       document.getElementById('reviews-loading').classList.add('hidden');
       if (error) return showToast(error.message, 'error');
-      document.getElementById('reviews-tbody').innerHTML = data.map(r => `
+      document.getElementById('reviews-tbody').innerHTML = data.length === 0
+        ? '<tr><td colspan="6" class="px-4 py-8 text-center text-gray-400">No reviews yet. Click \'Add Review\' to create one.</td></tr>'
+        : data.map(r => `
         <tr>
           <td class="px-4 py-3 font-medium">${r.author_name}</td>
           <td class="px-4 py-3 text-gray-500">${r.event_type||'-'}</td>
@@ -763,7 +773,9 @@
       const { data, error } = await sb.from('partners').select('*').order('display_order');
       document.getElementById('partners-loading').classList.add('hidden');
       if (error) return showToast(error.message, 'error');
-      document.getElementById('partners-grid').innerHTML = data.map(r => `
+      document.getElementById('partners-grid').innerHTML = data.length === 0
+        ? '<div class="col-span-full text-center py-8 text-gray-400">No partners yet. Click \'Add Partner\' to create one.</div>'
+        : data.map(r => `
         <div class="relative group bg-white border rounded-xl p-4 flex flex-col items-center gap-2 shadow-sm">
           <img src="${r.logo_url||''}" class="h-20 object-contain" onerror="this.style.display='none'" />
           <span class="text-sm font-semibold text-gray-700">${r.name}</span>
@@ -800,7 +812,9 @@
       const { data, error } = await sb.from('values_cards').select('*').order('display_order');
       document.getElementById('values-loading').classList.add('hidden');
       if (error) return showToast(error.message, 'error');
-      document.getElementById('values-tbody').innerHTML = data.map(r => `
+      document.getElementById('values-tbody').innerHTML = data.length === 0
+        ? '<tr><td colspan="5" class="px-4 py-8 text-center text-gray-400">No values yet. Click \'Add Value\' to create one.</td></tr>'
+        : data.map(r => `
         <tr>
           <td class="px-4 py-3 font-medium">${r.title}</td>
           <td class="px-4 py-3 text-gray-500">${r.icon||'-'}</td>
@@ -846,7 +860,9 @@
       const { data, error } = await sb.from('job_listings').select('*').order('display_order');
       document.getElementById('jobs-loading').classList.add('hidden');
       if (error) return showToast(error.message, 'error');
-      document.getElementById('jobs-tbody').innerHTML = data.map(r => `
+      document.getElementById('jobs-tbody').innerHTML = data.length === 0
+        ? '<tr><td colspan="5" class="px-4 py-8 text-center text-gray-400">No job listings yet. Click \'Add Job\' to create one.</td></tr>'
+        : data.map(r => `
         <tr>
           <td class="px-4 py-3 font-medium">${r.title}</td>
           <td class="px-4 py-3">${r.type||'-'}</td>
@@ -895,7 +911,9 @@
       const { data, error } = await sb.from('job_applications').select('*').order('created_at', { ascending: false });
       document.getElementById('applications-loading').classList.add('hidden');
       if (error) return showToast(error.message, 'error');
-      document.getElementById('applications-tbody').innerHTML = data.map(r => `
+      document.getElementById('applications-tbody').innerHTML = data.length === 0
+        ? '<tr><td colspan="6" class="px-4 py-8 text-center text-gray-400">No applications yet.</td></tr>'
+        : data.map(r => `
         <tr class="${r.is_reviewed ? '' : 'font-semibold'}">
           <td class="px-4 py-3">${r.name}</td>
           <td class="px-4 py-3 text-gray-500">${r.email}</td>
@@ -937,7 +955,9 @@
       const { data, error } = await sb.from('contact_submissions').select('*').order('created_at', { ascending: false });
       document.getElementById('messages-loading').classList.add('hidden');
       if (error) return showToast(error.message, 'error');
-      document.getElementById('messages-tbody').innerHTML = data.map(r => `
+      document.getElementById('messages-tbody').innerHTML = data.length === 0
+        ? '<tr><td colspan="6" class="px-4 py-8 text-center text-gray-400">No messages yet.</td></tr>'
+        : data.map(r => `
         <tr class="${r.is_read ? '' : 'font-semibold bg-red-50'}">
           <td class="px-4 py-3">${r.first_name} ${r.last_name||''}</td>
           <td class="px-4 py-3 text-gray-500">${r.email}</td>
@@ -981,7 +1001,9 @@
       const { data, error } = await sb.from('instagram_posts').select('*').order('display_order');
       document.getElementById('instagram-loading').classList.add('hidden');
       if (error) return showToast(error.message, 'error');
-      document.getElementById('instagram-grid').innerHTML = data.map(r => `
+      document.getElementById('instagram-grid').innerHTML = data.length === 0
+        ? '<div class="col-span-full text-center py-8 text-gray-400">No Instagram posts yet. Click \'Add Post\' to create one.</div>'
+        : data.map(r => `
         <div class="relative group rounded-xl overflow-hidden shadow bg-gray-100">
           <img src="${r.image_url||''}" class="w-full h-48 object-cover" onerror="this.style.display='none'" />
           <div class="absolute bottom-0 left-0 right-0 bg-black/60 text-white text-xs px-3 py-2 flex items-center justify-between">
@@ -1028,7 +1050,9 @@
       const { data, error } = await sb.from('discover_cards').select('*').order('display_order');
       document.getElementById('discover-loading').classList.add('hidden');
       if (error) return showToast(error.message, 'error');
-      document.getElementById('discover-tbody').innerHTML = data.map(r => `
+      document.getElementById('discover-tbody').innerHTML = data.length === 0
+        ? '<tr><td colspan="6" class="px-4 py-8 text-center text-gray-400">No discover cards yet. Click \'Add Card\' to create one.</td></tr>'
+        : data.map(r => `
         <tr>
           <td class="px-4 py-3">${imgPreview(r.image_url)}</td>
           <td class="px-4 py-3 font-medium">${r.title}</td>
@@ -1081,7 +1105,9 @@
       const { data, error } = await sb.from('stats').select('*').order('display_order');
       document.getElementById('stats-loading').classList.add('hidden');
       if (error) return showToast(error.message, 'error');
-      document.getElementById('stats-tbody').innerHTML = data.map(r => `
+      document.getElementById('stats-tbody').innerHTML = data.length === 0
+        ? '<tr><td colspan="5" class="px-4 py-8 text-center text-gray-400">No stats yet. Click \'Add Stat\' to create one.</td></tr>'
+        : data.map(r => `
         <tr>
           <td class="px-4 py-3 font-medium">${r.label}</td>
           <td class="px-4 py-3">${r.value}</td>
