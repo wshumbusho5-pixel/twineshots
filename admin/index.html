@@ -35,43 +35,133 @@
 
   <style>
     * { font-family: 'Titillium Web', sans-serif; }
-    .sidebar-item { transition: all 0.15s ease; }
-    .sidebar-item:hover, .sidebar-item.active { background: rgba(229,9,20,0.15); border-right: 3px solid #e50914; color: #e50914; }
-    .modal-overlay { background: rgba(0,0,0,0.5); }
+
+    /* Sidebar */
+    .sidebar-item { transition: all 0.15s ease; border-left: 3px solid transparent; }
+    .sidebar-item:hover, .sidebar-item.active {
+      background: rgba(229,9,20,0.2);
+      color: #ff4757;
+      border-left: 3px solid #ff4757;
+    }
+
+    /* Group labels */
+    .sidebar-group-label {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #64748b;
+      padding: 1rem 1.25rem 0.35rem;
+      font-weight: 700;
+    }
+
+    /* Modal */
+    .modal-overlay { background: rgba(0,0,0,0.6); }
+
+    /* Toast */
     .toast { animation: slideIn 0.3s ease, fadeOut 0.3s ease 2.7s; }
     @keyframes slideIn { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
     @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+
+    /* Tables */
     table tbody tr:nth-child(even) { background: #f9fafb; }
     table tbody tr:hover { background: #f3f4f6; }
+
+    /* Spinner */
     .spinner { border: 3px solid #f3f3f3; border-top: 3px solid #e50914; border-radius: 50%; width: 24px; height: 24px; animation: spin 0.8s linear infinite; display: inline-block; }
     @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Scrollbar */
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+
+    /* Cards */
+    .content-card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      padding: 1.5rem;
+    }
+
+    /* Upload zone */
+    .upload-zone {
+      border: 2px dashed #cbd5e1;
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: #f8fafc;
+    }
+    .upload-zone:hover {
+      border-color: #e50914;
+      background: #fff5f5;
+    }
+    .upload-zone.dragover {
+      border-color: #e50914;
+      background: #fff5f5;
+    }
+
+    /* Quick action cards */
+    .quick-action {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      padding: 1.5rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 1px solid #e2e8f0;
+    }
+    .quick-action:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+      border-color: #e50914;
+    }
+
+    /* Empty state */
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
+    }
+    .empty-state i {
+      font-size: 3rem;
+      color: #cbd5e1;
+      margin-bottom: 1rem;
+    }
+    .empty-state p {
+      color: #94a3b8;
+      font-size: 0.95rem;
+    }
+    .empty-state .sub {
+      font-size: 0.8rem;
+      color: #cbd5e1;
+      margin-top: 0.25rem;
+    }
   </style>
 </head>
-<body class="bg-gray-100 min-h-screen">
+<body style="background: #f1f5f9;" class="min-h-screen">
 
   <!-- ==================== TOAST CONTAINER ==================== -->
   <div id="toast-container" class="fixed top-4 right-4 z-[9999] flex flex-col gap-2"></div>
 
   <!-- ==================== LOGIN SCREEN ==================== -->
-  <div id="login-screen" class="min-h-screen flex items-center justify-center bg-nearblack">
+  <div id="login-screen" class="min-h-screen flex items-center justify-center" style="background: #1a1a2e;">
     <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md">
       <div class="text-center mb-8">
-        <h1 class="text-3xl font-bold text-nearblack">Twineshots</h1>
-        <p class="text-gray-500 mt-1">Admin Panel</p>
+        <h1 class="text-3xl font-black tracking-wide" style="color: #e50914;">TWINESHOTS</h1>
+        <p class="text-gray-500 mt-1 text-sm">Admin Panel</p>
       </div>
       <form id="login-form" class="space-y-4" onsubmit="return false;">
         <div>
           <label class="block text-sm font-semibold text-gray-700 mb-1">Email</label>
-          <input type="email" id="login-email" required class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-accent focus:border-accent outline-none" placeholder="admin@twineshots.com" />
+          <input type="email" id="login-email" required class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none" placeholder="admin@twineshots.com" />
         </div>
         <div>
           <label class="block text-sm font-semibold text-gray-700 mb-1">Password</label>
-          <input type="password" id="login-password" required class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-accent focus:border-accent outline-none" placeholder="Enter password" />
+          <input type="password" id="login-password" required class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none" placeholder="Enter password" />
         </div>
         <div id="login-error" class="text-red-500 text-sm hidden"></div>
-        <button type="submit" id="login-btn" class="w-full bg-accent text-white font-bold py-2.5 rounded-lg hover:bg-red-700 transition">Sign In</button>
+        <button type="submit" id="login-btn" class="w-full font-bold py-2.5 rounded-lg transition" style="background: #e50914; color: white;" onmouseover="this.style.background='#c50710'" onmouseout="this.style.background='#e50914'">Sign In</button>
       </form>
     </div>
   </div>
@@ -80,40 +170,59 @@
   <div id="admin-layout" class="min-h-screen" style="display:none">
 
     <!-- SIDEBAR -->
-    <aside id="sidebar" class="w-[260px] bg-sidebar text-gray-300 flex-shrink-0 flex flex-col fixed h-full z-50 overflow-y-auto">
-      <div class="p-5 border-b border-gray-800">
-        <h1 class="text-xl font-bold text-white">Twineshots</h1>
-        <p class="text-xs text-gray-500">Admin Panel</p>
+    <aside id="sidebar" style="width:280px; background:#1a1a2e;" class="text-gray-300 flex-shrink-0 flex flex-col fixed h-full z-50 overflow-y-auto">
+      <!-- Logo area -->
+      <div class="p-5">
+        <h1 class="text-xl font-black text-white tracking-wide">TWINESHOTS</h1>
+        <p class="text-xs mt-0.5" style="color: #64748b;">Admin Panel</p>
+        <div class="mt-3" style="height: 2px; background: #e50914; width: 40px;"></div>
       </div>
-      <nav class="flex-1 py-2" id="sidebar-nav">
-        <a href="#" data-section="dashboard" class="sidebar-item active flex items-center gap-3 px-5 py-3 text-sm cursor-pointer"><i class="fa-solid fa-gauge-high w-5 text-center"></i> Dashboard</a>
-        <a href="#" data-section="hero" class="sidebar-item flex items-center gap-3 px-5 py-3 text-sm cursor-pointer"><i class="fa-solid fa-images w-5 text-center"></i> Hero Slides</a>
-        <a href="#" data-section="services" class="sidebar-item flex items-center gap-3 px-5 py-3 text-sm cursor-pointer"><i class="fa-solid fa-camera w-5 text-center"></i> Services</a>
-        <a href="#" data-section="gallery" class="sidebar-item flex items-center gap-3 px-5 py-3 text-sm cursor-pointer"><i class="fa-solid fa-photo-film w-5 text-center"></i> Gallery</a>
-        <a href="#" data-section="team" class="sidebar-item flex items-center gap-3 px-5 py-3 text-sm cursor-pointer"><i class="fa-solid fa-users w-5 text-center"></i> Team</a>
-        <a href="#" data-section="reviews" class="sidebar-item flex items-center gap-3 px-5 py-3 text-sm cursor-pointer"><i class="fa-solid fa-star w-5 text-center"></i> Reviews</a>
-        <a href="#" data-section="partners" class="sidebar-item flex items-center gap-3 px-5 py-3 text-sm cursor-pointer"><i class="fa-solid fa-handshake w-5 text-center"></i> Partners</a>
-        <a href="#" data-section="values" class="sidebar-item flex items-center gap-3 px-5 py-3 text-sm cursor-pointer"><i class="fa-solid fa-heart w-5 text-center"></i> Values</a>
-        <a href="#" data-section="jobs" class="sidebar-item flex items-center gap-3 px-5 py-3 text-sm cursor-pointer"><i class="fa-solid fa-briefcase w-5 text-center"></i> Jobs</a>
-        <a href="#" data-section="applications" class="sidebar-item flex items-center gap-3 px-5 py-3 text-sm cursor-pointer"><i class="fa-solid fa-file-lines w-5 text-center"></i> Applications</a>
-        <a href="#" data-section="messages" class="sidebar-item flex items-center gap-3 px-5 py-3 text-sm cursor-pointer"><i class="fa-solid fa-envelope w-5 text-center"></i> Messages <span id="unread-badge" class="hidden ml-auto bg-accent text-white text-xs rounded-full px-2 py-0.5"></span></a>
-        <a href="#" data-section="instagram" class="sidebar-item flex items-center gap-3 px-5 py-3 text-sm cursor-pointer"><i class="fa-brands fa-instagram w-5 text-center"></i> Instagram</a>
-        <a href="#" data-section="discover" class="sidebar-item flex items-center gap-3 px-5 py-3 text-sm cursor-pointer"><i class="fa-solid fa-compass w-5 text-center"></i> Discover</a>
-        <a href="#" data-section="stats" class="sidebar-item flex items-center gap-3 px-5 py-3 text-sm cursor-pointer"><i class="fa-solid fa-chart-bar w-5 text-center"></i> Stats</a>
-        <a href="#" data-section="settings" class="sidebar-item flex items-center gap-3 px-5 py-3 text-sm cursor-pointer"><i class="fa-solid fa-gear w-5 text-center"></i> Settings</a>
-        <div class="border-t border-gray-800 mt-2"></div>
-        <a href="#" id="logout-btn" class="sidebar-item flex items-center gap-3 px-5 py-3 text-sm cursor-pointer text-red-400 hover:text-red-300"><i class="fa-solid fa-right-from-bracket w-5 text-center"></i> Logout</a>
+
+      <nav class="flex-1 py-1" id="sidebar-nav">
+        <!-- CONTENT group -->
+        <div class="sidebar-group-label">Content</div>
+        <a href="#" data-section="dashboard" class="sidebar-item active flex items-center gap-3 px-5 py-3 text-sm cursor-pointer" style="color: #a0aec0;"><i class="fa-solid fa-gauge-high w-5 text-center"></i> Dashboard</a>
+        <a href="#" data-section="hero" class="sidebar-item flex items-center gap-3 px-5 py-3 text-sm cursor-pointer" style="color: #a0aec0;"><i class="fa-solid fa-images w-5 text-center"></i> Hero Slides</a>
+        <a href="#" data-section="gallery" class="sidebar-item flex items-center gap-3 px-5 py-3 text-sm cursor-pointer" style="color: #a0aec0;"><i class="fa-solid fa-photo-film w-5 text-center"></i> Gallery</a>
+        <a href="#" data-section="services" class="sidebar-item flex items-center gap-3 px-5 py-3 text-sm cursor-pointer" style="color: #a0aec0;"><i class="fa-solid fa-camera w-5 text-center"></i> Services</a>
+
+        <!-- PEOPLE group -->
+        <div class="sidebar-group-label mt-2">People</div>
+        <a href="#" data-section="team" class="sidebar-item flex items-center gap-3 px-5 py-3 text-sm cursor-pointer" style="color: #a0aec0;"><i class="fa-solid fa-users w-5 text-center"></i> Team</a>
+        <a href="#" data-section="reviews" class="sidebar-item flex items-center gap-3 px-5 py-3 text-sm cursor-pointer" style="color: #a0aec0;"><i class="fa-solid fa-star w-5 text-center"></i> Reviews</a>
+        <a href="#" data-section="partners" class="sidebar-item flex items-center gap-3 px-5 py-3 text-sm cursor-pointer" style="color: #a0aec0;"><i class="fa-solid fa-handshake w-5 text-center"></i> Partners</a>
+
+        <!-- SETTINGS group -->
+        <div class="sidebar-group-label mt-2">Settings</div>
+        <a href="#" data-section="values" class="sidebar-item flex items-center gap-3 px-5 py-3 text-sm cursor-pointer" style="color: #a0aec0;"><i class="fa-solid fa-heart w-5 text-center"></i> Values</a>
+        <a href="#" data-section="stats" class="sidebar-item flex items-center gap-3 px-5 py-3 text-sm cursor-pointer" style="color: #a0aec0;"><i class="fa-solid fa-chart-bar w-5 text-center"></i> Stats</a>
+        <a href="#" data-section="jobs" class="sidebar-item flex items-center gap-3 px-5 py-3 text-sm cursor-pointer" style="color: #a0aec0;"><i class="fa-solid fa-briefcase w-5 text-center"></i> Jobs</a>
+        <a href="#" data-section="applications" class="sidebar-item flex items-center gap-3 px-5 py-3 text-sm cursor-pointer" style="color: #a0aec0;"><i class="fa-solid fa-file-lines w-5 text-center"></i> Applications</a>
+        <a href="#" data-section="messages" class="sidebar-item flex items-center gap-3 px-5 py-3 text-sm cursor-pointer" style="color: #a0aec0;"><i class="fa-solid fa-envelope w-5 text-center"></i> Messages <span id="unread-badge" class="hidden ml-auto text-white text-xs rounded-full px-2 py-0.5" style="background:#e50914;"></span></a>
+        <a href="#" data-section="instagram" class="sidebar-item flex items-center gap-3 px-5 py-3 text-sm cursor-pointer" style="color: #a0aec0;"><i class="fa-brands fa-instagram w-5 text-center"></i> Instagram</a>
+        <a href="#" data-section="discover" class="sidebar-item flex items-center gap-3 px-5 py-3 text-sm cursor-pointer" style="color: #a0aec0;"><i class="fa-solid fa-compass w-5 text-center"></i> Discover</a>
+        <a href="#" data-section="settings" class="sidebar-item flex items-center gap-3 px-5 py-3 text-sm cursor-pointer" style="color: #a0aec0;"><i class="fa-solid fa-gear w-5 text-center"></i> Settings</a>
+
+        <!-- Logout -->
+        <div style="border-top: 1px solid rgba(255,255,255,0.08); margin-top: 0.75rem;"></div>
+        <a href="#" id="logout-btn" class="sidebar-item flex items-center gap-3 px-5 py-3 text-sm cursor-pointer" style="color: #ff4757;"><i class="fa-solid fa-right-from-bracket w-5 text-center"></i> Logout</a>
       </nav>
     </aside>
 
     <!-- MAIN CONTENT -->
-    <main class="ml-[260px] flex-1 p-6 overflow-y-auto min-h-screen bg-white">
+    <main style="margin-left: 280px; background: #f1f5f9;" class="flex-1 p-6 overflow-y-auto min-h-screen">
 
-      <!-- DASHBOARD -->
+      <!-- ==================== DASHBOARD ==================== -->
       <div id="section-dashboard" class="section">
-        <h2 class="text-2xl font-bold text-gray-800 mb-1">Dashboard</h2>
-        <p class="text-gray-500 mb-6">Welcome back! Here's an overview of your site.</p>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4" id="dashboard-cards">
+        <div class="flex items-center justify-between mb-6">
+          <div>
+            <h2 class="text-2xl font-bold text-gray-800">Dashboard</h2>
+            <p class="text-gray-500 text-sm">Welcome back! Here's an overview of your site.</p>
+          </div>
+        </div>
+
+        <!-- Stat cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-8" id="dashboard-cards">
           <div class="bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-xl p-5 shadow">
             <div class="text-sm opacity-80">Total Services</div>
             <div class="text-3xl font-bold mt-1" id="stat-services">-</div>
@@ -135,40 +244,69 @@
             <div class="text-3xl font-bold mt-1" id="stat-applications">-</div>
           </div>
         </div>
+
+        <!-- Quick Actions -->
+        <h3 class="text-lg font-bold text-gray-700 mb-4">Quick Actions</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div class="quick-action" onclick="document.querySelector('[data-section=gallery]').click()">
+            <i class="fa-solid fa-cloud-arrow-up text-3xl mb-2" style="color: #e50914;"></i>
+            <div class="font-bold text-gray-800">Upload Photos</div>
+            <div class="text-xs text-gray-400 mt-1">Add images to the gallery</div>
+          </div>
+          <div class="quick-action" onclick="document.querySelector('[data-section=team]').click()">
+            <i class="fa-solid fa-user-plus text-3xl mb-2" style="color: #8b5cf6;"></i>
+            <div class="font-bold text-gray-800">Add Team Member</div>
+            <div class="text-xs text-gray-400 mt-1">Manage your team</div>
+          </div>
+          <div class="quick-action" onclick="document.querySelector('[data-section=messages]').click()">
+            <i class="fa-solid fa-envelope-open-text text-3xl mb-2" style="color: #3b82f6;"></i>
+            <div class="font-bold text-gray-800">View Messages</div>
+            <div class="text-xs text-gray-400 mt-1">Check client inquiries</div>
+          </div>
+          <div class="quick-action" onclick="document.querySelector('[data-section=settings]').click()">
+            <i class="fa-solid fa-sliders text-3xl mb-2" style="color: #10b981;"></i>
+            <div class="font-bold text-gray-800">Site Settings</div>
+            <div class="text-xs text-gray-400 mt-1">Update your site config</div>
+          </div>
+        </div>
       </div>
 
-      <!-- HERO SLIDES -->
+      <!-- ==================== HERO SLIDES ==================== -->
       <div id="section-hero" class="section hidden">
         <div class="flex items-center justify-between mb-6">
           <h2 class="text-2xl font-bold text-gray-800">Hero Slides</h2>
-          <button onclick="openHeroModal()" class="bg-accent text-white px-4 py-2 rounded-lg hover:bg-red-700 text-sm font-semibold"><i class="fa-solid fa-plus mr-1"></i> Add Slide</button>
+          <button onclick="openHeroModal()" class="px-5 py-2.5 rounded-lg text-sm font-semibold shadow-sm" style="background: #e50914; color: white;"><i class="fa-solid fa-plus mr-1"></i> Add Slide</button>
         </div>
-        <div class="overflow-x-auto"><table class="w-full text-sm text-left" id="hero-table">
-          <thead class="bg-gray-50 text-gray-600 uppercase text-xs"><tr><th class="px-4 py-3">Image</th><th class="px-4 py-3">Title</th><th class="px-4 py-3">Description</th><th class="px-4 py-3">Order</th><th class="px-4 py-3">Active</th><th class="px-4 py-3">Actions</th></tr></thead>
-          <tbody id="hero-tbody"></tbody>
-        </table></div>
-        <div id="hero-loading" class="text-center py-8"><div class="spinner mx-auto"></div></div>
+        <div class="content-card">
+          <div class="overflow-x-auto"><table class="w-full text-sm text-left" id="hero-table">
+            <thead><tr style="background: #f8fafc;"><th class="px-4 py-3 text-xs font-bold uppercase text-gray-600">Image</th><th class="px-4 py-3 text-xs font-bold uppercase text-gray-600">Title</th><th class="px-4 py-3 text-xs font-bold uppercase text-gray-600">Description</th><th class="px-4 py-3 text-xs font-bold uppercase text-gray-600">Order</th><th class="px-4 py-3 text-xs font-bold uppercase text-gray-600">Active</th><th class="px-4 py-3 text-xs font-bold uppercase text-gray-600">Actions</th></tr></thead>
+            <tbody id="hero-tbody"></tbody>
+          </table></div>
+          <div id="hero-loading" class="text-center py-8"><div class="spinner mx-auto"></div></div>
+        </div>
       </div>
 
-      <!-- SERVICES -->
+      <!-- ==================== SERVICES ==================== -->
       <div id="section-services" class="section hidden">
         <div class="flex items-center justify-between mb-6">
           <h2 class="text-2xl font-bold text-gray-800">Services</h2>
-          <button onclick="openServiceModal()" class="bg-accent text-white px-4 py-2 rounded-lg hover:bg-red-700 text-sm font-semibold"><i class="fa-solid fa-plus mr-1"></i> Add Service</button>
+          <button onclick="openServiceModal()" class="px-5 py-2.5 rounded-lg text-sm font-semibold shadow-sm" style="background: #e50914; color: white;"><i class="fa-solid fa-plus mr-1"></i> Add Service</button>
         </div>
-        <div class="overflow-x-auto"><table class="w-full text-sm text-left" id="services-table">
-          <thead class="bg-gray-50 text-gray-600 uppercase text-xs"><tr><th class="px-4 py-3">Image</th><th class="px-4 py-3">Name</th><th class="px-4 py-3">Price</th><th class="px-4 py-3">Order</th><th class="px-4 py-3">Active</th><th class="px-4 py-3">Actions</th></tr></thead>
-          <tbody id="services-tbody"></tbody>
-        </table></div>
-        <div id="services-loading" class="text-center py-8"><div class="spinner mx-auto"></div></div>
+        <div class="content-card">
+          <div class="overflow-x-auto"><table class="w-full text-sm text-left" id="services-table">
+            <thead><tr style="background: #f8fafc;"><th class="px-4 py-3 text-xs font-bold uppercase text-gray-600">Image</th><th class="px-4 py-3 text-xs font-bold uppercase text-gray-600">Name</th><th class="px-4 py-3 text-xs font-bold uppercase text-gray-600">Price</th><th class="px-4 py-3 text-xs font-bold uppercase text-gray-600">Order</th><th class="px-4 py-3 text-xs font-bold uppercase text-gray-600">Active</th><th class="px-4 py-3 text-xs font-bold uppercase text-gray-600">Actions</th></tr></thead>
+            <tbody id="services-tbody"></tbody>
+          </table></div>
+          <div id="services-loading" class="text-center py-8"><div class="spinner mx-auto"></div></div>
+        </div>
       </div>
 
-      <!-- GALLERY -->
+      <!-- ==================== GALLERY ==================== -->
       <div id="section-gallery" class="section hidden">
         <div class="flex items-center justify-between mb-6">
           <h2 class="text-2xl font-bold text-gray-800">Gallery</h2>
-          <div class="flex gap-2 items-center">
-            <select id="gallery-filter" onchange="loadGallery()" class="border border-gray-300 rounded-lg px-3 py-2 text-sm">
+          <div class="flex gap-3 items-center">
+            <select id="gallery-filter" onchange="loadGallery()" class="border border-gray-300 rounded-lg px-3 py-2.5 text-sm bg-white">
               <option value="">All Categories</option>
               <option value="Weddings">Weddings</option>
               <option value="Corporate">Corporate</option>
@@ -179,140 +317,169 @@
               <option value="Real Estate">Real Estate</option>
               <option value="Other">Other</option>
             </select>
-            <button onclick="openGalleryModal()" class="bg-accent text-white px-4 py-2 rounded-lg hover:bg-red-700 text-sm font-semibold"><i class="fa-solid fa-plus mr-1"></i> Add Image</button>
+            <button onclick="openGalleryModal()" class="px-5 py-2.5 rounded-lg text-sm font-semibold shadow-sm" style="background: #e50914; color: white;"><i class="fa-solid fa-plus mr-1"></i> Add Image</button>
           </div>
         </div>
+
+        <!-- Drag and drop multi-upload zone -->
+        <div class="content-card mb-6">
+          <div id="gallery-dropzone" class="upload-zone py-8">
+            <input type="file" id="gallery-multi-upload" accept="image/*" multiple class="hidden" />
+            <i class="fa-solid fa-images text-4xl text-gray-400 mb-2"></i>
+            <p class="text-lg font-semibold text-gray-600">Drag photos here or click to browse</p>
+            <p class="text-sm text-gray-400 mt-1">Upload multiple photos at once</p>
+          </div>
+        </div>
+
         <div id="gallery-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
         <div id="gallery-loading" class="text-center py-8"><div class="spinner mx-auto"></div></div>
       </div>
 
-      <!-- TEAM -->
+      <!-- ==================== TEAM ==================== -->
       <div id="section-team" class="section hidden">
         <div class="flex items-center justify-between mb-6">
           <h2 class="text-2xl font-bold text-gray-800">Team Members</h2>
-          <button onclick="openTeamModal()" class="bg-accent text-white px-4 py-2 rounded-lg hover:bg-red-700 text-sm font-semibold"><i class="fa-solid fa-plus mr-1"></i> Add Member</button>
+          <button onclick="openTeamModal()" class="px-5 py-2.5 rounded-lg text-sm font-semibold shadow-sm" style="background: #e50914; color: white;"><i class="fa-solid fa-plus mr-1"></i> Add Member</button>
         </div>
-        <div class="overflow-x-auto"><table class="w-full text-sm text-left">
-          <thead class="bg-gray-50 text-gray-600 uppercase text-xs"><tr><th class="px-4 py-3">Avatar</th><th class="px-4 py-3">Name</th><th class="px-4 py-3">Role</th><th class="px-4 py-3">Order</th><th class="px-4 py-3">Active</th><th class="px-4 py-3">Actions</th></tr></thead>
-          <tbody id="team-tbody"></tbody>
-        </table></div>
-        <div id="team-loading" class="text-center py-8"><div class="spinner mx-auto"></div></div>
+        <div class="content-card">
+          <div class="overflow-x-auto"><table class="w-full text-sm text-left">
+            <thead><tr style="background: #f8fafc;"><th class="px-4 py-3 text-xs font-bold uppercase text-gray-600">Avatar</th><th class="px-4 py-3 text-xs font-bold uppercase text-gray-600">Name</th><th class="px-4 py-3 text-xs font-bold uppercase text-gray-600">Role</th><th class="px-4 py-3 text-xs font-bold uppercase text-gray-600">Order</th><th class="px-4 py-3 text-xs font-bold uppercase text-gray-600">Active</th><th class="px-4 py-3 text-xs font-bold uppercase text-gray-600">Actions</th></tr></thead>
+            <tbody id="team-tbody"></tbody>
+          </table></div>
+          <div id="team-loading" class="text-center py-8"><div class="spinner mx-auto"></div></div>
+        </div>
       </div>
 
-      <!-- REVIEWS -->
+      <!-- ==================== REVIEWS ==================== -->
       <div id="section-reviews" class="section hidden">
         <div class="flex items-center justify-between mb-6">
           <h2 class="text-2xl font-bold text-gray-800">Reviews</h2>
-          <button onclick="openReviewModal()" class="bg-accent text-white px-4 py-2 rounded-lg hover:bg-red-700 text-sm font-semibold"><i class="fa-solid fa-plus mr-1"></i> Add Review</button>
+          <button onclick="openReviewModal()" class="px-5 py-2.5 rounded-lg text-sm font-semibold shadow-sm" style="background: #e50914; color: white;"><i class="fa-solid fa-plus mr-1"></i> Add Review</button>
         </div>
-        <div class="overflow-x-auto"><table class="w-full text-sm text-left">
-          <thead class="bg-gray-50 text-gray-600 uppercase text-xs"><tr><th class="px-4 py-3">Author</th><th class="px-4 py-3">Event Type</th><th class="px-4 py-3">Rating</th><th class="px-4 py-3">Featured</th><th class="px-4 py-3">Active</th><th class="px-4 py-3">Actions</th></tr></thead>
-          <tbody id="reviews-tbody"></tbody>
-        </table></div>
-        <div id="reviews-loading" class="text-center py-8"><div class="spinner mx-auto"></div></div>
+        <div class="content-card">
+          <div class="overflow-x-auto"><table class="w-full text-sm text-left">
+            <thead><tr style="background: #f8fafc;"><th class="px-4 py-3 text-xs font-bold uppercase text-gray-600">Author</th><th class="px-4 py-3 text-xs font-bold uppercase text-gray-600">Event Type</th><th class="px-4 py-3 text-xs font-bold uppercase text-gray-600">Rating</th><th class="px-4 py-3 text-xs font-bold uppercase text-gray-600">Featured</th><th class="px-4 py-3 text-xs font-bold uppercase text-gray-600">Active</th><th class="px-4 py-3 text-xs font-bold uppercase text-gray-600">Actions</th></tr></thead>
+            <tbody id="reviews-tbody"></tbody>
+          </table></div>
+          <div id="reviews-loading" class="text-center py-8"><div class="spinner mx-auto"></div></div>
+        </div>
       </div>
 
-      <!-- PARTNERS -->
+      <!-- ==================== PARTNERS ==================== -->
       <div id="section-partners" class="section hidden">
         <div class="flex items-center justify-between mb-6">
           <h2 class="text-2xl font-bold text-gray-800">Partners</h2>
-          <button onclick="openPartnerModal()" class="bg-accent text-white px-4 py-2 rounded-lg hover:bg-red-700 text-sm font-semibold"><i class="fa-solid fa-plus mr-1"></i> Add Partner</button>
+          <button onclick="openPartnerModal()" class="px-5 py-2.5 rounded-lg text-sm font-semibold shadow-sm" style="background: #e50914; color: white;"><i class="fa-solid fa-plus mr-1"></i> Add Partner</button>
         </div>
         <div id="partners-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
         <div id="partners-loading" class="text-center py-8"><div class="spinner mx-auto"></div></div>
       </div>
 
-      <!-- VALUES -->
+      <!-- ==================== VALUES ==================== -->
       <div id="section-values" class="section hidden">
         <div class="flex items-center justify-between mb-6">
           <h2 class="text-2xl font-bold text-gray-800">Values (Why Choose Us)</h2>
-          <button onclick="openValueModal()" class="bg-accent text-white px-4 py-2 rounded-lg hover:bg-red-700 text-sm font-semibold"><i class="fa-solid fa-plus mr-1"></i> Add Value</button>
+          <button onclick="openValueModal()" class="px-5 py-2.5 rounded-lg text-sm font-semibold shadow-sm" style="background: #e50914; color: white;"><i class="fa-solid fa-plus mr-1"></i> Add Value</button>
         </div>
-        <div class="overflow-x-auto"><table class="w-full text-sm text-left">
-          <thead class="bg-gray-50 text-gray-600 uppercase text-xs"><tr><th class="px-4 py-3">Title</th><th class="px-4 py-3">Icon</th><th class="px-4 py-3">Order</th><th class="px-4 py-3">Active</th><th class="px-4 py-3">Actions</th></tr></thead>
-          <tbody id="values-tbody"></tbody>
-        </table></div>
-        <div id="values-loading" class="text-center py-8"><div class="spinner mx-auto"></div></div>
+        <div class="content-card">
+          <div class="overflow-x-auto"><table class="w-full text-sm text-left">
+            <thead><tr style="background: #f8fafc;"><th class="px-4 py-3 text-xs font-bold uppercase text-gray-600">Title</th><th class="px-4 py-3 text-xs font-bold uppercase text-gray-600">Icon</th><th class="px-4 py-3 text-xs font-bold uppercase text-gray-600">Order</th><th class="px-4 py-3 text-xs font-bold uppercase text-gray-600">Active</th><th class="px-4 py-3 text-xs font-bold uppercase text-gray-600">Actions</th></tr></thead>
+            <tbody id="values-tbody"></tbody>
+          </table></div>
+          <div id="values-loading" class="text-center py-8"><div class="spinner mx-auto"></div></div>
+        </div>
       </div>
 
-      <!-- JOBS -->
+      <!-- ==================== JOBS ==================== -->
       <div id="section-jobs" class="section hidden">
         <div class="flex items-center justify-between mb-6">
           <h2 class="text-2xl font-bold text-gray-800">Job Listings</h2>
-          <button onclick="openJobModal()" class="bg-accent text-white px-4 py-2 rounded-lg hover:bg-red-700 text-sm font-semibold"><i class="fa-solid fa-plus mr-1"></i> Add Job</button>
+          <button onclick="openJobModal()" class="px-5 py-2.5 rounded-lg text-sm font-semibold shadow-sm" style="background: #e50914; color: white;"><i class="fa-solid fa-plus mr-1"></i> Add Job</button>
         </div>
-        <div class="overflow-x-auto"><table class="w-full text-sm text-left">
-          <thead class="bg-gray-50 text-gray-600 uppercase text-xs"><tr><th class="px-4 py-3">Title</th><th class="px-4 py-3">Type</th><th class="px-4 py-3">Location</th><th class="px-4 py-3">Active</th><th class="px-4 py-3">Actions</th></tr></thead>
-          <tbody id="jobs-tbody"></tbody>
-        </table></div>
-        <div id="jobs-loading" class="text-center py-8"><div class="spinner mx-auto"></div></div>
+        <div class="content-card">
+          <div class="overflow-x-auto"><table class="w-full text-sm text-left">
+            <thead><tr style="background: #f8fafc;"><th class="px-4 py-3 text-xs font-bold uppercase text-gray-600">Title</th><th class="px-4 py-3 text-xs font-bold uppercase text-gray-600">Type</th><th class="px-4 py-3 text-xs font-bold uppercase text-gray-600">Location</th><th class="px-4 py-3 text-xs font-bold uppercase text-gray-600">Active</th><th class="px-4 py-3 text-xs font-bold uppercase text-gray-600">Actions</th></tr></thead>
+            <tbody id="jobs-tbody"></tbody>
+          </table></div>
+          <div id="jobs-loading" class="text-center py-8"><div class="spinner mx-auto"></div></div>
+        </div>
       </div>
 
-      <!-- APPLICATIONS -->
+      <!-- ==================== APPLICATIONS ==================== -->
       <div id="section-applications" class="section hidden">
         <div class="flex items-center justify-between mb-6">
           <h2 class="text-2xl font-bold text-gray-800">Job Applications</h2>
         </div>
-        <div class="overflow-x-auto"><table class="w-full text-sm text-left">
-          <thead class="bg-gray-50 text-gray-600 uppercase text-xs"><tr><th class="px-4 py-3">Name</th><th class="px-4 py-3">Email</th><th class="px-4 py-3">Position</th><th class="px-4 py-3">Date</th><th class="px-4 py-3">Reviewed</th><th class="px-4 py-3">Actions</th></tr></thead>
-          <tbody id="applications-tbody"></tbody>
-        </table></div>
-        <div id="applications-loading" class="text-center py-8"><div class="spinner mx-auto"></div></div>
+        <div class="content-card">
+          <div class="overflow-x-auto"><table class="w-full text-sm text-left">
+            <thead><tr style="background: #f8fafc;"><th class="px-4 py-3 text-xs font-bold uppercase text-gray-600">Name</th><th class="px-4 py-3 text-xs font-bold uppercase text-gray-600">Email</th><th class="px-4 py-3 text-xs font-bold uppercase text-gray-600">Position</th><th class="px-4 py-3 text-xs font-bold uppercase text-gray-600">Date</th><th class="px-4 py-3 text-xs font-bold uppercase text-gray-600">Reviewed</th><th class="px-4 py-3 text-xs font-bold uppercase text-gray-600">Actions</th></tr></thead>
+            <tbody id="applications-tbody"></tbody>
+          </table></div>
+          <div id="applications-loading" class="text-center py-8"><div class="spinner mx-auto"></div></div>
+        </div>
       </div>
 
-      <!-- MESSAGES -->
+      <!-- ==================== MESSAGES ==================== -->
       <div id="section-messages" class="section hidden">
         <div class="flex items-center justify-between mb-6">
           <h2 class="text-2xl font-bold text-gray-800">Contact Messages</h2>
         </div>
-        <div class="overflow-x-auto"><table class="w-full text-sm text-left">
-          <thead class="bg-gray-50 text-gray-600 uppercase text-xs"><tr><th class="px-4 py-3">Name</th><th class="px-4 py-3">Email</th><th class="px-4 py-3">Service</th><th class="px-4 py-3">Date</th><th class="px-4 py-3">Status</th><th class="px-4 py-3">Actions</th></tr></thead>
-          <tbody id="messages-tbody"></tbody>
-        </table></div>
-        <div id="messages-loading" class="text-center py-8"><div class="spinner mx-auto"></div></div>
+        <div class="content-card">
+          <div class="overflow-x-auto"><table class="w-full text-sm text-left">
+            <thead><tr style="background: #f8fafc;"><th class="px-4 py-3 text-xs font-bold uppercase text-gray-600">Name</th><th class="px-4 py-3 text-xs font-bold uppercase text-gray-600">Email</th><th class="px-4 py-3 text-xs font-bold uppercase text-gray-600">Service</th><th class="px-4 py-3 text-xs font-bold uppercase text-gray-600">Date</th><th class="px-4 py-3 text-xs font-bold uppercase text-gray-600">Status</th><th class="px-4 py-3 text-xs font-bold uppercase text-gray-600">Actions</th></tr></thead>
+            <tbody id="messages-tbody"></tbody>
+          </table></div>
+          <div id="messages-loading" class="text-center py-8"><div class="spinner mx-auto"></div></div>
+        </div>
       </div>
 
-      <!-- INSTAGRAM -->
+      <!-- ==================== INSTAGRAM ==================== -->
       <div id="section-instagram" class="section hidden">
         <div class="flex items-center justify-between mb-6">
           <h2 class="text-2xl font-bold text-gray-800">Instagram Posts</h2>
-          <button onclick="openInstagramModal()" class="bg-accent text-white px-4 py-2 rounded-lg hover:bg-red-700 text-sm font-semibold"><i class="fa-solid fa-plus mr-1"></i> Add Post</button>
+          <button onclick="openInstagramModal()" class="px-5 py-2.5 rounded-lg text-sm font-semibold shadow-sm" style="background: #e50914; color: white;"><i class="fa-solid fa-plus mr-1"></i> Add Post</button>
         </div>
         <div id="instagram-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
         <div id="instagram-loading" class="text-center py-8"><div class="spinner mx-auto"></div></div>
       </div>
 
-      <!-- DISCOVER -->
+      <!-- ==================== DISCOVER ==================== -->
       <div id="section-discover" class="section hidden">
         <div class="flex items-center justify-between mb-6">
           <h2 class="text-2xl font-bold text-gray-800">Discover Cards</h2>
-          <button onclick="openDiscoverModal()" class="bg-accent text-white px-4 py-2 rounded-lg hover:bg-red-700 text-sm font-semibold"><i class="fa-solid fa-plus mr-1"></i> Add Card</button>
+          <button onclick="openDiscoverModal()" class="px-5 py-2.5 rounded-lg text-sm font-semibold shadow-sm" style="background: #e50914; color: white;"><i class="fa-solid fa-plus mr-1"></i> Add Card</button>
         </div>
-        <div class="overflow-x-auto"><table class="w-full text-sm text-left">
-          <thead class="bg-gray-50 text-gray-600 uppercase text-xs"><tr><th class="px-4 py-3">Image</th><th class="px-4 py-3">Title</th><th class="px-4 py-3">Link</th><th class="px-4 py-3">Order</th><th class="px-4 py-3">Active</th><th class="px-4 py-3">Actions</th></tr></thead>
-          <tbody id="discover-tbody"></tbody>
-        </table></div>
-        <div id="discover-loading" class="text-center py-8"><div class="spinner mx-auto"></div></div>
+        <div class="content-card">
+          <div class="overflow-x-auto"><table class="w-full text-sm text-left">
+            <thead><tr style="background: #f8fafc;"><th class="px-4 py-3 text-xs font-bold uppercase text-gray-600">Image</th><th class="px-4 py-3 text-xs font-bold uppercase text-gray-600">Title</th><th class="px-4 py-3 text-xs font-bold uppercase text-gray-600">Link</th><th class="px-4 py-3 text-xs font-bold uppercase text-gray-600">Order</th><th class="px-4 py-3 text-xs font-bold uppercase text-gray-600">Active</th><th class="px-4 py-3 text-xs font-bold uppercase text-gray-600">Actions</th></tr></thead>
+            <tbody id="discover-tbody"></tbody>
+          </table></div>
+          <div id="discover-loading" class="text-center py-8"><div class="spinner mx-auto"></div></div>
+        </div>
       </div>
 
-      <!-- STATS -->
+      <!-- ==================== STATS ==================== -->
       <div id="section-stats" class="section hidden">
         <div class="flex items-center justify-between mb-6">
           <h2 class="text-2xl font-bold text-gray-800">Stats</h2>
-          <button onclick="openStatModal()" class="bg-accent text-white px-4 py-2 rounded-lg hover:bg-red-700 text-sm font-semibold"><i class="fa-solid fa-plus mr-1"></i> Add Stat</button>
+          <button onclick="openStatModal()" class="px-5 py-2.5 rounded-lg text-sm font-semibold shadow-sm" style="background: #e50914; color: white;"><i class="fa-solid fa-plus mr-1"></i> Add Stat</button>
         </div>
-        <div class="overflow-x-auto"><table class="w-full text-sm text-left">
-          <thead class="bg-gray-50 text-gray-600 uppercase text-xs"><tr><th class="px-4 py-3">Label</th><th class="px-4 py-3">Value</th><th class="px-4 py-3">Order</th><th class="px-4 py-3">Active</th><th class="px-4 py-3">Actions</th></tr></thead>
-          <tbody id="stats-tbody"></tbody>
-        </table></div>
-        <div id="stats-loading" class="text-center py-8"><div class="spinner mx-auto"></div></div>
+        <div class="content-card">
+          <div class="overflow-x-auto"><table class="w-full text-sm text-left">
+            <thead><tr style="background: #f8fafc;"><th class="px-4 py-3 text-xs font-bold uppercase text-gray-600">Label</th><th class="px-4 py-3 text-xs font-bold uppercase text-gray-600">Value</th><th class="px-4 py-3 text-xs font-bold uppercase text-gray-600">Order</th><th class="px-4 py-3 text-xs font-bold uppercase text-gray-600">Active</th><th class="px-4 py-3 text-xs font-bold uppercase text-gray-600">Actions</th></tr></thead>
+            <tbody id="stats-tbody"></tbody>
+          </table></div>
+          <div id="stats-loading" class="text-center py-8"><div class="spinner mx-auto"></div></div>
+        </div>
       </div>
 
-      <!-- SETTINGS -->
+      <!-- ==================== SETTINGS ==================== -->
       <div id="section-settings" class="section hidden">
         <h2 class="text-2xl font-bold text-gray-800 mb-6">Site Settings</h2>
-        <div id="settings-form" class="max-w-2xl space-y-8">
-          <div id="settings-loading" class="text-center py-8"><div class="spinner mx-auto"></div></div>
+        <div class="content-card">
+          <div id="settings-form" class="max-w-2xl space-y-8">
+            <div id="settings-loading" class="text-center py-8"><div class="spinner mx-auto"></div></div>
+          </div>
         </div>
       </div>
 
@@ -321,12 +488,12 @@
 
   <!-- ==================== MODAL CONTAINER ==================== -->
   <div id="modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center modal-overlay">
-    <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto mx-4" id="modal-content">
-      <div class="flex items-center justify-between p-5 border-b">
-        <h3 class="text-lg font-bold text-gray-800" id="modal-title">Modal</h3>
-        <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 text-xl"><i class="fa-solid fa-xmark"></i></button>
+    <div class="bg-white shadow-2xl w-full max-h-[90vh] overflow-y-auto mx-4" id="modal-content" style="max-width: 550px; border-radius: 16px;">
+      <div class="flex items-center justify-between px-6 py-4" style="background: #1a1a2e; border-radius: 16px 16px 0 0;">
+        <h3 class="text-lg font-bold text-white" id="modal-title">Modal</h3>
+        <button onclick="closeModal()" class="text-gray-400 hover:text-white text-xl transition"><i class="fa-solid fa-xmark"></i></button>
       </div>
-      <div class="p-5" id="modal-body"></div>
+      <div class="p-6" id="modal-body"></div>
     </div>
   </div>
 
@@ -350,8 +517,9 @@
       const container = document.getElementById('toast-container');
       const toast = document.createElement('div');
       const bg = type === 'success' ? 'bg-green-500' : type === 'error' ? 'bg-red-500' : 'bg-blue-500';
-      toast.className = `toast ${bg} text-white px-5 py-3 rounded-lg shadow-lg text-sm font-medium`;
-      toast.textContent = message;
+      const icon = type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle';
+      toast.className = `toast ${bg} text-white px-5 py-3 rounded-lg shadow-lg text-sm font-medium flex items-center gap-2`;
+      toast.innerHTML = `<i class="fa-solid ${icon}"></i> ${message}`;
       container.appendChild(toast);
       setTimeout(() => toast.remove(), 3000);
     }
@@ -522,15 +690,21 @@
         <form id="hero-form" class="space-y-4">
           <div><label class="block text-sm font-semibold mb-1">Title</label><input name="title" value="${item?.title||''}" class="w-full border rounded-lg px-3 py-2 text-sm" required /></div>
           <div><label class="block text-sm font-semibold mb-1">Description</label><textarea name="description" class="w-full border rounded-lg px-3 py-2 text-sm" rows="3">${item?.description||''}</textarea></div>
-          <div><label class="block text-sm font-semibold mb-1">Image</label>
+          <div>
+            <label class="block text-sm font-semibold mb-1">Image</label>
             ${item?.image_url ? `<img src="${item.image_url}" class="w-24 h-16 object-cover rounded mb-2" />` : ''}
-            <input type="file" name="image" accept="image/*" class="w-full text-sm" />
+            <label class="upload-zone block">
+              <input type="file" name="image" accept="image/*" class="hidden" onchange="this.parentElement.querySelector('.upload-text').textContent = this.files[0]?.name || 'Click to upload'" />
+              <i class="fa-solid fa-cloud-arrow-up text-2xl text-gray-400 mb-1"></i>
+              <p class="upload-text text-sm text-gray-500">Click to upload or drag & drop</p>
+              <p class="text-xs text-gray-400 mt-1">PNG, JPG up to 10MB</p>
+            </label>
           </div>
           <div class="grid grid-cols-2 gap-4">
             <div><label class="block text-sm font-semibold mb-1">Display Order</label><input name="display_order" type="number" value="${item?.display_order??0}" class="w-full border rounded-lg px-3 py-2 text-sm" /></div>
             <div class="flex items-center gap-2 pt-6"><input type="checkbox" name="is_active" ${item?.is_active!==false?'checked':''} class="w-4 h-4" /><label class="text-sm">Active</label></div>
           </div>
-          <button type="submit" class="w-full bg-accent text-white py-2 rounded-lg font-semibold hover:bg-red-700">${isEdit?'Update':'Create'}</button>
+          <button type="submit" class="w-full py-2.5 rounded-lg font-semibold transition" style="background: #e50914; color: white;" onmouseover="this.style.background='#c50710'" onmouseout="this.style.background='#e50914'">${isEdit?'Update':'Create'}</button>
         </form>
       `);
       document.getElementById('hero-form').addEventListener('submit', async (e) => {
@@ -577,15 +751,21 @@
           <div><label class="block text-sm font-semibold mb-1">Name</label><input name="name" value="${item?.name||''}" class="w-full border rounded-lg px-3 py-2 text-sm" required /></div>
           <div><label class="block text-sm font-semibold mb-1">Description</label><textarea name="description" class="w-full border rounded-lg px-3 py-2 text-sm" rows="3">${item?.description||''}</textarea></div>
           <div><label class="block text-sm font-semibold mb-1">Price</label><input name="price" value="${item?.price||''}" class="w-full border rounded-lg px-3 py-2 text-sm" /></div>
-          <div><label class="block text-sm font-semibold mb-1">Image</label>
+          <div>
+            <label class="block text-sm font-semibold mb-1">Image</label>
             ${item?.image_url ? `<img src="${item.image_url}" class="w-24 h-16 object-cover rounded mb-2" />` : ''}
-            <input type="file" name="image" accept="image/*" class="w-full text-sm" />
+            <label class="upload-zone block">
+              <input type="file" name="image" accept="image/*" class="hidden" onchange="this.parentElement.querySelector('.upload-text').textContent = this.files[0]?.name || 'Click to upload'" />
+              <i class="fa-solid fa-cloud-arrow-up text-2xl text-gray-400 mb-1"></i>
+              <p class="upload-text text-sm text-gray-500">Click to upload or drag & drop</p>
+              <p class="text-xs text-gray-400 mt-1">PNG, JPG up to 10MB</p>
+            </label>
           </div>
           <div class="grid grid-cols-2 gap-4">
             <div><label class="block text-sm font-semibold mb-1">Display Order</label><input name="display_order" type="number" value="${item?.display_order??0}" class="w-full border rounded-lg px-3 py-2 text-sm" /></div>
             <div class="flex items-center gap-2 pt-6"><input type="checkbox" name="is_active" ${item?.is_active!==false?'checked':''} class="w-4 h-4" /><label class="text-sm">Active</label></div>
           </div>
-          <button type="submit" class="w-full bg-accent text-white py-2 rounded-lg font-semibold hover:bg-red-700">${isEdit?'Update':'Create'}</button>
+          <button type="submit" class="w-full py-2.5 rounded-lg font-semibold transition" style="background: #e50914; color: white;" onmouseover="this.style.background='#c50710'" onmouseout="this.style.background='#e50914'">${isEdit?'Update':'Create'}</button>
         </form>
       `);
       document.getElementById('service-form').addEventListener('submit', async (e) => {
@@ -613,7 +793,7 @@
       document.getElementById('gallery-loading').classList.add('hidden');
       if (error) return showToast(error.message, 'error');
       document.getElementById('gallery-grid').innerHTML = data.length === 0
-        ? '<div class="col-span-full text-center py-8 text-gray-400">No gallery images yet. Click \'Add Image\' to create one.</div>'
+        ? '<div class="col-span-full empty-state"><i class="fa-solid fa-images block"></i><p>No gallery images yet.</p><p class="sub">Click "Add Image" or drag photos above to get started.</p></div>'
         : data.map(r => `
         <div class="relative group rounded-xl overflow-hidden shadow bg-gray-100">
           <img src="${r.image_url}" class="w-full h-48 object-cover" onerror="this.style.display='none'" />
@@ -623,12 +803,62 @@
             <button onclick="deleteRow('gallery_items','${r.id}', loadGallery)" class="mt-1 bg-red-600 px-3 py-1 rounded text-xs hover:bg-red-700"><i class="fa-solid fa-trash mr-1"></i>Delete</button>
           </div>
         </div>`).join('');
+
+      // Setup gallery dropzone listeners (re-bind after load)
+      setupGalleryDropzone();
+    }
+
+    function setupGalleryDropzone() {
+      const dz = document.getElementById('gallery-dropzone');
+      if (!dz || dz.dataset.bound) return;
+      dz.dataset.bound = 'true';
+
+      dz.addEventListener('click', () => {
+        document.getElementById('gallery-multi-upload').click();
+      });
+      document.getElementById('gallery-multi-upload').addEventListener('change', async (e) => {
+        const files = Array.from(e.target.files);
+        if (!files.length) return;
+        for (const file of files) {
+          try {
+            const url = await uploadFile('gallery', file);
+            await sb.from('gallery_items').insert({ title: file.name.split('.')[0], category: 'Other', image_url: url });
+          } catch (err) { showToast('Failed: ' + file.name, 'error'); }
+        }
+        showToast(`${files.length} photo(s) uploaded`);
+        loadGallery();
+      });
+      // Drag and drop
+      dz.addEventListener('dragover', (e) => { e.preventDefault(); dz.classList.add('dragover'); });
+      dz.addEventListener('dragleave', () => dz.classList.remove('dragover'));
+      dz.addEventListener('drop', async (e) => {
+        e.preventDefault();
+        dz.classList.remove('dragover');
+        const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/'));
+        if (!files.length) return;
+        for (const file of files) {
+          try {
+            const url = await uploadFile('gallery', file);
+            await sb.from('gallery_items').insert({ title: file.name.split('.')[0], category: 'Other', image_url: url });
+          } catch (err) { showToast('Failed: ' + file.name, 'error'); }
+        }
+        showToast(`${files.length} photo(s) uploaded`);
+        loadGallery();
+      });
     }
 
     function openGalleryModal() {
       openModal('Add Gallery Image', `
         <form id="gallery-form" class="space-y-4">
-          <div><label class="block text-sm font-semibold mb-1">Image</label><input type="file" name="image" accept="image/*" class="w-full text-sm" required /></div>
+          <div>
+            <label class="block text-sm font-semibold mb-1">Image</label>
+            <label class="upload-zone block">
+              <input type="file" name="image" accept="image/*" class="hidden" required onchange="this.parentElement.querySelector('.upload-text').textContent = this.files[0]?.name || 'Click to upload'" />
+              <i class="fa-solid fa-cloud-arrow-up text-2xl text-gray-400 mb-1"></i>
+              <p class="upload-text text-sm text-gray-500">Click to upload or drag & drop</p>
+              <p class="text-xs text-gray-400 mt-1">PNG, JPG up to 10MB</p>
+            </label>
+          </div>
           <div><label class="block text-sm font-semibold mb-1">Title</label><input name="title" class="w-full border rounded-lg px-3 py-2 text-sm" /></div>
           <div><label class="block text-sm font-semibold mb-1">Category</label>
             <select name="category" class="w-full border rounded-lg px-3 py-2 text-sm">
@@ -636,7 +866,7 @@
             </select>
           </div>
           <div><label class="block text-sm font-semibold mb-1">Description</label><textarea name="description" class="w-full border rounded-lg px-3 py-2 text-sm" rows="2"></textarea></div>
-          <button type="submit" class="w-full bg-accent text-white py-2 rounded-lg font-semibold hover:bg-red-700">Upload</button>
+          <button type="submit" class="w-full py-2.5 rounded-lg font-semibold transition" style="background: #e50914; color: white;" onmouseover="this.style.background='#c50710'" onmouseout="this.style.background='#e50914'">Upload</button>
         </form>
       `);
       document.getElementById('gallery-form').addEventListener('submit', async (e) => {
@@ -681,9 +911,15 @@
           <div><label class="block text-sm font-semibold mb-1">Name</label><input name="name" value="${item?.name||''}" class="w-full border rounded-lg px-3 py-2 text-sm" required /></div>
           <div><label class="block text-sm font-semibold mb-1">Role</label><input name="role" value="${item?.role||''}" class="w-full border rounded-lg px-3 py-2 text-sm" /></div>
           <div><label class="block text-sm font-semibold mb-1">Bio</label><textarea name="bio" class="w-full border rounded-lg px-3 py-2 text-sm" rows="3">${item?.bio||''}</textarea></div>
-          <div><label class="block text-sm font-semibold mb-1">Avatar</label>
+          <div>
+            <label class="block text-sm font-semibold mb-1">Avatar</label>
             ${item?.avatar_url ? `<img src="${item.avatar_url}" class="w-16 h-16 rounded-full object-cover mb-2" />` : ''}
-            <input type="file" name="avatar" accept="image/*" class="w-full text-sm" />
+            <label class="upload-zone block">
+              <input type="file" name="avatar" accept="image/*" class="hidden" onchange="this.parentElement.querySelector('.upload-text').textContent = this.files[0]?.name || 'Click to upload'" />
+              <i class="fa-solid fa-cloud-arrow-up text-2xl text-gray-400 mb-1"></i>
+              <p class="upload-text text-sm text-gray-500">Click to upload or drag & drop</p>
+              <p class="text-xs text-gray-400 mt-1">PNG, JPG up to 10MB</p>
+            </label>
           </div>
           <div class="grid grid-cols-3 gap-3">
             <div><label class="block text-sm font-semibold mb-1">Instagram</label><input name="instagram" value="${item?.instagram||''}" class="w-full border rounded-lg px-3 py-2 text-sm" /></div>
@@ -694,7 +930,7 @@
             <div><label class="block text-sm font-semibold mb-1">Display Order</label><input name="display_order" type="number" value="${item?.display_order??0}" class="w-full border rounded-lg px-3 py-2 text-sm" /></div>
             <div class="flex items-center gap-2 pt-6"><input type="checkbox" name="is_active" ${item?.is_active!==false?'checked':''} class="w-4 h-4" /><label class="text-sm">Active</label></div>
           </div>
-          <button type="submit" class="w-full bg-accent text-white py-2 rounded-lg font-semibold hover:bg-red-700">${isEdit?'Update':'Create'}</button>
+          <button type="submit" class="w-full py-2.5 rounded-lg font-semibold transition" style="background: #e50914; color: white;" onmouseover="this.style.background='#c50710'" onmouseout="this.style.background='#e50914'">${isEdit?'Update':'Create'}</button>
         </form>
       `);
       document.getElementById('team-form').addEventListener('submit', async (e) => {
@@ -751,7 +987,7 @@
             <div class="flex items-center gap-2"><input type="checkbox" name="is_featured" ${item?.is_featured?'checked':''} class="w-4 h-4" /><label class="text-sm">Featured</label></div>
             <div class="flex items-center gap-2"><input type="checkbox" name="is_active" ${item?.is_active!==false?'checked':''} class="w-4 h-4" /><label class="text-sm">Active</label></div>
           </div>
-          <button type="submit" class="w-full bg-accent text-white py-2 rounded-lg font-semibold hover:bg-red-700">${isEdit?'Update':'Create'}</button>
+          <button type="submit" class="w-full py-2.5 rounded-lg font-semibold transition" style="background: #e50914; color: white;" onmouseover="this.style.background='#c50710'" onmouseout="this.style.background='#e50914'">${isEdit?'Update':'Create'}</button>
         </form>
       `);
       document.getElementById('review-form').addEventListener('submit', async (e) => {
@@ -774,7 +1010,7 @@
       document.getElementById('partners-loading').classList.add('hidden');
       if (error) return showToast(error.message, 'error');
       document.getElementById('partners-grid').innerHTML = data.length === 0
-        ? '<div class="col-span-full text-center py-8 text-gray-400">No partners yet. Click \'Add Partner\' to create one.</div>'
+        ? '<div class="col-span-full empty-state"><i class="fa-solid fa-handshake block"></i><p>No partners yet.</p><p class="sub">Click "Add Partner" to create one.</p></div>'
         : data.map(r => `
         <div class="relative group bg-white border rounded-xl p-4 flex flex-col items-center gap-2 shadow-sm">
           <img src="${r.logo_url||''}" class="h-20 object-contain" onerror="this.style.display='none'" />
@@ -788,9 +1024,17 @@
       openModal('Add Partner', `
         <form id="partner-form" class="space-y-4">
           <div><label class="block text-sm font-semibold mb-1">Name</label><input name="name" class="w-full border rounded-lg px-3 py-2 text-sm" required /></div>
-          <div><label class="block text-sm font-semibold mb-1">Logo</label><input type="file" name="logo" accept="image/*" class="w-full text-sm" required /></div>
+          <div>
+            <label class="block text-sm font-semibold mb-1">Logo</label>
+            <label class="upload-zone block">
+              <input type="file" name="logo" accept="image/*" class="hidden" required onchange="this.parentElement.querySelector('.upload-text').textContent = this.files[0]?.name || 'Click to upload'" />
+              <i class="fa-solid fa-cloud-arrow-up text-2xl text-gray-400 mb-1"></i>
+              <p class="upload-text text-sm text-gray-500">Click to upload or drag & drop</p>
+              <p class="text-xs text-gray-400 mt-1">PNG, JPG up to 10MB</p>
+            </label>
+          </div>
           <div><label class="block text-sm font-semibold mb-1">Website URL</label><input name="website_url" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="https://..." /></div>
-          <button type="submit" class="w-full bg-accent text-white py-2 rounded-lg font-semibold hover:bg-red-700">Add Partner</button>
+          <button type="submit" class="w-full py-2.5 rounded-lg font-semibold transition" style="background: #e50914; color: white;" onmouseover="this.style.background='#c50710'" onmouseout="this.style.background='#e50914'">Add Partner</button>
         </form>
       `);
       document.getElementById('partner-form').addEventListener('submit', async (e) => {
@@ -838,7 +1082,7 @@
             <div><label class="block text-sm font-semibold mb-1">Display Order</label><input name="display_order" type="number" value="${item?.display_order??0}" class="w-full border rounded-lg px-3 py-2 text-sm" /></div>
             <div class="flex items-center gap-2 pt-6"><input type="checkbox" name="is_active" ${item?.is_active!==false?'checked':''} class="w-4 h-4" /><label class="text-sm">Active</label></div>
           </div>
-          <button type="submit" class="w-full bg-accent text-white py-2 rounded-lg font-semibold hover:bg-red-700">${isEdit?'Update':'Create'}</button>
+          <button type="submit" class="w-full py-2.5 rounded-lg font-semibold transition" style="background: #e50914; color: white;" onmouseover="this.style.background='#c50710'" onmouseout="this.style.background='#e50914'">${isEdit?'Update':'Create'}</button>
         </form>
       `);
       document.getElementById('value-form').addEventListener('submit', async (e) => {
@@ -889,7 +1133,7 @@
           <div><label class="block text-sm font-semibold mb-1">Description</label><textarea name="description" class="w-full border rounded-lg px-3 py-2 text-sm" rows="4">${item?.description||''}</textarea></div>
           <div><label class="block text-sm font-semibold mb-1">Requirements</label><textarea name="requirements" class="w-full border rounded-lg px-3 py-2 text-sm" rows="4" placeholder="One requirement per line">${item?.requirements||''}</textarea></div>
           <div class="flex items-center gap-2"><input type="checkbox" name="is_active" ${item?.is_active!==false?'checked':''} class="w-4 h-4" /><label class="text-sm">Active</label></div>
-          <button type="submit" class="w-full bg-accent text-white py-2 rounded-lg font-semibold hover:bg-red-700">${isEdit?'Update':'Create'}</button>
+          <button type="submit" class="w-full py-2.5 rounded-lg font-semibold transition" style="background: #e50914; color: white;" onmouseover="this.style.background='#c50710'" onmouseout="this.style.background='#e50914'">${isEdit?'Update':'Create'}</button>
         </form>
       `);
       document.getElementById('job-form').addEventListener('submit', async (e) => {
@@ -1002,7 +1246,7 @@
       document.getElementById('instagram-loading').classList.add('hidden');
       if (error) return showToast(error.message, 'error');
       document.getElementById('instagram-grid').innerHTML = data.length === 0
-        ? '<div class="col-span-full text-center py-8 text-gray-400">No Instagram posts yet. Click \'Add Post\' to create one.</div>'
+        ? '<div class="col-span-full empty-state"><i class="fa-brands fa-instagram block"></i><p>No Instagram posts yet.</p><p class="sub">Click "Add Post" to create one.</p></div>'
         : data.map(r => `
         <div class="relative group rounded-xl overflow-hidden shadow bg-gray-100">
           <img src="${r.image_url||''}" class="w-full h-48 object-cover" onerror="this.style.display='none'" />
@@ -1017,7 +1261,15 @@
     function openInstagramModal() {
       openModal('Add Instagram Post', `
         <form id="instagram-form" class="space-y-4">
-          <div><label class="block text-sm font-semibold mb-1">Image</label><input type="file" name="image" accept="image/*" class="w-full text-sm" /></div>
+          <div>
+            <label class="block text-sm font-semibold mb-1">Image</label>
+            <label class="upload-zone block">
+              <input type="file" name="image" accept="image/*" class="hidden" onchange="this.parentElement.querySelector('.upload-text').textContent = this.files[0]?.name || 'Click to upload'" />
+              <i class="fa-solid fa-cloud-arrow-up text-2xl text-gray-400 mb-1"></i>
+              <p class="upload-text text-sm text-gray-500">Click to upload or drag & drop</p>
+              <p class="text-xs text-gray-400 mt-1">PNG, JPG up to 10MB</p>
+            </label>
+          </div>
           <div><label class="block text-sm font-semibold mb-1">Or Image URL</label><input name="image_url" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="https://..." /></div>
           <div><label class="block text-sm font-semibold mb-1">Post URL</label><input name="post_url" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="https://instagram.com/p/..." /></div>
           <div><label class="block text-sm font-semibold mb-1">Type</label>
@@ -1025,7 +1277,7 @@
               <option value="image">Image</option><option value="reel">Reel</option>
             </select>
           </div>
-          <button type="submit" class="w-full bg-accent text-white py-2 rounded-lg font-semibold hover:bg-red-700">Add Post</button>
+          <button type="submit" class="w-full py-2.5 rounded-lg font-semibold transition" style="background: #e50914; color: white;" onmouseover="this.style.background='#c50710'" onmouseout="this.style.background='#e50914'">Add Post</button>
         </form>
       `);
       document.getElementById('instagram-form').addEventListener('submit', async (e) => {
@@ -1073,15 +1325,21 @@
           <div><label class="block text-sm font-semibold mb-1">Title</label><input name="title" value="${item?.title||''}" class="w-full border rounded-lg px-3 py-2 text-sm" required /></div>
           <div><label class="block text-sm font-semibold mb-1">Description</label><textarea name="description" class="w-full border rounded-lg px-3 py-2 text-sm" rows="3">${item?.description||''}</textarea></div>
           <div><label class="block text-sm font-semibold mb-1">Link URL</label><input name="link_url" value="${item?.link_url||''}" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="https://..." /></div>
-          <div><label class="block text-sm font-semibold mb-1">Image</label>
+          <div>
+            <label class="block text-sm font-semibold mb-1">Image</label>
             ${item?.image_url ? `<img src="${item.image_url}" class="w-24 h-16 object-cover rounded mb-2" />` : ''}
-            <input type="file" name="image" accept="image/*" class="w-full text-sm" />
+            <label class="upload-zone block">
+              <input type="file" name="image" accept="image/*" class="hidden" onchange="this.parentElement.querySelector('.upload-text').textContent = this.files[0]?.name || 'Click to upload'" />
+              <i class="fa-solid fa-cloud-arrow-up text-2xl text-gray-400 mb-1"></i>
+              <p class="upload-text text-sm text-gray-500">Click to upload or drag & drop</p>
+              <p class="text-xs text-gray-400 mt-1">PNG, JPG up to 10MB</p>
+            </label>
           </div>
           <div class="grid grid-cols-2 gap-4">
             <div><label class="block text-sm font-semibold mb-1">Display Order</label><input name="display_order" type="number" value="${item?.display_order??0}" class="w-full border rounded-lg px-3 py-2 text-sm" /></div>
             <div class="flex items-center gap-2 pt-6"><input type="checkbox" name="is_active" ${item?.is_active!==false?'checked':''} class="w-4 h-4" /><label class="text-sm">Active</label></div>
           </div>
-          <button type="submit" class="w-full bg-accent text-white py-2 rounded-lg font-semibold hover:bg-red-700">${isEdit?'Update':'Create'}</button>
+          <button type="submit" class="w-full py-2.5 rounded-lg font-semibold transition" style="background: #e50914; color: white;" onmouseover="this.style.background='#c50710'" onmouseout="this.style.background='#e50914'">${isEdit?'Update':'Create'}</button>
         </form>
       `);
       document.getElementById('discover-form').addEventListener('submit', async (e) => {
@@ -1130,7 +1388,7 @@
             <div><label class="block text-sm font-semibold mb-1">Display Order</label><input name="display_order" type="number" value="${item?.display_order??0}" class="w-full border rounded-lg px-3 py-2 text-sm" /></div>
             <div class="flex items-center gap-2 pt-6"><input type="checkbox" name="is_active" ${item?.is_active!==false?'checked':''} class="w-4 h-4" /><label class="text-sm">Active</label></div>
           </div>
-          <button type="submit" class="w-full bg-accent text-white py-2 rounded-lg font-semibold hover:bg-red-700">${isEdit?'Update':'Create'}</button>
+          <button type="submit" class="w-full py-2.5 rounded-lg font-semibold transition" style="background: #e50914; color: white;" onmouseover="this.style.background='#c50710'" onmouseout="this.style.background='#e50914'">${isEdit?'Update':'Create'}</button>
         </form>
       `);
       document.getElementById('stat-form').addEventListener('submit', async (e) => {
@@ -1176,7 +1434,7 @@
         }
         html += '</div></div>';
       }
-      html += `<button onclick="saveSettings()" class="bg-accent text-white px-6 py-2.5 rounded-lg font-semibold hover:bg-red-700">Save Settings</button>`;
+      html += `<button onclick="saveSettings()" class="px-6 py-2.5 rounded-lg font-semibold transition" style="background: #e50914; color: white;" onmouseover="this.style.background='#c50710'" onmouseout="this.style.background='#e50914'">Save Settings</button>`;
       document.getElementById('settings-form').innerHTML = html;
     }
 
