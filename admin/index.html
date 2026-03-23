@@ -61,7 +61,7 @@
         <h1 class="text-3xl font-bold text-nearblack">Twineshots</h1>
         <p class="text-gray-500 mt-1">Admin Panel</p>
       </div>
-      <form id="login-form" class="space-y-4">
+      <form id="login-form" class="space-y-4" onsubmit="return false;">
         <div>
           <label class="block text-sm font-semibold text-gray-700 mb-1">Email</label>
           <input type="email" id="login-email" required class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-accent focus:border-accent outline-none" placeholder="admin@twineshots.com" />
@@ -337,10 +337,13 @@
     const SUPABASE_URL = 'https://wljrwgkykrrxblazonei.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndsanJ3Z2t5a3JyeGJsYXpvbmVpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyMjg3MTksImV4cCI6MjA4OTgwNDcxOX0.PK1ai1Acfpzqrk1Ns7Hemwbo4KPxU6pflGKiDw_5_jM';
 
-    const { createClient } = window.supabase || window;
-    const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    // Alias for convenience
-    const supabase = supabaseClient;
+    let sb;
+    try {
+      sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    } catch(e) {
+      console.error('Supabase init failed:', e);
+      alert('Failed to initialize Supabase. Check console for details.');
+    }
 
     // ===== TOAST =====
     function showToast(message, type = 'success') {
@@ -375,7 +378,7 @@
       errEl.classList.add('hidden');
       document.getElementById('login-btn').textContent = 'Signing in...';
       try {
-        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+        const { data, error } = await sb.auth.signInWithPassword({ email, password });
         document.getElementById('login-btn').textContent = 'Sign In';
         if (error) {
           errEl.textContent = error.message;
@@ -394,7 +397,7 @@
 
     document.getElementById('logout-btn').addEventListener('click', async (e) => {
       e.preventDefault();
-      await supabase.auth.signOut();
+      await sb.auth.signOut();
     });
 
     function showAdmin() {
@@ -406,7 +409,7 @@
       document.getElementById('admin-layout').style.display = 'none';
     }
 
-    supabase.auth.onAuthStateChange((event, session) => {
+    sb.auth.onAuthStateChange((event, session) => {
       if (session) {
         showAdmin();
         loadDashboard();
@@ -417,7 +420,7 @@
 
     // Check session on load
     (async () => {
-      const { data: { session } } = await supabase.auth.getSession();
+      const { data: { session } } = await sb.auth.getSession();
       if (session) {
         showAdmin();
         loadDashboard();
@@ -463,20 +466,20 @@
     async function uploadFile(bucket, file) {
       const ext = file.name.split('.').pop();
       const path = `${Date.now()}-${Math.random().toString(36).substring(2,8)}.${ext}`;
-      const { error } = await supabase.storage.from(bucket).upload(path, file);
+      const { error } = await sb.storage.from(bucket).upload(path, file);
       if (error) throw error;
-      const { data } = supabase.storage.from(bucket).getPublicUrl(path);
+      const { data } = sb.storage.from(bucket).getPublicUrl(path);
       return data.publicUrl;
     }
 
     // ===== DASHBOARD =====
     async function loadDashboard() {
       const [services, team, gallery, messages, applications] = await Promise.all([
-        supabase.from('services').select('id', { count: 'exact', head: true }),
-        supabase.from('team_members').select('id', { count: 'exact', head: true }),
-        supabase.from('gallery_items').select('id', { count: 'exact', head: true }),
-        supabase.from('contact_submissions').select('id', { count: 'exact', head: true }).eq('is_read', false),
-        supabase.from('job_applications').select('id', { count: 'exact', head: true }).eq('is_reviewed', false),
+        sb.from('services').select('id', { count: 'exact', head: true }),
+        sb.from('team_members').select('id', { count: 'exact', head: true }),
+        sb.from('gallery_items').select('id', { count: 'exact', head: true }),
+        sb.from('contact_submissions').select('id', { count: 'exact', head: true }).eq('is_read', false),
+        sb.from('job_applications').select('id', { count: 'exact', head: true }).eq('is_reviewed', false),
       ]);
       document.getElementById('stat-services').textContent = services.count ?? 0;
       document.getElementById('stat-team').textContent = team.count ?? 0;
@@ -494,7 +497,7 @@
     // ===== HERO SLIDES =====
     async function loadHero() {
       document.getElementById('hero-loading').classList.remove('hidden');
-      const { data, error } = await supabase.from('hero_slides').select('*').order('display_order');
+      const { data, error } = await sb.from('hero_slides').select('*').order('display_order');
       document.getElementById('hero-loading').classList.add('hidden');
       if (error) return showToast(error.message, 'error');
       document.getElementById('hero-tbody').innerHTML = data.map(r => `
@@ -535,8 +538,8 @@
         try {
           const file = fd.get('image');
           if (file && file.size > 0) payload.image_url = await uploadFile('hero', file);
-          if (isEdit) { const { error } = await supabase.from('hero_slides').update(payload).eq('id', item.id); if (error) throw error; }
-          else { const { error } = await supabase.from('hero_slides').insert(payload); if (error) throw error; }
+          if (isEdit) { const { error } = await sb.from('hero_slides').update(payload).eq('id', item.id); if (error) throw error; }
+          else { const { error } = await sb.from('hero_slides').insert(payload); if (error) throw error; }
           showToast(isEdit ? 'Slide updated' : 'Slide created');
           closeModal(); loadHero();
         } catch (err) { showToast(err.message, 'error'); }
@@ -546,7 +549,7 @@
     // ===== SERVICES =====
     async function loadServices() {
       document.getElementById('services-loading').classList.remove('hidden');
-      const { data, error } = await supabase.from('services').select('*').order('display_order');
+      const { data, error } = await sb.from('services').select('*').order('display_order');
       document.getElementById('services-loading').classList.add('hidden');
       if (error) return showToast(error.message, 'error');
       document.getElementById('services-tbody').innerHTML = data.map(r => `
@@ -588,8 +591,8 @@
         try {
           const file = fd.get('image');
           if (file && file.size > 0) payload.image_url = await uploadFile('services', file);
-          if (isEdit) { const { error } = await supabase.from('services').update(payload).eq('id', item.id); if (error) throw error; }
-          else { const { error } = await supabase.from('services').insert(payload); if (error) throw error; }
+          if (isEdit) { const { error } = await sb.from('services').update(payload).eq('id', item.id); if (error) throw error; }
+          else { const { error } = await sb.from('services').insert(payload); if (error) throw error; }
           showToast(isEdit ? 'Service updated' : 'Service created');
           closeModal(); loadServices();
         } catch (err) { showToast(err.message, 'error'); }
@@ -599,7 +602,7 @@
     // ===== GALLERY =====
     async function loadGallery() {
       document.getElementById('gallery-loading').classList.remove('hidden');
-      let query = supabase.from('gallery_items').select('*').order('display_order');
+      let query = sb.from('gallery_items').select('*').order('display_order');
       const filter = document.getElementById('gallery-filter').value;
       if (filter) query = query.eq('category', filter);
       const { data, error } = await query;
@@ -635,7 +638,7 @@
         const fd = new FormData(e.target);
         try {
           const url = await uploadFile('gallery', fd.get('image'));
-          const { error } = await supabase.from('gallery_items').insert({ title: fd.get('title'), category: fd.get('category'), image_url: url, description: fd.get('description') });
+          const { error } = await sb.from('gallery_items').insert({ title: fd.get('title'), category: fd.get('category'), image_url: url, description: fd.get('description') });
           if (error) throw error;
           showToast('Image added to gallery');
           closeModal(); loadGallery();
@@ -646,7 +649,7 @@
     // ===== TEAM =====
     async function loadTeam() {
       document.getElementById('team-loading').classList.remove('hidden');
-      const { data, error } = await supabase.from('team_members').select('*').order('display_order');
+      const { data, error } = await sb.from('team_members').select('*').order('display_order');
       document.getElementById('team-loading').classList.add('hidden');
       if (error) return showToast(error.message, 'error');
       document.getElementById('team-tbody').innerHTML = data.map(r => `
@@ -693,8 +696,8 @@
         try {
           const file = fd.get('avatar');
           if (file && file.size > 0) payload.avatar_url = await uploadFile('team', file);
-          if (isEdit) { const { error } = await supabase.from('team_members').update(payload).eq('id', item.id); if (error) throw error; }
-          else { const { error } = await supabase.from('team_members').insert(payload); if (error) throw error; }
+          if (isEdit) { const { error } = await sb.from('team_members').update(payload).eq('id', item.id); if (error) throw error; }
+          else { const { error } = await sb.from('team_members').insert(payload); if (error) throw error; }
           showToast(isEdit ? 'Member updated' : 'Member added');
           closeModal(); loadTeam();
         } catch (err) { showToast(err.message, 'error'); }
@@ -704,7 +707,7 @@
     // ===== REVIEWS =====
     async function loadReviews() {
       document.getElementById('reviews-loading').classList.remove('hidden');
-      const { data, error } = await supabase.from('reviews').select('*').order('created_at', { ascending: false });
+      const { data, error } = await sb.from('reviews').select('*').order('created_at', { ascending: false });
       document.getElementById('reviews-loading').classList.add('hidden');
       if (error) return showToast(error.message, 'error');
       document.getElementById('reviews-tbody').innerHTML = data.map(r => `
@@ -746,8 +749,8 @@
         const fd = new FormData(e.target);
         const payload = { author_name: fd.get('author_name'), author_role: fd.get('author_role'), event_type: fd.get('event_type'), content: fd.get('content'), rating: parseInt(fd.get('rating')), is_featured: fd.has('is_featured'), is_active: fd.has('is_active') };
         try {
-          if (isEdit) { const { error } = await supabase.from('reviews').update(payload).eq('id', item.id); if (error) throw error; }
-          else { const { error } = await supabase.from('reviews').insert(payload); if (error) throw error; }
+          if (isEdit) { const { error } = await sb.from('reviews').update(payload).eq('id', item.id); if (error) throw error; }
+          else { const { error } = await sb.from('reviews').insert(payload); if (error) throw error; }
           showToast(isEdit ? 'Review updated' : 'Review added');
           closeModal(); loadReviews();
         } catch (err) { showToast(err.message, 'error'); }
@@ -757,7 +760,7 @@
     // ===== PARTNERS =====
     async function loadPartners() {
       document.getElementById('partners-loading').classList.remove('hidden');
-      const { data, error } = await supabase.from('partners').select('*').order('display_order');
+      const { data, error } = await sb.from('partners').select('*').order('display_order');
       document.getElementById('partners-loading').classList.add('hidden');
       if (error) return showToast(error.message, 'error');
       document.getElementById('partners-grid').innerHTML = data.map(r => `
@@ -783,7 +786,7 @@
         const fd = new FormData(e.target);
         try {
           const url = await uploadFile('partners', fd.get('logo'));
-          const { error } = await supabase.from('partners').insert({ name: fd.get('name'), logo_url: url, website_url: fd.get('website_url') });
+          const { error } = await sb.from('partners').insert({ name: fd.get('name'), logo_url: url, website_url: fd.get('website_url') });
           if (error) throw error;
           showToast('Partner added');
           closeModal(); loadPartners();
@@ -794,7 +797,7 @@
     // ===== VALUES =====
     async function loadValues() {
       document.getElementById('values-loading').classList.remove('hidden');
-      const { data, error } = await supabase.from('values_cards').select('*').order('display_order');
+      const { data, error } = await sb.from('values_cards').select('*').order('display_order');
       document.getElementById('values-loading').classList.add('hidden');
       if (error) return showToast(error.message, 'error');
       document.getElementById('values-tbody').innerHTML = data.map(r => `
@@ -829,8 +832,8 @@
         const fd = new FormData(e.target);
         const payload = { title: fd.get('title'), description: fd.get('description'), icon: fd.get('icon'), display_order: parseInt(fd.get('display_order'))||0, is_active: fd.has('is_active') };
         try {
-          if (isEdit) { const { error } = await supabase.from('values_cards').update(payload).eq('id', item.id); if (error) throw error; }
-          else { const { error } = await supabase.from('values_cards').insert(payload); if (error) throw error; }
+          if (isEdit) { const { error } = await sb.from('values_cards').update(payload).eq('id', item.id); if (error) throw error; }
+          else { const { error } = await sb.from('values_cards').insert(payload); if (error) throw error; }
           showToast(isEdit ? 'Value updated' : 'Value added');
           closeModal(); loadValues();
         } catch (err) { showToast(err.message, 'error'); }
@@ -840,7 +843,7 @@
     // ===== JOBS =====
     async function loadJobs() {
       document.getElementById('jobs-loading').classList.remove('hidden');
-      const { data, error } = await supabase.from('job_listings').select('*').order('display_order');
+      const { data, error } = await sb.from('job_listings').select('*').order('display_order');
       document.getElementById('jobs-loading').classList.add('hidden');
       if (error) return showToast(error.message, 'error');
       document.getElementById('jobs-tbody').innerHTML = data.map(r => `
@@ -878,8 +881,8 @@
         const fd = new FormData(e.target);
         const payload = { title: fd.get('title'), type: fd.get('type'), location: fd.get('location'), description: fd.get('description'), requirements: fd.get('requirements'), is_active: fd.has('is_active') };
         try {
-          if (isEdit) { const { error } = await supabase.from('job_listings').update(payload).eq('id', item.id); if (error) throw error; }
-          else { const { error } = await supabase.from('job_listings').insert(payload); if (error) throw error; }
+          if (isEdit) { const { error } = await sb.from('job_listings').update(payload).eq('id', item.id); if (error) throw error; }
+          else { const { error } = await sb.from('job_listings').insert(payload); if (error) throw error; }
           showToast(isEdit ? 'Job updated' : 'Job created');
           closeModal(); loadJobs();
         } catch (err) { showToast(err.message, 'error'); }
@@ -889,7 +892,7 @@
     // ===== APPLICATIONS =====
     async function loadApplications() {
       document.getElementById('applications-loading').classList.remove('hidden');
-      const { data, error } = await supabase.from('job_applications').select('*').order('created_at', { ascending: false });
+      const { data, error } = await sb.from('job_applications').select('*').order('created_at', { ascending: false });
       document.getElementById('applications-loading').classList.add('hidden');
       if (error) return showToast(error.message, 'error');
       document.getElementById('applications-tbody').innerHTML = data.map(r => `
@@ -922,7 +925,7 @@
     }
 
     async function markAppReviewed(id) {
-      const { error } = await supabase.from('job_applications').update({ is_reviewed: true }).eq('id', id);
+      const { error } = await sb.from('job_applications').update({ is_reviewed: true }).eq('id', id);
       if (error) return showToast(error.message, 'error');
       showToast('Application marked as reviewed');
       closeModal(); loadApplications(); loadDashboard();
@@ -931,7 +934,7 @@
     // ===== MESSAGES =====
     async function loadMessages() {
       document.getElementById('messages-loading').classList.remove('hidden');
-      const { data, error } = await supabase.from('contact_submissions').select('*').order('created_at', { ascending: false });
+      const { data, error } = await sb.from('contact_submissions').select('*').order('created_at', { ascending: false });
       document.getElementById('messages-loading').classList.add('hidden');
       if (error) return showToast(error.message, 'error');
       document.getElementById('messages-tbody').innerHTML = data.map(r => `
@@ -966,7 +969,7 @@
     }
 
     async function markMsgRead(id) {
-      const { error } = await supabase.from('contact_submissions').update({ is_read: true }).eq('id', id);
+      const { error } = await sb.from('contact_submissions').update({ is_read: true }).eq('id', id);
       if (error) return showToast(error.message, 'error');
       showToast('Message marked as read');
       closeModal(); loadMessages(); loadDashboard();
@@ -975,7 +978,7 @@
     // ===== INSTAGRAM =====
     async function loadInstagram() {
       document.getElementById('instagram-loading').classList.remove('hidden');
-      const { data, error } = await supabase.from('instagram_posts').select('*').order('display_order');
+      const { data, error } = await sb.from('instagram_posts').select('*').order('display_order');
       document.getElementById('instagram-loading').classList.add('hidden');
       if (error) return showToast(error.message, 'error');
       document.getElementById('instagram-grid').innerHTML = data.map(r => `
@@ -1011,7 +1014,7 @@
           const file = fd.get('image');
           if (file && file.size > 0) imageUrl = await uploadFile('general', file);
           if (!imageUrl) { showToast('Please provide an image', 'error'); return; }
-          const { error } = await supabase.from('instagram_posts').insert({ image_url: imageUrl, post_url: fd.get('post_url'), post_type: fd.get('post_type') });
+          const { error } = await sb.from('instagram_posts').insert({ image_url: imageUrl, post_url: fd.get('post_url'), post_type: fd.get('post_type') });
           if (error) throw error;
           showToast('Instagram post added');
           closeModal(); loadInstagram();
@@ -1022,7 +1025,7 @@
     // ===== DISCOVER =====
     async function loadDiscover() {
       document.getElementById('discover-loading').classList.remove('hidden');
-      const { data, error } = await supabase.from('discover_cards').select('*').order('display_order');
+      const { data, error } = await sb.from('discover_cards').select('*').order('display_order');
       document.getElementById('discover-loading').classList.add('hidden');
       if (error) return showToast(error.message, 'error');
       document.getElementById('discover-tbody').innerHTML = data.map(r => `
@@ -1064,8 +1067,8 @@
         try {
           const file = fd.get('image');
           if (file && file.size > 0) payload.image_url = await uploadFile('general', file);
-          if (isEdit) { const { error } = await supabase.from('discover_cards').update(payload).eq('id', item.id); if (error) throw error; }
-          else { const { error } = await supabase.from('discover_cards').insert(payload); if (error) throw error; }
+          if (isEdit) { const { error } = await sb.from('discover_cards').update(payload).eq('id', item.id); if (error) throw error; }
+          else { const { error } = await sb.from('discover_cards').insert(payload); if (error) throw error; }
           showToast(isEdit ? 'Card updated' : 'Card created');
           closeModal(); loadDiscover();
         } catch (err) { showToast(err.message, 'error'); }
@@ -1075,7 +1078,7 @@
     // ===== STATS =====
     async function loadStats() {
       document.getElementById('stats-loading').classList.remove('hidden');
-      const { data, error } = await supabase.from('stats').select('*').order('display_order');
+      const { data, error } = await sb.from('stats').select('*').order('display_order');
       document.getElementById('stats-loading').classList.add('hidden');
       if (error) return showToast(error.message, 'error');
       document.getElementById('stats-tbody').innerHTML = data.map(r => `
@@ -1109,8 +1112,8 @@
         const fd = new FormData(e.target);
         const payload = { label: fd.get('label'), value: fd.get('value'), display_order: parseInt(fd.get('display_order'))||0, is_active: fd.has('is_active') };
         try {
-          if (isEdit) { const { error } = await supabase.from('stats').update(payload).eq('id', item.id); if (error) throw error; }
-          else { const { error } = await supabase.from('stats').insert(payload); if (error) throw error; }
+          if (isEdit) { const { error } = await sb.from('stats').update(payload).eq('id', item.id); if (error) throw error; }
+          else { const { error } = await sb.from('stats').insert(payload); if (error) throw error; }
           showToast(isEdit ? 'Stat updated' : 'Stat created');
           closeModal(); loadStats();
         } catch (err) { showToast(err.message, 'error'); }
@@ -1127,7 +1130,7 @@
 
     async function loadSettings() {
       document.getElementById('settings-loading').classList.remove('hidden');
-      const { data, error } = await supabase.from('site_settings').select('*');
+      const { data, error } = await sb.from('site_settings').select('*');
       document.getElementById('settings-loading').classList.add('hidden');
       if (error) return showToast(error.message, 'error');
 
@@ -1157,7 +1160,7 @@
       const updates = [];
       inputs.forEach(inp => {
         updates.push(
-          supabase.from('site_settings').upsert(
+          sb.from('site_settings').upsert(
             { setting_key: inp.name, setting_value: inp.value },
             { onConflict: 'setting_key' }
           )
@@ -1174,7 +1177,7 @@
     // ===== DELETE HELPER =====
     async function deleteRow(table, id, reloadFn) {
       if (!confirm('Are you sure you want to delete this item?')) return;
-      const { error } = await supabase.from(table).delete().eq('id', id);
+      const { error } = await sb.from(table).delete().eq('id', id);
       if (error) return showToast(error.message, 'error');
       showToast('Item deleted');
       if (reloadFn) reloadFn();
