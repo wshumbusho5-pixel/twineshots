@@ -77,7 +77,7 @@
   </div>
 
   <!-- ==================== ADMIN LAYOUT ==================== -->
-  <div id="admin-layout" class="hidden flex min-h-screen">
+  <div id="admin-layout" class="min-h-screen" style="display:none">
 
     <!-- SIDEBAR -->
     <aside id="sidebar" class="w-[260px] bg-sidebar text-gray-300 flex-shrink-0 flex flex-col fixed h-full z-50 overflow-y-auto">
@@ -337,7 +337,10 @@
     const SUPABASE_URL = 'https://wljrwgkykrrxblazonei.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndsanJ3Z2t5a3JyeGJsYXpvbmVpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyMjg3MTksImV4cCI6MjA4OTgwNDcxOX0.PK1ai1Acfpzqrk1Ns7Hemwbo4KPxU6pflGKiDw_5_jM';
 
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const { createClient } = window.supabase || window;
+    const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    // Alias for convenience
+    const supabase = supabaseClient;
 
     // ===== TOAST =====
     function showToast(message, type = 'success') {
@@ -371,9 +374,22 @@
       const errEl = document.getElementById('login-error');
       errEl.classList.add('hidden');
       document.getElementById('login-btn').textContent = 'Signing in...';
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
-      document.getElementById('login-btn').textContent = 'Sign In';
-      if (error) { errEl.textContent = error.message; errEl.classList.remove('hidden'); }
+      try {
+        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+        document.getElementById('login-btn').textContent = 'Sign In';
+        if (error) {
+          errEl.textContent = error.message;
+          errEl.classList.remove('hidden');
+        } else if (data?.session) {
+          document.getElementById('login-screen').classList.add('hidden');
+          document.getElementById('admin-layout').style.display = 'flex';
+          loadDashboard();
+        }
+      } catch (err) {
+        document.getElementById('login-btn').textContent = 'Sign In';
+        errEl.textContent = 'Connection error: ' + err.message;
+        errEl.classList.remove('hidden');
+      }
     });
 
     document.getElementById('logout-btn').addEventListener('click', async (e) => {
@@ -381,16 +397,21 @@
       await supabase.auth.signOut();
     });
 
+    function showAdmin() {
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('admin-layout').style.display = 'flex';
+    }
+    function showLogin() {
+      document.getElementById('login-screen').style.display = 'flex';
+      document.getElementById('admin-layout').style.display = 'none';
+    }
+
     supabase.auth.onAuthStateChange((event, session) => {
       if (session) {
-        document.getElementById('login-screen').classList.add('hidden');
-        document.getElementById('admin-layout').classList.remove('hidden');
-        document.getElementById('admin-layout').classList.add('flex');
+        showAdmin();
         loadDashboard();
       } else {
-        document.getElementById('login-screen').classList.remove('hidden');
-        document.getElementById('admin-layout').classList.add('hidden');
-        document.getElementById('admin-layout').classList.remove('flex');
+        showLogin();
       }
     });
 
@@ -398,9 +419,7 @@
     (async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (session) {
-        document.getElementById('login-screen').classList.add('hidden');
-        document.getElementById('admin-layout').classList.remove('hidden');
-        document.getElementById('admin-layout').classList.add('flex');
+        showAdmin();
         loadDashboard();
       }
     })();
