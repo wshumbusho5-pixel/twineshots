@@ -1,0 +1,1883 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Twineshots — Professional Photography &amp; Videography</title>
+  <meta name="description" content="Twineshots - Professional photography and videography services in Kampala, Uganda. Weddings, Corporate Events, Portraits, Live Streaming and more." />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700;900&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwindcss.config = {
+      theme: {
+        extend: {
+          fontFamily: { titillium: ['"Titillium Web"', 'sans-serif'] },
+          colors: {
+            primary: '#1e3a8a',
+            dark: '#172554',
+            'light-bg': '#f8fafc',
+            'text-main': '#1f2937',
+            muted: '#475569',
+            accent: '#e50914',
+            nearblack: '#010B13',
+            'green-brand': '#22C55E',
+            'green-dark': '#16A34A',
+            'light-blue': '#93c5fd',
+            gold: '#fbbf24',
+          },
+        },
+      },
+    };
+  </script>
+
+  <!-- Font Awesome 6.5.1 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <!-- Ionicons 7.1.0 -->
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+  <!-- GSAP 3.12.2 + ScrollTrigger -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+  <!-- External CSS -->
+  <link rel="stylesheet" href="styles.css" />
+
+  <style>
+    :root {
+      --primary: #1e3a8a;
+      --dark: #172554;
+      --light-bg: #f8fafc;
+      --text: #1f2937;
+      --muted: #475569;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Titillium Web', sans-serif !important;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      color: var(--text);
+      background: var(--light-bg);
+      overflow-x: hidden;
+    }
+
+    /* ====== NAVBAR ====== */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 90px;
+      background: #010B13;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+    }
+
+    .navbar .logo-text {
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: 3px;
+      text-decoration: none;
+    }
+
+    .navbar .logo-text span { color: #e50914; }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      list-style: none;
+    }
+
+    .nav-links li a {
+      color: #cbd5e1;
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 0.5rem 0.75rem;
+      border-radius: 8px;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .nav-links li a:hover,
+    .nav-links li a.active {
+      color: #fff;
+      background: rgba(255,255,255,0.1);
+    }
+
+    .nav-links li a.active { color: #e50914; }
+
+    .nav-social {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .nav-social a {
+      color: #cbd5e1;
+      font-size: 1.1rem;
+      transition: color 0.3s;
+    }
+
+    .nav-social a:hover { color: #e50914; }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      z-index: 1100;
+    }
+
+    .hamburger span {
+      width: 28px;
+      height: 3px;
+      background: #fff;
+      border-radius: 4px;
+      transition: all 0.3s;
+    }
+
+    .hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(5px, 6px); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(5px, -6px); }
+
+    /* Mobile Menu Overlay */
+    .mobile-menu {
+      position: fixed;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100vh;
+      background: rgba(1, 11, 19, 0.97);
+      z-index: 1050;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+      transition: left 0.4s ease;
+    }
+
+    .mobile-menu.open { left: 0; }
+
+    .mobile-menu a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 1.3rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.5rem 1rem;
+      border-radius: 10px;
+      transition: background 0.3s;
+    }
+
+    .mobile-menu a:hover { background: rgba(229,9,20,0.2); }
+
+    .mobile-menu .mobile-social {
+      display: flex;
+      gap: 1.5rem;
+      margin-top: 1rem;
+    }
+
+    .mobile-menu .mobile-social a { font-size: 1.5rem; }
+
+    @media (max-width: 992px) {
+      .nav-links, .nav-social { display: none; }
+      .hamburger { display: flex; }
+    }
+
+    /* ====== HERO SLIDER ====== */
+    .hero {
+      margin-top: 90px;
+      position: relative;
+      height: 85vh;
+      min-height: 500px;
+      overflow: hidden;
+    }
+
+    .hero-slide {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      opacity: 0;
+      transition: opacity 1s ease;
+    }
+
+    .hero-slide.active { opacity: 1; }
+
+    .hero-slide .overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(1,11,19,0.85), rgba(30,58,138,0.7));
+    }
+
+    .hero-slide:nth-child(1) { background: linear-gradient(135deg, #1e3a8a, #172554); }
+    .hero-slide:nth-child(2) { background: linear-gradient(135deg, #172554, #0f172a); }
+    .hero-slide:nth-child(3) { background: linear-gradient(135deg, #0c4a6e, #1e3a8a); }
+    .hero-slide:nth-child(4) { background: linear-gradient(135deg, #1e3a8a, #7c3aed); }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      color: #fff;
+      max-width: 800px;
+      padding: 0 2rem;
+    }
+
+    .hero-content .badge {
+      display: inline-block;
+      background: rgba(229,9,20,0.9);
+      color: #fff;
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 0.4rem 1.2rem;
+      border-radius: 50px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-content h1 {
+      font-size: 3.5rem;
+      font-weight: 900;
+      line-height: 1.1;
+      margin-bottom: 1rem;
+    }
+
+    .hero-content p {
+      font-size: 1.2rem;
+      color: #cbd5e1;
+      margin-bottom: 2rem;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .hero-content .btn-hero {
+      display: inline-block;
+      padding: 0.9rem 2.5rem;
+      background: linear-gradient(135deg, #22C55E, #16A34A);
+      color: #fff;
+      font-weight: 700;
+      font-size: 1rem;
+      border-radius: 50px;
+      text-decoration: none;
+      transition: transform 0.3s, box-shadow 0.3s;
+      box-shadow: 0 4px 15px rgba(34,197,94,0.4);
+    }
+
+    .hero-content .btn-hero:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(34,197,94,0.5);
+    }
+
+    .hero-dots {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 0.75rem;
+      z-index: 10;
+    }
+
+    .hero-dots .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.4);
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .hero-dots .dot.active {
+      background: #e50914;
+      transform: scale(1.3);
+    }
+
+    @media (max-width: 768px) {
+      .hero-content h1 { font-size: 2.2rem; }
+      .hero-content p { font-size: 1rem; }
+      .hero { height: 70vh; min-height: 400px; }
+    }
+
+    /* ====== SECTION STYLES ====== */
+    .section-title {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .section-title h2 {
+      font-size: 2.5rem;
+      font-weight: 900;
+      color: #172554;
+      margin-bottom: 0.5rem;
+    }
+
+    .section-title p {
+      font-size: 1.1rem;
+      color: var(--muted);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .section-title .line {
+      width: 60px;
+      height: 4px;
+      background: linear-gradient(90deg, #e50914, #93c5fd);
+      margin: 1rem auto 0;
+      border-radius: 2px;
+    }
+
+    /* ====== SERVICE CARDS ====== */
+    .service-card {
+      position: relative;
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+      transition: transform 0.4s, box-shadow 0.4s;
+      cursor: pointer;
+    }
+
+    .service-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+    }
+
+    .service-card .card-bg {
+      width: 100%;
+      aspect-ratio: 4/3;
+      background: linear-gradient(135deg, #334155, #1e293b);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .service-card .card-bg ion-icon {
+      font-size: 3rem;
+      color: rgba(255,255,255,0.2);
+    }
+
+    .service-card .card-badge {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      background: rgba(229,9,20,0.9);
+      color: #fff;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 0.3rem 0.8rem;
+      border-radius: 50px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .service-card .card-body {
+      padding: 1.25rem;
+      background: #fff;
+    }
+
+    .service-card .card-body h3 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #172554;
+      margin-bottom: 0.4rem;
+    }
+
+    .service-card .card-body p {
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    /* ====== WHY CHOOSE US ====== */
+    .value-card {
+      background: #fff;
+      border-radius: 28px;
+      padding: 2.5rem 2rem;
+      text-align: center;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+      transition: transform 0.4s, box-shadow 0.4s;
+    }
+
+    .value-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+    }
+
+    .value-card .icon-wrap {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #1e3a8a, #93c5fd);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.25rem;
+    }
+
+    .value-card .icon-wrap ion-icon {
+      font-size: 1.8rem;
+      color: #fff;
+    }
+
+    .value-card h3 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #172554;
+      margin-bottom: 0.6rem;
+    }
+
+    .value-card p {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* ====== BOOKING FORM ====== */
+    .booking-section {
+      background: var(--light-bg);
+    }
+
+    .form-container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: #fff;
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: 0 15px 50px rgba(0,0,0,0.1);
+    }
+
+    .form-header {
+      background: #010B13;
+      padding: 2rem 2.5rem;
+      text-align: center;
+    }
+
+    .form-header h3 {
+      font-size: 1.6rem;
+      font-weight: 900;
+      color: #fff;
+      margin-bottom: 0.4rem;
+    }
+
+    .form-header p {
+      color: #94a3b8;
+      font-size: 0.95rem;
+    }
+
+    .form-body {
+      padding: 2.5rem;
+    }
+
+    .form-body label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #172554;
+      margin-bottom: 0.4rem;
+    }
+
+    .form-body input,
+    .form-body select,
+    .form-body textarea {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 2px solid #e2e8f0;
+      border-radius: 14px;
+      font-size: 0.95rem;
+      font-family: 'Titillium Web', sans-serif !important;
+      transition: border-color 0.3s;
+      outline: none;
+      margin-bottom: 1.25rem;
+      background: #f8fafc;
+    }
+
+    .form-body input:focus,
+    .form-body select:focus,
+    .form-body textarea:focus {
+      border-color: #1e3a8a;
+    }
+
+    .form-body textarea { min-height: 120px; resize: vertical; }
+
+    .btn-submit {
+      width: 100%;
+      padding: 1rem;
+      background: linear-gradient(135deg, #22C55E, #16A34A);
+      color: #fff;
+      font-size: 1.1rem;
+      font-weight: 700;
+      border: none;
+      border-radius: 14px;
+      cursor: pointer;
+      transition: transform 0.3s, box-shadow 0.3s;
+      box-shadow: 0 4px 15px rgba(34,197,94,0.3);
+    }
+
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(34,197,94,0.4);
+    }
+
+    /* ====== PARTNERS ====== */
+    .partner-box {
+      background: #e2e8f0;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 80px;
+      font-size: 0.8rem;
+      color: var(--muted);
+      font-weight: 600;
+      transition: transform 0.3s;
+    }
+
+    .partner-box:hover { transform: scale(1.05); }
+
+    /* ====== CTA SECTION ====== */
+    .cta-card {
+      background: #fff;
+      border-radius: 28px;
+      padding: 3.5rem 2rem;
+      text-align: center;
+      box-shadow: 0 15px 50px rgba(0,0,0,0.1);
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .cta-card h2 {
+      font-size: 2rem;
+      font-weight: 900;
+      color: #172554;
+      margin-bottom: 1rem;
+    }
+
+    .cta-card p {
+      color: var(--muted);
+      margin-bottom: 2rem;
+      font-size: 1.05rem;
+    }
+
+    .btn-cta {
+      display: inline-block;
+      padding: 1rem 3rem;
+      background: linear-gradient(135deg, #22C55E, #16A34A);
+      color: #fff;
+      font-weight: 700;
+      font-size: 1.05rem;
+      border-radius: 50px;
+      text-decoration: none;
+      transition: transform 0.3s, box-shadow 0.3s;
+      box-shadow: 0 4px 15px rgba(34,197,94,0.4);
+    }
+
+    .btn-cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(34,197,94,0.5);
+    }
+
+    /* ====== TESTIMONIALS ====== */
+    .review-card {
+      background: #fff;
+      border-radius: 24px;
+      padding: 2rem;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+      transition: transform 0.4s, box-shadow 0.4s;
+    }
+
+    .review-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+    }
+
+    .review-card .stars {
+      color: #fbbf24;
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+    }
+
+    .review-card .quote {
+      font-size: 0.95rem;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 1.25rem;
+      font-style: italic;
+    }
+
+    .review-card .reviewer {
+      font-weight: 700;
+      color: #172554;
+      font-size: 1rem;
+    }
+
+    .review-card .reviewer-role {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    /* ====== INSTAGRAM FEED ====== */
+    .insta-box {
+      aspect-ratio: 1;
+      background: linear-gradient(135deg, #334155, #475569);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.3s;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .insta-box:hover { transform: scale(1.05); }
+
+    .insta-box .insta-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .insta-box:hover .insta-overlay { opacity: 1; }
+
+    .insta-box .insta-overlay i { color: #fff; font-size: 1.5rem; }
+
+    /* ====== VIDEO SECTION ====== */
+    .video-placeholder {
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+      aspect-ratio: 16/9;
+      background: linear-gradient(135deg, #1e293b, #0f172a);
+      border-radius: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 15px 50px rgba(0,0,0,0.2);
+    }
+
+    .video-placeholder .play-btn {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: rgba(229,9,20,0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.3s;
+    }
+
+    .video-placeholder:hover .play-btn { transform: scale(1.15); }
+
+    .video-placeholder .play-btn i { color: #fff; font-size: 2rem; margin-left: 4px; }
+
+    .video-placeholder p {
+      color: #94a3b8;
+      margin-top: 1rem;
+      font-weight: 600;
+    }
+
+    /* ====== DISCOVER MORE ====== */
+    .discover-card {
+      position: relative;
+      border-radius: 24px;
+      overflow: hidden;
+      aspect-ratio: 4/3;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+      transition: transform 0.4s, box-shadow 0.4s;
+      cursor: pointer;
+    }
+
+    .discover-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+    }
+
+    .discover-card .bg {
+      position: absolute;
+      inset: 0;
+    }
+
+    .discover-card:nth-child(1) .bg { background: linear-gradient(135deg, #1e3a8a, #3b82f6); }
+    .discover-card:nth-child(2) .bg { background: linear-gradient(135deg, #172554, #1e3a8a); }
+    .discover-card:nth-child(3) .bg { background: linear-gradient(135deg, #0f172a, #334155); }
+
+    .discover-card .card-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      text-align: center;
+    }
+
+    .discover-card .card-overlay h3 {
+      color: #fff;
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+    }
+
+    .discover-card .card-overlay a {
+      display: inline-block;
+      padding: 0.6rem 1.8rem;
+      border: 2px solid #fff;
+      color: #fff;
+      border-radius: 50px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: all 0.3s;
+    }
+
+    .discover-card .card-overlay a:hover {
+      background: #fff;
+      color: #172554;
+    }
+
+    /* ====== FLOATING BUTTONS ====== */
+    .float-whatsapp {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: #25D366;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 900;
+      box-shadow: 0 4px 15px rgba(37,211,102,0.4);
+      transition: transform 0.3s;
+    }
+
+    .float-whatsapp:hover { transform: scale(1.1); }
+    .float-whatsapp i { color: #fff; font-size: 1.8rem; }
+
+    .float-review {
+      position: fixed;
+      bottom: 6.5rem;
+      right: 2rem;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #1e3a8a, #93c5fd);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 900;
+      box-shadow: 0 4px 15px rgba(30,58,138,0.3);
+      transition: transform 0.3s;
+    }
+
+    .float-review:hover { transform: scale(1.1); }
+    .float-review i { color: #fff; font-size: 1.4rem; }
+
+    /* WhatsApp Modal */
+    .wa-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 2000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .wa-modal-backdrop.show { display: flex; }
+
+    .wa-modal {
+      background: #fff;
+      border-radius: 24px;
+      padding: 2.5rem;
+      max-width: 400px;
+      width: 90%;
+      text-align: center;
+      position: relative;
+    }
+
+    .wa-modal h3 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #172554;
+      margin-bottom: 1.5rem;
+    }
+
+    .wa-modal .wa-number {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      padding: 0.75rem;
+      background: #f0fdf4;
+      border-radius: 14px;
+      margin-bottom: 0.75rem;
+      text-decoration: none;
+      color: #172554;
+      font-weight: 600;
+      transition: background 0.3s;
+    }
+
+    .wa-modal .wa-number:hover { background: #dcfce7; }
+    .wa-modal .wa-number i { color: #25D366; font-size: 1.3rem; }
+
+    .wa-modal .close-wa {
+      position: absolute;
+      top: 1rem;
+      right: 1.25rem;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--muted);
+    }
+
+    /* ====== FOOTER ====== */
+    .site-footer {
+      background: #010B13;
+      color: #cbd5e1;
+      padding: 4rem 0 0;
+    }
+
+    .site-footer h4 {
+      color: #fff;
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 1.25rem;
+    }
+
+    .site-footer p, .site-footer a {
+      font-size: 0.9rem;
+      color: #94a3b8;
+      line-height: 1.7;
+    }
+
+    .site-footer a {
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .site-footer a:hover { color: #e50914; }
+
+    .footer-social {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .footer-social a {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      color: #cbd5e1;
+      transition: all 0.3s;
+    }
+
+    .footer-social a:hover {
+      background: #e50914;
+      color: #fff;
+    }
+
+    .footer-bottom {
+      margin-top: 3rem;
+      padding: 1.5rem 0;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      text-align: center;
+    }
+
+    .footer-bottom p {
+      font-size: 0.85rem;
+      color: #64748b;
+    }
+
+    /* ====== WELCOME POPUP ====== */
+    .welcome-popup-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      z-index: 5000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
+    .welcome-popup-backdrop.show { display: flex; }
+
+    .welcome-popup {
+      background: rgba(1, 11, 19, 0.92);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 28px;
+      padding: 3rem 2.5rem;
+      max-width: 500px;
+      width: 92%;
+      text-align: center;
+      position: relative;
+      box-shadow: 0 25px 80px rgba(0,0,0,0.5);
+    }
+
+    .welcome-popup .close-popup {
+      position: absolute;
+      top: 1rem;
+      right: 1.25rem;
+      background: none;
+      border: none;
+      color: #94a3b8;
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: color 0.3s;
+    }
+
+    .welcome-popup .close-popup:hover { color: #fff; }
+
+    .welcome-popup h2 {
+      font-size: 2rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, #e50914, #93c5fd);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.5rem;
+    }
+
+    .welcome-popup .tagline {
+      color: #94a3b8;
+      font-size: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .welcome-popup .features {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-bottom: 2rem;
+      text-align: left;
+    }
+
+    .welcome-popup .feature-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      color: #cbd5e1;
+      font-size: 0.9rem;
+    }
+
+    .welcome-popup .feature-item ion-icon {
+      color: #22C55E;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    .welcome-popup .btn-popup {
+      display: inline-block;
+      padding: 0.9rem 2.5rem;
+      background: linear-gradient(135deg, #e50914, #93c5fd);
+      color: #fff;
+      font-weight: 700;
+      border-radius: 50px;
+      text-decoration: none;
+      font-size: 1rem;
+      transition: transform 0.3s, box-shadow 0.3s;
+      box-shadow: 0 4px 20px rgba(229,9,20,0.3);
+    }
+
+    .welcome-popup .btn-popup:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(229,9,20,0.4);
+    }
+
+    .welcome-popup .dismiss {
+      display: block;
+      margin-top: 1.25rem;
+      color: #64748b;
+      font-size: 0.8rem;
+      cursor: pointer;
+      background: none;
+      border: none;
+      text-decoration: underline;
+      font-family: 'Titillium Web', sans-serif !important;
+    }
+
+    .welcome-popup .dismiss:hover { color: #94a3b8; }
+
+    /* ====== ANIMATIONS ====== */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(40px);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ====== NAVBAR ====== -->
+  <nav class="navbar">
+    <a href="index.html" class="logo-text">TWINE<span>SHOTS</span></a>
+
+    <ul class="nav-links">
+      <li><a href="index.html" class="active"><ion-icon name="home-outline"></ion-icon> Home</a></li>
+      <li><a href="gallery.html"><ion-icon name="images-outline"></ion-icon> Gallery</a></li>
+      <li><a href="team.html"><ion-icon name="people-outline"></ion-icon> Our Team</a></li>
+      <li><a href="services.html"><ion-icon name="aperture-outline"></ion-icon> Services</a></li>
+      <li><a href="info.html"><ion-icon name="information-circle-outline"></ion-icon> Info</a></li>
+      <li><a href="contact.html"><ion-icon name="call-outline"></ion-icon> Contact Us</a></li>
+      <li><a href="careers.html"><ion-icon name="briefcase-outline"></ion-icon> Careers</a></li>
+    </ul>
+
+    <div class="nav-social">
+      <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+      <a href="#" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+      <a href="#" aria-label="X / Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+      <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+    </div>
+
+    <div class="hamburger" id="hamburger" onclick="toggleMobileMenu()">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu Overlay -->
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="index.html"><ion-icon name="home-outline"></ion-icon> Home</a>
+    <a href="gallery.html"><ion-icon name="images-outline"></ion-icon> Gallery</a>
+    <a href="team.html"><ion-icon name="people-outline"></ion-icon> Our Team</a>
+    <a href="services.html"><ion-icon name="aperture-outline"></ion-icon> Services</a>
+    <a href="info.html"><ion-icon name="information-circle-outline"></ion-icon> Info</a>
+    <a href="contact.html"><ion-icon name="call-outline"></ion-icon> Contact Us</a>
+    <a href="careers.html"><ion-icon name="briefcase-outline"></ion-icon> Careers</a>
+    <div class="mobile-social">
+      <a href="#"><i class="fa-brands fa-instagram"></i></a>
+      <a href="#"><i class="fa-brands fa-youtube"></i></a>
+      <a href="#"><i class="fa-brands fa-x-twitter"></i></a>
+      <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+    </div>
+  </div>
+
+  <!-- ====== HERO SLIDER ====== -->
+  <section class="hero" id="hero">
+    <div class="hero-slide active">
+      <div class="overlay"></div>
+      <div class="hero-content">
+        <span class="badge">Photography &amp; Videography</span>
+        <h1>Corporate Events</h1>
+        <p>Capture the atmosphere, interactions, and moments that define your corporate gatherings.</p>
+        <a href="services.html" class="btn-hero">Explore Services</a>
+      </div>
+    </div>
+    <div class="hero-slide">
+      <div class="overlay"></div>
+      <div class="hero-content">
+        <span class="badge">Professional Coverage</span>
+        <h1>Conferences</h1>
+        <p>Real stories through a powerful lens. We document conferences with cinematic precision.</p>
+        <a href="gallery.html" class="btn-hero">View Gallery</a>
+      </div>
+    </div>
+    <div class="hero-slide">
+      <div class="overlay"></div>
+      <div class="hero-content">
+        <span class="badge">Architectural Excellence</span>
+        <h1>Real Estate Coverage</h1>
+        <p>High-end architectural and interior photography that showcases properties at their finest.</p>
+        <a href="contact.html" class="btn-hero">Get a Quote</a>
+      </div>
+    </div>
+    <div class="hero-slide">
+      <div class="overlay"></div>
+      <div class="hero-content">
+        <span class="badge">Live Broadcasting</span>
+        <h1>Live Stream</h1>
+        <p>Capturing every moment. Professional live streaming for events of all sizes.</p>
+        <a href="services.html" class="btn-hero">Learn More</a>
+      </div>
+    </div>
+    <div class="hero-dots">
+      <div class="dot active" onclick="goToSlide(0)"></div>
+      <div class="dot" onclick="goToSlide(1)"></div>
+      <div class="dot" onclick="goToSlide(2)"></div>
+      <div class="dot" onclick="goToSlide(3)"></div>
+    </div>
+  </section>
+
+  <!-- ====== OUR SERVICES ====== -->
+  <section class="py-20 px-4" style="background: var(--light-bg);" id="services">
+    <div class="max-w-7xl mx-auto">
+      <div class="section-title fade-up">
+        <h2>Our Services</h2>
+        <p>Professional photography and videography services tailored to your unique vision.</p>
+        <div class="line"></div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- Service 1: Weddings -->
+        <div class="service-card fade-up">
+          <div class="card-bg" style="background: linear-gradient(135deg, #831843, #be185d);">
+            <ion-icon name="heart-outline"></ion-icon>
+          </div>
+          <span class="card-badge">Popular</span>
+          <div class="card-body">
+            <h3>Weddings</h3>
+            <p>Professional photography and videography services tailored to your needs.</p>
+          </div>
+        </div>
+        <!-- Service 2: Corporate -->
+        <div class="service-card fade-up">
+          <div class="card-bg" style="background: linear-gradient(135deg, #1e3a8a, #2563eb);">
+            <ion-icon name="business-outline"></ion-icon>
+          </div>
+          <span class="card-badge">Featured</span>
+          <div class="card-body">
+            <h3>Corporate</h3>
+            <p>Professional photography and videography services tailored to your needs.</p>
+          </div>
+        </div>
+        <!-- Service 3: Portraits -->
+        <div class="service-card fade-up">
+          <div class="card-bg" style="background: linear-gradient(135deg, #065f46, #059669);">
+            <ion-icon name="person-outline"></ion-icon>
+          </div>
+          <span class="card-badge">Studio</span>
+          <div class="card-body">
+            <h3>Portraits</h3>
+            <p>Professional photography and videography services tailored to your needs.</p>
+          </div>
+        </div>
+        <!-- Service 4: Kwanjula -->
+        <div class="service-card fade-up">
+          <div class="card-bg" style="background: linear-gradient(135deg, #92400e, #d97706);">
+            <ion-icon name="flower-outline"></ion-icon>
+          </div>
+          <span class="card-badge">Cultural</span>
+          <div class="card-body">
+            <h3>Kwanjula</h3>
+            <p>Professional photography and videography services tailored to your needs.</p>
+          </div>
+        </div>
+        <!-- Service 5: Live Feed -->
+        <div class="service-card fade-up">
+          <div class="card-bg" style="background: linear-gradient(135deg, #7c3aed, #a855f7);">
+            <ion-icon name="radio-outline"></ion-icon>
+          </div>
+          <span class="card-badge">Live</span>
+          <div class="card-body">
+            <h3>Live Feed</h3>
+            <p>Professional photography and videography services tailored to your needs.</p>
+          </div>
+        </div>
+        <!-- Service 6: Live Stream -->
+        <div class="service-card fade-up">
+          <div class="card-bg" style="background: linear-gradient(135deg, #dc2626, #f87171);">
+            <ion-icon name="videocam-outline"></ion-icon>
+          </div>
+          <span class="card-badge">Streaming</span>
+          <div class="card-body">
+            <h3>Live Stream</h3>
+            <p>Professional photography and videography services tailored to your needs.</p>
+          </div>
+        </div>
+        <!-- Service 7: Real Estate -->
+        <div class="service-card fade-up">
+          <div class="card-bg" style="background: linear-gradient(135deg, #0e7490, #06b6d4);">
+            <ion-icon name="home-outline"></ion-icon>
+          </div>
+          <span class="card-badge">Property</span>
+          <div class="card-body">
+            <h3>Real Estate</h3>
+            <p>Professional photography and videography services tailored to your needs.</p>
+          </div>
+        </div>
+        <!-- Service 8: Conference -->
+        <div class="service-card fade-up">
+          <div class="card-bg" style="background: linear-gradient(135deg, #1e40af, #3b82f6);">
+            <ion-icon name="mic-outline"></ion-icon>
+          </div>
+          <span class="card-badge">Events</span>
+          <div class="card-body">
+            <h3>Conference</h3>
+            <p>Professional photography and videography services tailored to your needs.</p>
+          </div>
+        </div>
+        <!-- Service 9: Workshops -->
+        <div class="service-card fade-up">
+          <div class="card-bg" style="background: linear-gradient(135deg, #4338ca, #6366f1);">
+            <ion-icon name="school-outline"></ion-icon>
+          </div>
+          <span class="card-badge">Training</span>
+          <div class="card-body">
+            <h3>Workshops</h3>
+            <p>Professional photography and videography services tailored to your needs.</p>
+          </div>
+        </div>
+        <!-- Service 10: Documentaries -->
+        <div class="service-card fade-up">
+          <div class="card-bg" style="background: linear-gradient(135deg, #374151, #6b7280);">
+            <ion-icon name="film-outline"></ion-icon>
+          </div>
+          <span class="card-badge">Film</span>
+          <div class="card-body">
+            <h3>Documentaries</h3>
+            <p>Professional photography and videography services tailored to your needs.</p>
+          </div>
+        </div>
+        <!-- Service 11: Trainings -->
+        <div class="service-card fade-up">
+          <div class="card-bg" style="background: linear-gradient(135deg, #166534, #22c55e);">
+            <ion-icon name="clipboard-outline"></ion-icon>
+          </div>
+          <span class="card-badge">Education</span>
+          <div class="card-body">
+            <h3>Trainings</h3>
+            <p>Professional photography and videography services tailored to your needs.</p>
+          </div>
+        </div>
+        <!-- Service 12: Equipment Hire -->
+        <div class="service-card fade-up">
+          <div class="card-bg" style="background: linear-gradient(135deg, #78350f, #a16207);">
+            <ion-icon name="camera-outline"></ion-icon>
+          </div>
+          <span class="card-badge">Rental</span>
+          <div class="card-body">
+            <h3>Equipment Hire</h3>
+            <p>Professional photography and videography services tailored to your needs.</p>
+          </div>
+        </div>
+        <!-- Service 13: Commercials -->
+        <div class="service-card fade-up">
+          <div class="card-bg" style="background: linear-gradient(135deg, #9f1239, #e11d48);">
+            <ion-icon name="megaphone-outline"></ion-icon>
+          </div>
+          <span class="card-badge">Advertising</span>
+          <div class="card-body">
+            <h3>Commercials</h3>
+            <p>Professional photography and videography services tailored to your needs.</p>
+          </div>
+        </div>
+        <!-- Service 14: Studio Hire -->
+        <div class="service-card fade-up">
+          <div class="card-bg" style="background: linear-gradient(135deg, #1f2937, #4b5563);">
+            <ion-icon name="easel-outline"></ion-icon>
+          </div>
+          <span class="card-badge">Studio</span>
+          <div class="card-body">
+            <h3>Studio Hire</h3>
+            <p>Professional photography and videography services tailored to your needs.</p>
+          </div>
+        </div>
+        <!-- Service 15: Kukyaala -->
+        <div class="service-card fade-up">
+          <div class="card-bg" style="background: linear-gradient(135deg, #b45309, #f59e0b);">
+            <ion-icon name="rose-outline"></ion-icon>
+          </div>
+          <span class="card-badge">Cultural</span>
+          <div class="card-body">
+            <h3>Kukyaala</h3>
+            <p>Professional photography and videography services tailored to your needs.</p>
+          </div>
+        </div>
+        <!-- Service 16: Birthdays -->
+        <div class="service-card fade-up">
+          <div class="card-bg" style="background: linear-gradient(135deg, #c026d3, #e879f9);">
+            <ion-icon name="gift-outline"></ion-icon>
+          </div>
+          <span class="card-badge">Celebration</span>
+          <div class="card-body">
+            <h3>Birthdays</h3>
+            <p>Professional photography and videography services tailored to your needs.</p>
+          </div>
+        </div>
+        <!-- Service 17: Social Events -->
+        <div class="service-card fade-up">
+          <div class="card-bg" style="background: linear-gradient(135deg, #0369a1, #38bdf8);">
+            <ion-icon name="sparkles-outline"></ion-icon>
+          </div>
+          <span class="card-badge">Social</span>
+          <div class="card-body">
+            <h3>Social Events</h3>
+            <p>Professional photography and videography services tailored to your needs.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== WHY CHOOSE TWINESHOTS ====== -->
+  <section class="py-20 px-4" style="background: #fff;" id="why-us">
+    <div class="max-w-7xl mx-auto">
+      <div class="section-title fade-up">
+        <h2>Why Choose Twineshots?</h2>
+        <p>We bring passion, precision, and professionalism to every project we undertake.</p>
+        <div class="line"></div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div class="value-card fade-up">
+          <div class="icon-wrap"><ion-icon name="bulb-outline"></ion-icon></div>
+          <h3>Creativity</h3>
+          <p>We push creative boundaries to deliver imagery that tells your unique story in unexpected and compelling ways.</p>
+        </div>
+        <div class="value-card fade-up">
+          <div class="icon-wrap"><ion-icon name="trophy-outline"></ion-icon></div>
+          <h3>Excellence</h3>
+          <p>Every frame is crafted with meticulous attention to detail, ensuring the highest quality in every deliverable we produce.</p>
+        </div>
+        <div class="value-card fade-up">
+          <div class="icon-wrap"><ion-icon name="shield-outline"></ion-icon></div>
+          <h3>Integrity</h3>
+          <p>We operate with transparency and honesty, building trust through reliable delivery and clear communication at every stage.</p>
+        </div>
+        <div class="value-card fade-up">
+          <div class="icon-wrap"><ion-icon name="heart-outline"></ion-icon></div>
+          <h3>Passion</h3>
+          <p>Our love for visual storytelling drives us to go above and beyond, capturing moments that resonate deeply with our clients.</p>
+        </div>
+        <div class="value-card fade-up">
+          <div class="icon-wrap"><ion-icon name="people-outline"></ion-icon></div>
+          <h3>Collaboration</h3>
+          <p>We work closely with our clients to understand their vision and bring it to life through seamless teamwork and partnership.</p>
+        </div>
+        <div class="value-card fade-up">
+          <div class="icon-wrap"><ion-icon name="person-outline"></ion-icon></div>
+          <h3>Client Focus</h3>
+          <p>Your satisfaction is our priority. We tailor every project to meet your specific needs and exceed your expectations.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== BOOK YOUR SESSION ====== -->
+  <section class="booking-section py-20 px-4" id="booking">
+    <div class="max-w-7xl mx-auto">
+      <div class="section-title fade-up">
+        <h2>Book Your Session</h2>
+        <p>Fill out the form below and we will get back to you within 24 hours.</p>
+        <div class="line"></div>
+      </div>
+
+      <div class="form-container fade-up">
+        <div class="form-header">
+          <h3>Get in Touch</h3>
+          <p>Tell us about your event and we will craft the perfect package for you.</p>
+        </div>
+        <div class="form-body">
+          <form id="bookingForm" onsubmit="event.preventDefault(); alert('Thank you! Your message has been received. We will contact you soon.');">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6">
+              <div>
+                <label for="firstName">First Name *</label>
+                <input type="text" id="firstName" name="firstName" placeholder="Enter your first name" required />
+              </div>
+              <div>
+                <label for="lastName">Last Name *</label>
+                <input type="text" id="lastName" name="lastName" placeholder="Enter your last name" required />
+              </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6">
+              <div>
+                <label for="email">Email Address *</label>
+                <input type="email" id="email" name="email" placeholder="your@email.com" required />
+              </div>
+              <div>
+                <label for="phone">Phone Number *</label>
+                <input type="tel" id="phone" name="phone" placeholder="+256 7XX XXX XXX" required />
+              </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6">
+              <div>
+                <label for="service">Service *</label>
+                <select id="service" name="service" required>
+                  <option value="" disabled selected>Select a service</option>
+                  <option value="Weddings">Weddings</option>
+                  <option value="Corporate">Corporate</option>
+                  <option value="Portraits">Portraits</option>
+                  <option value="Kwanjula">Kwanjula</option>
+                  <option value="Live Feed">Live Feed</option>
+                  <option value="Live Stream">Live Stream</option>
+                  <option value="Real Estate">Real Estate</option>
+                  <option value="Conference">Conference</option>
+                  <option value="Workshops">Workshops</option>
+                  <option value="Documentaries">Documentaries</option>
+                  <option value="Trainings">Trainings</option>
+                  <option value="Equipment Hire">Equipment Hire</option>
+                  <option value="Commercials">Commercials</option>
+                  <option value="Studio Hire">Studio Hire</option>
+                  <option value="Kukyaala">Kukyaala</option>
+                  <option value="Birthdays">Birthdays</option>
+                  <option value="Social Events">Social Events</option>
+                  <option value="Graduation">Graduation</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+              <div>
+                <label for="venue">Venue <span style="color: var(--muted); font-weight: 400;">(optional)</span></label>
+                <input type="text" id="venue" name="venue" placeholder="Event venue" />
+              </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6">
+              <div>
+                <label for="eventDate">Event Date *</label>
+                <input type="date" id="eventDate" name="eventDate" required />
+              </div>
+              <div>
+                <label for="city">City / District *</label>
+                <input type="text" id="city" name="city" placeholder="e.g. Kampala" required />
+              </div>
+            </div>
+            <div>
+              <label for="message">Message</label>
+              <textarea id="message" name="message" placeholder="Tell us more about your event..."></textarea>
+            </div>
+            <button type="submit" class="btn-submit">
+              <i class="fa-solid fa-paper-plane" style="margin-right: 0.5rem;"></i> Send Message
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== OUR PARTNERS ====== -->
+  <section class="py-20 px-4" style="background: #fff;" id="partners">
+    <div class="max-w-7xl mx-auto">
+      <div class="section-title fade-up">
+        <h2>Our Partners</h2>
+        <p>Trusted by leading brands and organizations across Uganda and beyond.</p>
+        <div class="line"></div>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 fade-up">
+        <div class="partner-box">Partner Logo</div>
+        <div class="partner-box">Partner Logo</div>
+        <div class="partner-box">Partner Logo</div>
+        <div class="partner-box">Partner Logo</div>
+        <div class="partner-box">Partner Logo</div>
+        <div class="partner-box">Partner Logo</div>
+        <div class="partner-box">Partner Logo</div>
+        <div class="partner-box">Partner Logo</div>
+        <div class="partner-box">Partner Logo</div>
+        <div class="partner-box">Partner Logo</div>
+        <div class="partner-box">Partner Logo</div>
+        <div class="partner-box">Partner Logo</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== READY TO CREATE SOMETHING BEAUTIFUL ====== -->
+  <section class="py-20 px-4" style="background: var(--light-bg);" id="cta">
+    <div class="max-w-7xl mx-auto fade-up">
+      <div class="cta-card">
+        <h2>Ready to Create Something Beautiful?</h2>
+        <p>Let us bring your vision to life with stunning photography and videography that captures every meaningful moment.</p>
+        <a href="contact.html" class="btn-cta">
+          <i class="fa-solid fa-handshake" style="margin-right: 0.5rem;"></i> Let's Work Together
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== WHAT OUR CLIENTS SAY ====== -->
+  <section class="py-20 px-4" style="background: #fff;" id="reviews">
+    <div class="max-w-7xl mx-auto">
+      <div class="section-title fade-up">
+        <h2>What Our Clients Say</h2>
+        <p>Real feedback from clients who trusted us with their most important moments.</p>
+        <div class="line"></div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div class="review-card fade-up">
+          <div class="stars">
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+          </div>
+          <p class="quote">"Twineshots captured our wedding day perfectly. Every photo and video brought back the emotions and joy of our celebration. We could not have asked for a more dedicated and talented team."</p>
+          <p class="reviewer">Sarah &amp; David</p>
+          <p class="reviewer-role">Kampala</p>
+        </div>
+        <div class="review-card fade-up">
+          <div class="stars">
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+          </div>
+          <p class="quote">"We hired Twineshots for our annual corporate conference and they delivered exceptional quality. The team was professional, punctual, and the final deliverables exceeded our expectations."</p>
+          <p class="reviewer">Mark O.</p>
+          <p class="reviewer-role">Corporate Client</p>
+        </div>
+        <div class="review-card fade-up">
+          <div class="stars">
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+          </div>
+          <p class="quote">"My studio session with Twineshots was an incredible experience. They made me feel comfortable and the portraits turned out beautifully. Highly recommend their studio services."</p>
+          <p class="reviewer">Grace N.</p>
+          <p class="reviewer-role">Studio Session</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== INSTAGRAM FEED ====== -->
+  <section class="py-20 px-4" style="background: var(--light-bg);" id="instagram">
+    <div class="max-w-7xl mx-auto">
+      <div class="section-title fade-up">
+        <h2>Follow us @twineshots</h2>
+        <p>Stay inspired. Check out our latest work on Instagram.</p>
+        <div class="line"></div>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 fade-up">
+        <div class="insta-box" style="background: linear-gradient(135deg, #831843, #be185d);">
+          <div class="insta-overlay"><i class="fa-brands fa-instagram"></i></div>
+        </div>
+        <div class="insta-box" style="background: linear-gradient(135deg, #1e3a8a, #3b82f6);">
+          <div class="insta-overlay"><i class="fa-brands fa-instagram"></i></div>
+        </div>
+        <div class="insta-box" style="background: linear-gradient(135deg, #065f46, #10b981);">
+          <div class="insta-overlay"><i class="fa-brands fa-instagram"></i></div>
+        </div>
+        <div class="insta-box" style="background: linear-gradient(135deg, #92400e, #f59e0b);">
+          <div class="insta-overlay"><i class="fa-brands fa-instagram"></i></div>
+        </div>
+        <div class="insta-box" style="background: linear-gradient(135deg, #7c3aed, #c084fc);">
+          <div class="insta-overlay"><i class="fa-brands fa-instagram"></i></div>
+        </div>
+        <div class="insta-box" style="background: linear-gradient(135deg, #dc2626, #fb923c);">
+          <div class="insta-overlay"><i class="fa-brands fa-instagram"></i></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== SEE OUR WORK (YouTube Video) ====== -->
+  <section class="py-20 px-4" style="background: #fff;" id="video">
+    <div class="max-w-7xl mx-auto">
+      <div class="section-title fade-up">
+        <h2>See Our Work</h2>
+        <p>Watch our showreel and experience the Twineshots difference.</p>
+        <div class="line"></div>
+      </div>
+
+      <div class="video-placeholder fade-up">
+        <div class="play-btn">
+          <i class="fa-solid fa-play"></i>
+        </div>
+        <p>Twineshots Showreel</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== DISCOVER MORE ====== -->
+  <section class="py-20 px-4" style="background: var(--light-bg);" id="discover">
+    <div class="max-w-7xl mx-auto">
+      <div class="section-title fade-up">
+        <h2>Discover More</h2>
+        <p>Explore what makes Twineshots your go-to creative partner.</p>
+        <div class="line"></div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="discover-card fade-up">
+          <div class="bg"></div>
+          <div class="card-overlay">
+            <h3>About Twineshots</h3>
+            <a href="info.html">Learn More</a>
+          </div>
+        </div>
+        <div class="discover-card fade-up">
+          <div class="bg"></div>
+          <div class="card-overlay">
+            <h3>Meet Our Team</h3>
+            <a href="team.html">View Team</a>
+          </div>
+        </div>
+        <div class="discover-card fade-up">
+          <div class="bg"></div>
+          <div class="card-overlay">
+            <h3>Full Gallery</h3>
+            <a href="gallery.html">Browse Gallery</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== FLOATING BUTTONS ====== -->
+  <div class="float-review" onclick="window.location.href='#reviews'" title="Leave a Review">
+    <i class="fa-solid fa-star"></i>
+  </div>
+
+  <div class="float-whatsapp" onclick="openWhatsAppModal()" title="Chat on WhatsApp">
+    <i class="fa-brands fa-whatsapp"></i>
+  </div>
+
+  <!-- WhatsApp Modal -->
+  <div class="wa-modal-backdrop" id="waModal">
+    <div class="wa-modal">
+      <button class="close-wa" onclick="closeWhatsAppModal()">&times;</button>
+      <h3><i class="fa-brands fa-whatsapp" style="color: #25D366; margin-right: 0.5rem;"></i> Chat with Us</h3>
+      <a href="https://wa.me/256752969130" target="_blank" class="wa-number">
+        <i class="fa-brands fa-whatsapp"></i> +256 752 969 130
+      </a>
+      <a href="https://wa.me/256200906818" target="_blank" class="wa-number">
+        <i class="fa-brands fa-whatsapp"></i> +256 200 906 818
+      </a>
+    </div>
+  </div>
+
+  <!-- ====== FOOTER ====== -->
+  <footer class="site-footer">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+        <!-- Col 1: About -->
+        <div>
+          <h4>Twineshots</h4>
+          <p>Twineshots is a professional photography and videography company based in Kampala, Uganda. We specialize in capturing life's most important moments with creativity, passion, and precision.</p>
+        </div>
+        <!-- Col 2: Contact -->
+        <div>
+          <h4>Contact</h4>
+          <p style="margin-bottom: 0.5rem;">
+            <i class="fa-solid fa-envelope" style="margin-right: 0.5rem; color: #e50914;"></i>
+            <a href="mailto:ask@twineshots.com">ask@twineshots.com</a>
+          </p>
+          <p style="margin-bottom: 0.5rem;">
+            <i class="fa-solid fa-phone" style="margin-right: 0.5rem; color: #e50914;"></i>
+            <a href="tel:+256752969130">+256 752 969 130</a>
+          </p>
+          <p>
+            <i class="fa-solid fa-phone" style="margin-right: 0.5rem; color: #e50914;"></i>
+            <a href="tel:+256200906818">+256 200 906 818</a>
+          </p>
+        </div>
+        <!-- Col 3: Location -->
+        <div>
+          <h4>Location</h4>
+          <p>
+            <i class="fa-solid fa-location-dot" style="margin-right: 0.5rem; color: #e50914;"></i>
+            Elements Courts, alongside Makerere Kasubi road, Room G001
+          </p>
+        </div>
+        <!-- Col 4: Follow Us -->
+        <div>
+          <h4>Follow Us</h4>
+          <div class="footer-social">
+            <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+            <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+            <a href="#" aria-label="X / Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+            <a href="#" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+            <a href="#" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2026 Twineshots. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ====== WELCOME POPUP ====== -->
+  <div class="welcome-popup-backdrop" id="welcomePopup">
+    <div class="welcome-popup">
+      <button class="close-popup" onclick="closeWelcomePopup()">&times;</button>
+      <h2>Welcome to Twineshots</h2>
+      <p class="tagline">Capture Moments. Create Memories.</p>
+      <div class="features">
+        <div class="feature-item">
+          <ion-icon name="flash-outline"></ion-icon>
+          <span><strong>Instant Impact</strong> &mdash; We deliver stunning visuals that make a lasting first impression.</span>
+        </div>
+        <div class="feature-item">
+          <ion-icon name="diamond-outline"></ion-icon>
+          <span><strong>Premium Quality</strong> &mdash; Industry-leading equipment and post-production excellence.</span>
+        </div>
+        <div class="feature-item">
+          <ion-icon name="heart-outline"></ion-icon>
+          <span><strong>Client First</strong> &mdash; Your vision drives every frame we capture.</span>
+        </div>
+      </div>
+      <a href="gallery.html" class="btn-popup">Explore Our Gallery</a>
+      <button class="dismiss" onclick="dismissWelcomePopup()">Don't show again today</button>
+    </div>
+  </div>
+
+  <!-- ====== JAVASCRIPT ====== -->
+  <script>
+    // === Hero Slider ===
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.hero-slide');
+    const dots = document.querySelectorAll('.hero-dots .dot');
+
+    function goToSlide(index) {
+      slides[currentSlide].classList.remove('active');
+      dots[currentSlide].classList.remove('active');
+      currentSlide = index;
+      slides[currentSlide].classList.add('active');
+      dots[currentSlide].classList.add('active');
+    }
+
+    function nextSlide() {
+      goToSlide((currentSlide + 1) % slides.length);
+    }
+
+    let slideInterval = setInterval(nextSlide, 5000);
+
+    // Pause on hover
+    const heroSection = document.getElementById('hero');
+    heroSection.addEventListener('mouseenter', () => clearInterval(slideInterval));
+    heroSection.addEventListener('mouseleave', () => {
+      slideInterval = setInterval(nextSlide, 5000);
+    });
+
+    // === Mobile Menu ===
+    function toggleMobileMenu() {
+      const menu = document.getElementById('mobileMenu');
+      const hamburger = document.getElementById('hamburger');
+      menu.classList.toggle('open');
+      hamburger.classList.toggle('open');
+      document.body.style.overflow = menu.classList.contains('open') ? 'hidden' : '';
+    }
+
+    // Close mobile menu on link click
+    document.querySelectorAll('.mobile-menu a').forEach(link => {
+      link.addEventListener('click', () => {
+        document.getElementById('mobileMenu').classList.remove('open');
+        document.getElementById('hamburger').classList.remove('open');
+        document.body.style.overflow = '';
+      });
+    });
+
+    // === WhatsApp Modal ===
+    function openWhatsAppModal() {
+      document.getElementById('waModal').classList.add('show');
+    }
+
+    function closeWhatsAppModal() {
+      document.getElementById('waModal').classList.remove('show');
+    }
+
+    document.getElementById('waModal').addEventListener('click', function(e) {
+      if (e.target === this) closeWhatsAppModal();
+    });
+
+    // === Welcome Popup ===
+    function showWelcomePopup() {
+      const lastShown = localStorage.getItem('twineshots_popup_date');
+      const today = new Date().toDateString();
+      if (lastShown !== today) {
+        setTimeout(() => {
+          document.getElementById('welcomePopup').classList.add('show');
+        }, 1500);
+      }
+    }
+
+    function closeWelcomePopup() {
+      document.getElementById('welcomePopup').classList.remove('show');
+    }
+
+    function dismissWelcomePopup() {
+      const today = new Date().toDateString();
+      localStorage.setItem('twineshots_popup_date', today);
+      closeWelcomePopup();
+    }
+
+    // Close popup on backdrop click
+    document.getElementById('welcomePopup').addEventListener('click', function(e) {
+      if (e.target === this) closeWelcomePopup();
+    });
+
+    // Show popup on load
+    window.addEventListener('DOMContentLoaded', showWelcomePopup);
+
+    // === GSAP ScrollTrigger Animations ===
+    gsap.registerPlugin(ScrollTrigger);
+
+    gsap.utils.toArray('.fade-up').forEach((el) => {
+      gsap.fromTo(el,
+        { opacity: 0, y: 40 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: el,
+            start: 'top 85%',
+            toggleActions: 'play none none none',
+          },
+        }
+      );
+    });
+
+    // Navbar background opacity on scroll
+    window.addEventListener('scroll', () => {
+      const navbar = document.querySelector('.navbar');
+      if (window.scrollY > 100) {
+        navbar.style.boxShadow = '0 4px 30px rgba(0,0,0,0.5)';
+      } else {
+        navbar.style.boxShadow = '0 2px 20px rgba(0,0,0,0.3)';
+      }
+    });
+  </script>
+
+  <!-- External JS -->
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,1165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reviews -- Twineshots</title>
+  <meta name="description" content="Twineshots - Professional photography and videography services in Kampala, Uganda. Weddings, Corporate Events, Portraits, Live Streaming and more." />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700;900&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwindcss.config = {
+      theme: {
+        extend: {
+          fontFamily: { titillium: ['"Titillium Web"', 'sans-serif'] },
+          colors: {
+            primary: '#1e3a8a',
+            dark: '#172554',
+            'light-bg': '#f8fafc',
+            'text-main': '#1f2937',
+            muted: '#475569',
+            accent: '#e50914',
+            nearblack: '#010B13',
+            'green-brand': '#22C55E',
+            'green-dark': '#16A34A',
+            'light-blue': '#93c5fd',
+            gold: '#fbbf24',
+          },
+        },
+      },
+    };
+  </script>
+
+  <!-- Font Awesome 6.5.1 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <!-- Ionicons 7.1.0 -->
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+  <!-- GSAP 3.12.2 + ScrollTrigger -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+  <!-- External CSS -->
+  <link rel="stylesheet" href="styles.css" />
+
+  <style>
+    :root {
+      --primary: #1e3a8a;
+      --dark: #172554;
+      --light-bg: #f8fafc;
+      --text: #1f2937;
+      --muted: #475569;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Titillium Web', sans-serif !important;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      color: var(--text);
+      background: var(--light-bg);
+      overflow-x: hidden;
+    }
+
+    /* ====== NAVBAR ====== */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 90px;
+      background: #010B13;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+    }
+
+    .navbar .logo-text {
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: 3px;
+      text-decoration: none;
+    }
+
+    .navbar .logo-text span { color: #e50914; }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      list-style: none;
+    }
+
+    .nav-links li a {
+      color: #cbd5e1;
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 0.5rem 0.75rem;
+      border-radius: 8px;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .nav-links li a:hover,
+    .nav-links li a.active {
+      color: #fff;
+      background: rgba(255,255,255,0.1);
+    }
+
+    .nav-links li a.active { color: #e50914; }
+
+    .nav-social {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .nav-social a {
+      color: #cbd5e1;
+      font-size: 1.1rem;
+      transition: color 0.3s;
+    }
+
+    .nav-social a:hover { color: #e50914; }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      z-index: 1100;
+    }
+
+    .hamburger span {
+      width: 28px;
+      height: 3px;
+      background: #fff;
+      border-radius: 4px;
+      transition: all 0.3s;
+    }
+
+    .hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(5px, 6px); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(5px, -6px); }
+
+    /* Mobile Menu Overlay */
+    .mobile-menu {
+      position: fixed;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100vh;
+      background: rgba(1, 11, 19, 0.97);
+      z-index: 1050;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+      transition: left 0.4s ease;
+    }
+
+    .mobile-menu.open { left: 0; }
+
+    .mobile-menu a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 1.3rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.5rem 1rem;
+      border-radius: 10px;
+      transition: background 0.3s;
+    }
+
+    .mobile-menu a:hover { background: rgba(229,9,20,0.2); }
+
+    .mobile-menu .mobile-social {
+      display: flex;
+      gap: 1.5rem;
+      margin-top: 1rem;
+    }
+
+    .mobile-menu .mobile-social a { font-size: 1.5rem; }
+
+    @media (max-width: 992px) {
+      .nav-links, .nav-social { display: none; }
+      .hamburger { display: flex; }
+    }
+
+    /* ====== SECTION STYLES ====== */
+    .section-title {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .section-title h2 {
+      font-size: 2.5rem;
+      font-weight: 900;
+      color: #172554;
+      margin-bottom: 0.5rem;
+    }
+
+    .section-title p {
+      font-size: 1.1rem;
+      color: var(--muted);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .section-title .line {
+      width: 60px;
+      height: 4px;
+      background: linear-gradient(90deg, #e50914, #93c5fd);
+      margin: 1rem auto 0;
+      border-radius: 2px;
+    }
+
+    /* ====== REVIEW CARDS ====== */
+    .review-card {
+      background: #fff;
+      border-radius: 24px;
+      padding: 2rem;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+      transition: transform 0.4s, box-shadow 0.4s;
+    }
+
+    .review-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+    }
+
+    .review-card .stars {
+      color: #fbbf24;
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+    }
+
+    .review-card .quote {
+      font-size: 0.95rem;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 1.25rem;
+      font-style: italic;
+    }
+
+    .review-card .reviewer {
+      font-weight: 700;
+      color: #172554;
+      font-size: 1rem;
+    }
+
+    .review-card .reviewer-role {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .review-card .review-date {
+      font-size: 0.75rem;
+      color: #94a3b8;
+      margin-top: 0.5rem;
+    }
+
+    /* ====== BOOKING FORM ====== */
+    .form-container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: #fff;
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: 0 15px 50px rgba(0,0,0,0.1);
+    }
+
+    .form-header {
+      background: #010B13;
+      padding: 2rem 2.5rem;
+      text-align: center;
+    }
+
+    .form-header h3 {
+      font-size: 1.6rem;
+      font-weight: 900;
+      color: #fff;
+      margin-bottom: 0.4rem;
+    }
+
+    .form-header p {
+      color: #94a3b8;
+      font-size: 0.95rem;
+    }
+
+    .form-body {
+      padding: 2.5rem;
+    }
+
+    .form-body label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #172554;
+      margin-bottom: 0.4rem;
+    }
+
+    .form-body input,
+    .form-body select,
+    .form-body textarea {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 2px solid #e2e8f0;
+      border-radius: 14px;
+      font-size: 0.95rem;
+      font-family: 'Titillium Web', sans-serif !important;
+      transition: border-color 0.3s;
+      outline: none;
+      margin-bottom: 1.25rem;
+      background: #f8fafc;
+    }
+
+    .form-body input:focus,
+    .form-body select:focus,
+    .form-body textarea:focus {
+      border-color: #1e3a8a;
+    }
+
+    .form-body textarea { min-height: 120px; resize: vertical; }
+
+    .btn-submit {
+      width: 100%;
+      padding: 1rem;
+      background: linear-gradient(135deg, #22C55E, #16A34A);
+      color: #fff;
+      font-size: 1.1rem;
+      font-weight: 700;
+      border: none;
+      border-radius: 14px;
+      cursor: pointer;
+      transition: transform 0.3s, box-shadow 0.3s;
+      box-shadow: 0 4px 15px rgba(34,197,94,0.3);
+    }
+
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(34,197,94,0.4);
+    }
+
+    /* ====== FLOATING BUTTONS ====== */
+    .float-whatsapp {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: #25D366;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 900;
+      box-shadow: 0 4px 15px rgba(37,211,102,0.4);
+      transition: transform 0.3s;
+    }
+
+    .float-whatsapp:hover { transform: scale(1.1); }
+    .float-whatsapp i { color: #fff; font-size: 1.8rem; }
+
+    .float-review {
+      position: fixed;
+      bottom: 6.5rem;
+      right: 2rem;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #1e3a8a, #93c5fd);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 900;
+      box-shadow: 0 4px 15px rgba(30,58,138,0.3);
+      transition: transform 0.3s;
+    }
+
+    .float-review:hover { transform: scale(1.1); }
+    .float-review i { color: #fff; font-size: 1.4rem; }
+
+    /* WhatsApp Modal */
+    .wa-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 2000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .wa-modal-backdrop.show { display: flex; }
+
+    .wa-modal {
+      background: #fff;
+      border-radius: 24px;
+      padding: 2.5rem;
+      max-width: 400px;
+      width: 90%;
+      text-align: center;
+      position: relative;
+    }
+
+    .wa-modal h3 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #172554;
+      margin-bottom: 1.5rem;
+    }
+
+    .wa-modal .wa-number {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      padding: 0.75rem;
+      background: #f0fdf4;
+      border-radius: 14px;
+      margin-bottom: 0.75rem;
+      text-decoration: none;
+      color: #172554;
+      font-weight: 600;
+      transition: background 0.3s;
+    }
+
+    .wa-modal .wa-number:hover { background: #dcfce7; }
+    .wa-modal .wa-number i { color: #25D366; font-size: 1.3rem; }
+
+    .wa-modal .close-wa {
+      position: absolute;
+      top: 1rem;
+      right: 1.25rem;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--muted);
+    }
+
+    /* ====== FOOTER ====== */
+    .site-footer {
+      background: #010B13;
+      color: #cbd5e1;
+      padding: 4rem 0 0;
+    }
+
+    .site-footer h4 {
+      color: #fff;
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 1.25rem;
+    }
+
+    .site-footer p, .site-footer a {
+      font-size: 0.9rem;
+      color: #94a3b8;
+      line-height: 1.7;
+    }
+
+    .site-footer a {
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .site-footer a:hover { color: #e50914; }
+
+    .footer-social {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .footer-social a {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      color: #cbd5e1;
+      transition: all 0.3s;
+    }
+
+    .footer-social a:hover {
+      background: #e50914;
+      color: #fff;
+    }
+
+    .footer-bottom {
+      margin-top: 3rem;
+      padding: 1.5rem 0;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      text-align: center;
+    }
+
+    .footer-bottom p {
+      font-size: 0.85rem;
+      color: #64748b;
+    }
+
+    /* ====== WELCOME POPUP ====== */
+    .welcome-popup-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      z-index: 5000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
+    .welcome-popup-backdrop.show { display: flex; }
+
+    .welcome-popup {
+      background: rgba(1, 11, 19, 0.92);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 28px;
+      padding: 3rem 2.5rem;
+      max-width: 500px;
+      width: 92%;
+      text-align: center;
+      position: relative;
+      box-shadow: 0 25px 80px rgba(0,0,0,0.5);
+    }
+
+    .welcome-popup .close-popup {
+      position: absolute;
+      top: 1rem;
+      right: 1.25rem;
+      background: none;
+      border: none;
+      color: #94a3b8;
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: color 0.3s;
+    }
+
+    .welcome-popup .close-popup:hover { color: #fff; }
+
+    .welcome-popup h2 {
+      font-size: 2rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, #e50914, #93c5fd);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.5rem;
+    }
+
+    .welcome-popup .tagline {
+      color: #94a3b8;
+      font-size: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .welcome-popup .features {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-bottom: 2rem;
+      text-align: left;
+    }
+
+    .welcome-popup .feature-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      color: #cbd5e1;
+      font-size: 0.9rem;
+    }
+
+    .welcome-popup .feature-item ion-icon {
+      color: #22C55E;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    .welcome-popup .btn-popup {
+      display: inline-block;
+      padding: 0.9rem 2.5rem;
+      background: linear-gradient(135deg, #e50914, #93c5fd);
+      color: #fff;
+      font-weight: 700;
+      border-radius: 50px;
+      text-decoration: none;
+      font-size: 1rem;
+      transition: transform 0.3s, box-shadow 0.3s;
+      box-shadow: 0 4px 20px rgba(229,9,20,0.3);
+    }
+
+    .welcome-popup .btn-popup:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(229,9,20,0.4);
+    }
+
+    .welcome-popup .dismiss {
+      display: block;
+      margin-top: 1.25rem;
+      color: #64748b;
+      font-size: 0.8rem;
+      cursor: pointer;
+      background: none;
+      border: none;
+      text-decoration: underline;
+      font-family: 'Titillium Web', sans-serif !important;
+    }
+
+    .welcome-popup .dismiss:hover { color: #94a3b8; }
+
+    /* ====== STAR RATING SELECTOR ====== */
+    .star-rating {
+      display: flex;
+      gap: 0.35rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .star-rating i {
+      font-size: 1.8rem;
+      color: #e2e8f0;
+      cursor: pointer;
+      transition: color 0.2s, transform 0.2s;
+    }
+
+    .star-rating i:hover,
+    .star-rating i.active {
+      color: #fbbf24;
+      transform: scale(1.15);
+    }
+
+    /* ====== ANIMATIONS ====== */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(40px);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ====== NAVBAR ====== -->
+  <nav class="navbar">
+    <a href="index.html" class="logo-text">TWINE<span>SHOTS</span></a>
+
+    <ul class="nav-links">
+      <li><a href="index.html"><ion-icon name="home-outline"></ion-icon> Home</a></li>
+      <li><a href="gallery.html"><ion-icon name="images-outline"></ion-icon> Gallery</a></li>
+      <li><a href="team.html"><ion-icon name="people-outline"></ion-icon> Our Team</a></li>
+      <li><a href="services.html"><ion-icon name="aperture-outline"></ion-icon> Services</a></li>
+      <li><a href="info.html"><ion-icon name="information-circle-outline"></ion-icon> Info</a></li>
+      <li><a href="contact.html"><ion-icon name="call-outline"></ion-icon> Contact Us</a></li>
+      <li><a href="careers.html"><ion-icon name="briefcase-outline"></ion-icon> Careers</a></li>
+    </ul>
+
+    <div class="nav-social">
+      <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+      <a href="#" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+      <a href="#" aria-label="X / Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+      <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+    </div>
+
+    <div class="hamburger" id="hamburger" onclick="toggleMobileMenu()">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu Overlay -->
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="index.html"><ion-icon name="home-outline"></ion-icon> Home</a>
+    <a href="gallery.html"><ion-icon name="images-outline"></ion-icon> Gallery</a>
+    <a href="team.html"><ion-icon name="people-outline"></ion-icon> Our Team</a>
+    <a href="services.html"><ion-icon name="aperture-outline"></ion-icon> Services</a>
+    <a href="info.html"><ion-icon name="information-circle-outline"></ion-icon> Info</a>
+    <a href="contact.html"><ion-icon name="call-outline"></ion-icon> Contact Us</a>
+    <a href="careers.html"><ion-icon name="briefcase-outline"></ion-icon> Careers</a>
+    <div class="mobile-social">
+      <a href="#"><i class="fa-brands fa-instagram"></i></a>
+      <a href="#"><i class="fa-brands fa-youtube"></i></a>
+      <a href="#"><i class="fa-brands fa-x-twitter"></i></a>
+      <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+    </div>
+  </div>
+
+  <!-- ====== HERO BANNER ====== -->
+  <section style="margin-top: 90px; height: 50vh; min-height: 300px; background: linear-gradient(135deg, #7c2d12, #92400e); display: flex; align-items: center; justify-content: center; text-align: center; position: relative;">
+    <div style="position: relative; z-index: 2; color: #fff; max-width: 800px; padding: 0 2rem;">
+      <h1 style="font-size: 3.5rem; font-weight: 900; line-height: 1.1; margin-bottom: 1rem;">Client Reviews</h1>
+      <p style="font-size: 1.2rem; color: #fed7aa;">What our clients say about us</p>
+    </div>
+  </section>
+
+  <!-- ====== OVERALL RATING SUMMARY ====== -->
+  <section class="py-16 px-4" style="background: var(--light-bg);">
+    <div class="max-w-7xl mx-auto">
+      <div class="fade-up" style="max-width: 500px; margin: 0 auto; background: #fff; border-radius: 28px; padding: 3rem 2rem; text-align: center; box-shadow: 0 15px 50px rgba(0,0,0,0.1);">
+        <div style="font-size: 4rem; font-weight: 900; color: #172554; line-height: 1;">4.9<span style="font-size: 1.8rem; color: var(--muted); font-weight: 600;">/5.0</span></div>
+        <div style="margin: 1rem 0; font-size: 1.8rem; color: #fbbf24;">
+          <i class="fa-solid fa-star"></i>
+          <i class="fa-solid fa-star"></i>
+          <i class="fa-solid fa-star"></i>
+          <i class="fa-solid fa-star"></i>
+          <i class="fa-solid fa-star"></i>
+        </div>
+        <p style="font-size: 1.05rem; color: var(--muted); font-weight: 600;">Based on 150+ reviews</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== REVIEWS GRID ====== -->
+  <section class="py-16 px-4" style="background: var(--light-bg);">
+    <div class="max-w-7xl mx-auto">
+      <div class="section-title fade-up">
+        <h2>What Our Clients Say</h2>
+        <p>Real feedback from real clients who trusted us with their special moments.</p>
+        <div class="line"></div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+        <!-- Review 1 -->
+        <div class="review-card fade-up">
+          <div class="stars">
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+          </div>
+          <p class="quote">"Absolutely incredible work! Twineshots captured every single detail of our wedding day. From the first look to the last dance, every photo tells a story. We couldn't have asked for a better team to document the most important day of our lives."</p>
+          <p class="reviewer">Sarah &amp; David</p>
+          <p class="reviewer-role">Wedding</p>
+          <p class="review-date">January 15, 2026</p>
+        </div>
+
+        <!-- Review 2 -->
+        <div class="review-card fade-up">
+          <div class="stars">
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+          </div>
+          <p class="quote">"Professional and creative beyond our expectations. The team arrived early, blended seamlessly into our corporate event, and delivered stunning photos that perfectly represented our brand. Highly recommended for any business."</p>
+          <p class="reviewer">Mark O.</p>
+          <p class="reviewer-role">Corporate Event</p>
+          <p class="review-date">December 8, 2025</p>
+        </div>
+
+        <!-- Review 3 -->
+        <div class="review-card fade-up">
+          <div class="stars">
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+          </div>
+          <p class="quote">"The team made us feel so comfortable during our studio session. They knew exactly how to direct us for natural poses and the final images exceeded all our expectations. The lighting and editing were absolutely flawless."</p>
+          <p class="reviewer">Grace N.</p>
+          <p class="reviewer-role">Studio Session</p>
+          <p class="review-date">November 22, 2025</p>
+        </div>
+
+        <!-- Review 4 -->
+        <div class="review-card fade-up">
+          <div class="stars">
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+          </div>
+          <p class="quote">"Excellent coverage of our annual conference. They managed to capture keynote speakers, panel discussions, and networking moments all with exceptional quality. The turnaround time for the edited photos was impressively fast."</p>
+          <p class="reviewer">James K.</p>
+          <p class="reviewer-role">Conference</p>
+          <p class="review-date">October 30, 2025</p>
+        </div>
+
+        <!-- Review 5 -->
+        <div class="review-card fade-up">
+          <div class="stars">
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+          </div>
+          <p class="quote">"They captured every beautiful moment of our Kwanjula ceremony. The colors, the emotions, the traditions — everything was documented with such care and artistic vision. Our families were blown away by the final album."</p>
+          <p class="reviewer">Patricia M.</p>
+          <p class="reviewer-role">Kwanjula</p>
+          <p class="review-date">September 14, 2025</p>
+        </div>
+
+        <!-- Review 6 -->
+        <div class="review-card fade-up">
+          <div class="stars">
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+          </div>
+          <p class="quote">"Stunning property photography that helped us sell three listings within a week. The drone shots, interior lighting, and attention to architectural detail made each property look magazine-worthy. A game changer for our real estate business."</p>
+          <p class="reviewer">Robert T.</p>
+          <p class="reviewer-role">Real Estate</p>
+          <p class="review-date">August 5, 2025</p>
+        </div>
+
+        <!-- Review 7 -->
+        <div class="review-card fade-up">
+          <div class="stars">
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+          </div>
+          <p class="quote">"Made our daughter's party unforgettable with their photography. They were so patient and fun with the kids, capturing genuine laughter and joy. The candid shots were our absolute favorites — pure magic."</p>
+          <p class="reviewer">Alice W.</p>
+          <p class="reviewer-role">Birthday</p>
+          <p class="review-date">July 19, 2025</p>
+        </div>
+
+        <!-- Review 8 -->
+        <div class="review-card fade-up">
+          <div class="stars">
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+          </div>
+          <p class="quote">"Best investment we made for our wedding. The photos and video were cinematic, emotional, and beautifully edited. Twineshots truly understood our vision and brought it to life in ways we never imagined possible."</p>
+          <p class="reviewer">Tom &amp; Jane</p>
+          <p class="reviewer-role">Wedding</p>
+          <p class="review-date">June 28, 2025</p>
+        </div>
+
+        <!-- Review 9 -->
+        <div class="review-card fade-up">
+          <div class="stars">
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+          </div>
+          <p class="quote">"Reliable, creative, and always on time. Twineshots has been our go-to photography partner for all company events, product launches, and team headshots. Their consistency and professionalism are unmatched in the industry."</p>
+          <p class="reviewer">CloudKing Systems</p>
+          <p class="reviewer-role">Corporate</p>
+          <p class="review-date">May 10, 2025</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== LEAVE A REVIEW ====== -->
+  <section id="leave-review" class="py-16 px-4" style="background: #f1f5f9;">
+    <div class="max-w-7xl mx-auto">
+      <div class="section-title fade-up">
+        <h2>Leave a Review</h2>
+        <p>We'd love to hear about your experience with Twineshots.</p>
+        <div class="line"></div>
+      </div>
+
+      <div class="form-container fade-up">
+        <div class="form-header">
+          <h3>Share Your Experience</h3>
+          <p>Your feedback helps us grow and serve you better.</p>
+        </div>
+        <div class="form-body">
+          <form onsubmit="return false;">
+            <label for="reviewName">Your Name</label>
+            <input type="text" id="reviewName" placeholder="Enter your full name" />
+
+            <label for="eventType">Event Type</label>
+            <select id="eventType">
+              <option value="" disabled selected>Select event type</option>
+              <option value="wedding">Wedding</option>
+              <option value="corporate">Corporate Event</option>
+              <option value="conference">Conference</option>
+              <option value="kwanjula">Kwanjula</option>
+              <option value="birthday">Birthday</option>
+              <option value="studio">Studio Session</option>
+              <option value="realestate">Real Estate</option>
+              <option value="livestream">Live Stream</option>
+              <option value="other">Other</option>
+            </select>
+
+            <label>Rating</label>
+            <div class="star-rating" id="starRating">
+              <i class="fa-solid fa-star" data-value="1"></i>
+              <i class="fa-solid fa-star" data-value="2"></i>
+              <i class="fa-solid fa-star" data-value="3"></i>
+              <i class="fa-solid fa-star" data-value="4"></i>
+              <i class="fa-solid fa-star" data-value="5"></i>
+            </div>
+
+            <label for="reviewText">Your Review</label>
+            <textarea id="reviewText" placeholder="Tell us about your experience..."></textarea>
+
+            <button type="submit" class="btn-submit">Submit Review</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== FLOATING BUTTONS ====== -->
+  <div class="float-review" onclick="window.location.href='#leave-review'" title="Leave a Review">
+    <i class="fa-solid fa-star"></i>
+  </div>
+
+  <div class="float-whatsapp" onclick="openWhatsAppModal()" title="Chat on WhatsApp">
+    <i class="fa-brands fa-whatsapp"></i>
+  </div>
+
+  <!-- WhatsApp Modal -->
+  <div class="wa-modal-backdrop" id="waModal">
+    <div class="wa-modal">
+      <button class="close-wa" onclick="closeWhatsAppModal()">&times;</button>
+      <h3><i class="fa-brands fa-whatsapp" style="color: #25D366; margin-right: 0.5rem;"></i> Chat with Us</h3>
+      <a href="https://wa.me/256752969130" target="_blank" class="wa-number">
+        <i class="fa-brands fa-whatsapp"></i> +256 752 969 130
+      </a>
+      <a href="https://wa.me/256200906818" target="_blank" class="wa-number">
+        <i class="fa-brands fa-whatsapp"></i> +256 200 906 818
+      </a>
+    </div>
+  </div>
+
+  <!-- ====== FOOTER ====== -->
+  <footer class="site-footer">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+        <!-- Col 1: About -->
+        <div>
+          <h4>Twineshots</h4>
+          <p>Twineshots is a professional photography and videography company based in Kampala, Uganda. We specialize in capturing life's most important moments with creativity, passion, and precision.</p>
+        </div>
+        <!-- Col 2: Contact -->
+        <div>
+          <h4>Contact</h4>
+          <p style="margin-bottom: 0.5rem;">
+            <i class="fa-solid fa-envelope" style="margin-right: 0.5rem; color: #e50914;"></i>
+            <a href="mailto:ask@twineshots.com">ask@twineshots.com</a>
+          </p>
+          <p style="margin-bottom: 0.5rem;">
+            <i class="fa-solid fa-phone" style="margin-right: 0.5rem; color: #e50914;"></i>
+            <a href="tel:+256752969130">+256 752 969 130</a>
+          </p>
+          <p>
+            <i class="fa-solid fa-phone" style="margin-right: 0.5rem; color: #e50914;"></i>
+            <a href="tel:+256200906818">+256 200 906 818</a>
+          </p>
+        </div>
+        <!-- Col 3: Location -->
+        <div>
+          <h4>Location</h4>
+          <p>
+            <i class="fa-solid fa-location-dot" style="margin-right: 0.5rem; color: #e50914;"></i>
+            Elements Courts, alongside Makerere Kasubi road, Room G001
+          </p>
+        </div>
+        <!-- Col 4: Follow Us -->
+        <div>
+          <h4>Follow Us</h4>
+          <div class="footer-social">
+            <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+            <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+            <a href="#" aria-label="X / Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+            <a href="#" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+            <a href="#" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2026 Twineshots. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ====== WELCOME POPUP ====== -->
+  <div class="welcome-popup-backdrop" id="welcomePopup">
+    <div class="welcome-popup">
+      <button class="close-popup" onclick="closeWelcomePopup()">&times;</button>
+      <h2>Welcome to Twineshots</h2>
+      <p class="tagline">Capture Moments. Create Memories.</p>
+      <div class="features">
+        <div class="feature-item">
+          <ion-icon name="flash-outline"></ion-icon>
+          <span><strong>Instant Impact</strong> &mdash; We deliver stunning visuals that make a lasting first impression.</span>
+        </div>
+        <div class="feature-item">
+          <ion-icon name="diamond-outline"></ion-icon>
+          <span><strong>Premium Quality</strong> &mdash; Industry-leading equipment and post-production excellence.</span>
+        </div>
+        <div class="feature-item">
+          <ion-icon name="heart-outline"></ion-icon>
+          <span><strong>Client First</strong> &mdash; Your vision drives every frame we capture.</span>
+        </div>
+      </div>
+      <a href="gallery.html" class="btn-popup">Explore Our Gallery</a>
+      <button class="dismiss" onclick="dismissWelcomePopup()">Don't show again today</button>
+    </div>
+  </div>
+
+  <!-- ====== JAVASCRIPT ====== -->
+  <script>
+    // === Mobile Menu ===
+    function toggleMobileMenu() {
+      const menu = document.getElementById('mobileMenu');
+      const hamburger = document.getElementById('hamburger');
+      menu.classList.toggle('open');
+      hamburger.classList.toggle('open');
+      document.body.style.overflow = menu.classList.contains('open') ? 'hidden' : '';
+    }
+
+    // Close mobile menu on link click
+    document.querySelectorAll('.mobile-menu a').forEach(link => {
+      link.addEventListener('click', () => {
+        document.getElementById('mobileMenu').classList.remove('open');
+        document.getElementById('hamburger').classList.remove('open');
+        document.body.style.overflow = '';
+      });
+    });
+
+    // === WhatsApp Modal ===
+    function openWhatsAppModal() {
+      document.getElementById('waModal').classList.add('show');
+    }
+
+    function closeWhatsAppModal() {
+      document.getElementById('waModal').classList.remove('show');
+    }
+
+    document.getElementById('waModal').addEventListener('click', function(e) {
+      if (e.target === this) closeWhatsAppModal();
+    });
+
+    // === Welcome Popup ===
+    function showWelcomePopup() {
+      const lastShown = localStorage.getItem('twineshots_popup_date');
+      const today = new Date().toDateString();
+      if (lastShown !== today) {
+        setTimeout(() => {
+          document.getElementById('welcomePopup').classList.add('show');
+        }, 1500);
+      }
+    }
+
+    function closeWelcomePopup() {
+      document.getElementById('welcomePopup').classList.remove('show');
+    }
+
+    function dismissWelcomePopup() {
+      const today = new Date().toDateString();
+      localStorage.setItem('twineshots_popup_date', today);
+      closeWelcomePopup();
+    }
+
+    // Close popup on backdrop click
+    document.getElementById('welcomePopup').addEventListener('click', function(e) {
+      if (e.target === this) closeWelcomePopup();
+    });
+
+    // Show popup on load
+    window.addEventListener('DOMContentLoaded', showWelcomePopup);
+
+    // === Star Rating Selector ===
+    const starRating = document.getElementById('starRating');
+    const stars = starRating.querySelectorAll('i');
+    let selectedRating = 0;
+
+    stars.forEach((star, index) => {
+      star.addEventListener('mouseenter', () => {
+        stars.forEach((s, i) => {
+          s.classList.toggle('active', i <= index);
+        });
+      });
+
+      star.addEventListener('click', () => {
+        selectedRating = index + 1;
+        stars.forEach((s, i) => {
+          s.classList.toggle('active', i <= index);
+        });
+      });
+    });
+
+    starRating.addEventListener('mouseleave', () => {
+      stars.forEach((s, i) => {
+        s.classList.toggle('active', i < selectedRating);
+      });
+    });
+
+    // === GSAP ScrollTrigger Animations ===
+    gsap.registerPlugin(ScrollTrigger);
+
+    gsap.utils.toArray('.fade-up').forEach((el) => {
+      gsap.fromTo(el,
+        { opacity: 0, y: 40 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: el,
+            start: 'top 85%',
+            toggleActions: 'play none none none',
+          },
+        }
+      );
+    });
+
+    // Navbar background opacity on scroll
+    window.addEventListener('scroll', () => {
+      const navbar = document.querySelector('.navbar');
+      if (window.scrollY > 100) {
+        navbar.style.boxShadow = '0 4px 30px rgba(0,0,0,0.5)';
+      } else {
+        navbar.style.boxShadow = '0 2px 20px rgba(0,0,0,0.3)';
+      }
+    });
+  </script>
+
+  <!-- External JS -->
+  <script src="script.js"></script>
+</body>
+</html>

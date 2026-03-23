@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Services -- Twineshots</title>
+  <meta name="description" content="Twineshots - Professional photography and videography services in Kampala, Uganda. Weddings, Corporate Events, Portraits, Live Streaming and more." />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700;900&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwindcss.config = {
+      theme: {
+        extend: {
+          fontFamily: { titillium: ['"Titillium Web"', 'sans-serif'] },
+          colors: {
+            primary: '#1e3a8a',
+            dark: '#172554',
+            'light-bg': '#f8fafc',
+            'text-main': '#1f2937',
+            muted: '#475569',
+            accent: '#e50914',
+            nearblack: '#010B13',
+            'green-brand': '#22C55E',
+            'green-dark': '#16A34A',
+            'light-blue': '#93c5fd',
+            gold: '#fbbf24',
+          },
+        },
+      },
+    };
+  </script>
+
+  <!-- Font Awesome 6.5.1 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <!-- Ionicons 7.1.0 -->
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+  <!-- GSAP 3.12.2 + ScrollTrigger -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+  <!-- External CSS -->
+  <link rel="stylesheet" href="styles.css" />
+
+  <style>
+    :root {
+      --primary: #1e3a8a;
+      --dark: #172554;
+      --light-bg: #f8fafc;
+      --text: #1f2937;
+      --muted: #475569;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Titillium Web', sans-serif !important;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      color: var(--text);
+      background: var(--light-bg);
+      overflow-x: hidden;
+    }
+
+    /* ====== NAVBAR ====== */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 90px;
+      background: #010B13;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+    }
+
+    .navbar .logo-text {
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: 3px;
+      text-decoration: none;
+    }
+
+    .navbar .logo-text span { color: #e50914; }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      list-style: none;
+    }
+
+    .nav-links li a {
+      color: #cbd5e1;
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 0.5rem 0.75rem;
+      border-radius: 8px;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .nav-links li a:hover,
+    .nav-links li a.active {
+      color: #fff;
+      background: rgba(255,255,255,0.1);
+    }
+
+    .nav-links li a.active { color: #e50914; }
+
+    .nav-social {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .nav-social a {
+      color: #cbd5e1;
+      font-size: 1.1rem;
+      transition: color 0.3s;
+    }
+
+    .nav-social a:hover { color: #e50914; }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      z-index: 1100;
+    }
+
+    .hamburger span {
+      width: 28px;
+      height: 3px;
+      background: #fff;
+      border-radius: 4px;
+      transition: all 0.3s;
+    }
+
+    .hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(5px, 6px); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(5px, -6px); }
+
+    /* Mobile Menu Overlay */
+    .mobile-menu {
+      position: fixed;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100vh;
+      background: rgba(1, 11, 19, 0.97);
+      z-index: 1050;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+      transition: left 0.4s ease;
+    }
+
+    .mobile-menu.open { left: 0; }
+
+    .mobile-menu a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 1.3rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.5rem 1rem;
+      border-radius: 10px;
+      transition: background 0.3s;
+    }
+
+    .mobile-menu a:hover { background: rgba(229,9,20,0.2); }
+
+    .mobile-menu .mobile-social {
+      display: flex;
+      gap: 1.5rem;
+      margin-top: 1rem;
+    }
+
+    .mobile-menu .mobile-social a { font-size: 1.5rem; }
+
+    @media (max-width: 992px) {
+      .nav-links, .nav-social { display: none; }
+      .hamburger { display: flex; }
+    }
+
+    /* ====== SERVICES HERO ====== */
+    .services-hero {
+      margin-top: 90px;
+      height: 50vh;
+      min-height: 350px;
+      background: linear-gradient(135deg, #064e3b, #022c22);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      position: relative;
+    }
+
+    .services-hero h1 {
+      font-size: 3.5rem;
+      font-weight: 900;
+      color: #fff;
+      margin-bottom: 1rem;
+    }
+
+    .services-hero p {
+      font-size: 1.2rem;
+      color: #a7f3d0;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    @media (max-width: 768px) {
+      .services-hero h1 { font-size: 2.2rem; }
+      .services-hero p { font-size: 1rem; }
+      .services-hero { height: 40vh; min-height: 280px; }
+    }
+
+    /* ====== SERVICE DETAIL CARDS ====== */
+    .service-detail-card {
+      background: #fff;
+      border-radius: 24px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+      overflow: hidden;
+      display: flex;
+      flex-direction: row;
+      transition: transform 0.4s, box-shadow 0.4s;
+    }
+
+    .service-detail-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+    }
+
+    .service-detail-card .card-image {
+      width: 200px;
+      min-height: 220px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .service-detail-card .card-image ion-icon {
+      font-size: 3.5rem;
+      color: rgba(255,255,255,0.3);
+    }
+
+    .service-detail-card .card-content {
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      flex: 1;
+    }
+
+    .service-detail-card .card-content h3 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: #172554;
+      margin-bottom: 0.6rem;
+    }
+
+    .service-detail-card .card-content p {
+      font-size: 0.92rem;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 1rem;
+    }
+
+    .service-detail-card .card-content .price {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #064e3b;
+      margin-bottom: 0.75rem;
+    }
+
+    .service-detail-card .card-content .learn-more {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #e50914;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: gap 0.3s;
+    }
+
+    .service-detail-card .card-content .learn-more:hover {
+      gap: 0.8rem;
+    }
+
+    @media (max-width: 640px) {
+      .service-detail-card {
+        flex-direction: column;
+      }
+
+      .service-detail-card .card-image {
+        width: 100%;
+        min-height: 160px;
+      }
+    }
+
+    /* ====== CTA SECTION ====== */
+    .cta-card {
+      background: #fff;
+      border-radius: 28px;
+      padding: 3.5rem 2rem;
+      text-align: center;
+      box-shadow: 0 15px 50px rgba(0,0,0,0.1);
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .cta-card h2 {
+      font-size: 2rem;
+      font-weight: 900;
+      color: #172554;
+      margin-bottom: 1rem;
+    }
+
+    .cta-card p {
+      color: var(--muted);
+      margin-bottom: 2rem;
+      font-size: 1.05rem;
+    }
+
+    .btn-cta {
+      display: inline-block;
+      padding: 1rem 3rem;
+      background: linear-gradient(135deg, #22C55E, #16A34A);
+      color: #fff;
+      font-weight: 700;
+      font-size: 1.05rem;
+      border-radius: 50px;
+      text-decoration: none;
+      transition: transform 0.3s, box-shadow 0.3s;
+      box-shadow: 0 4px 15px rgba(34,197,94,0.4);
+    }
+
+    .btn-cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(34,197,94,0.5);
+    }
+
+    /* ====== FLOATING BUTTONS ====== */
+    .float-whatsapp {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: #25D366;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 900;
+      box-shadow: 0 4px 15px rgba(37,211,102,0.4);
+      transition: transform 0.3s;
+    }
+
+    .float-whatsapp:hover { transform: scale(1.1); }
+    .float-whatsapp i { color: #fff; font-size: 1.8rem; }
+
+    .float-review {
+      position: fixed;
+      bottom: 6.5rem;
+      right: 2rem;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #1e3a8a, #93c5fd);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 900;
+      box-shadow: 0 4px 15px rgba(30,58,138,0.3);
+      transition: transform 0.3s;
+    }
+
+    .float-review:hover { transform: scale(1.1); }
+    .float-review i { color: #fff; font-size: 1.4rem; }
+
+    /* WhatsApp Modal */
+    .wa-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 2000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .wa-modal-backdrop.show { display: flex; }
+
+    .wa-modal {
+      background: #fff;
+      border-radius: 24px;
+      padding: 2.5rem;
+      max-width: 400px;
+      width: 90%;
+      text-align: center;
+      position: relative;
+    }
+
+    .wa-modal h3 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #172554;
+      margin-bottom: 1.5rem;
+    }
+
+    .wa-modal .wa-number {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      padding: 0.75rem;
+      background: #f0fdf4;
+      border-radius: 14px;
+      margin-bottom: 0.75rem;
+      text-decoration: none;
+      color: #172554;
+      font-weight: 600;
+      transition: background 0.3s;
+    }
+
+    .wa-modal .wa-number:hover { background: #dcfce7; }
+    .wa-modal .wa-number i { color: #25D366; font-size: 1.3rem; }
+
+    .wa-modal .close-wa {
+      position: absolute;
+      top: 1rem;
+      right: 1.25rem;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--muted);
+    }
+
+    /* ====== FOOTER ====== */
+    .site-footer {
+      background: #010B13;
+      color: #cbd5e1;
+      padding: 4rem 0 0;
+    }
+
+    .site-footer h4 {
+      color: #fff;
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 1.25rem;
+    }
+
+    .site-footer p, .site-footer a {
+      font-size: 0.9rem;
+      color: #94a3b8;
+      line-height: 1.7;
+    }
+
+    .site-footer a {
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .site-footer a:hover { color: #e50914; }
+
+    .footer-social {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .footer-social a {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      color: #cbd5e1;
+      transition: all 0.3s;
+    }
+
+    .footer-social a:hover {
+      background: #e50914;
+      color: #fff;
+    }
+
+    .footer-bottom {
+      margin-top: 3rem;
+      padding: 1.5rem 0;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      text-align: center;
+    }
+
+    .footer-bottom p {
+      font-size: 0.85rem;
+      color: #64748b;
+    }
+
+    /* ====== WELCOME POPUP ====== */
+    .welcome-popup-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      z-index: 5000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
+    .welcome-popup-backdrop.show { display: flex; }
+
+    .welcome-popup {
+      background: rgba(1, 11, 19, 0.92);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 28px;
+      padding: 3rem 2.5rem;
+      max-width: 500px;
+      width: 92%;
+      text-align: center;
+      position: relative;
+      box-shadow: 0 25px 80px rgba(0,0,0,0.5);
+    }
+
+    .welcome-popup .close-popup {
+      position: absolute;
+      top: 1rem;
+      right: 1.25rem;
+      background: none;
+      border: none;
+      color: #94a3b8;
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: color 0.3s;
+    }
+
+    .welcome-popup .close-popup:hover { color: #fff; }
+
+    .welcome-popup h2 {
+      font-size: 2rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, #e50914, #93c5fd);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.5rem;
+    }
+
+    .welcome-popup .tagline {
+      color: #94a3b8;
+      font-size: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .welcome-popup .features {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-bottom: 2rem;
+      text-align: left;
+    }
+
+    .welcome-popup .feature-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      color: #cbd5e1;
+      font-size: 0.9rem;
+    }
+
+    .welcome-popup .feature-item ion-icon {
+      color: #22C55E;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    .welcome-popup .btn-popup {
+      display: inline-block;
+      padding: 0.9rem 2.5rem;
+      background: linear-gradient(135deg, #e50914, #93c5fd);
+      color: #fff;
+      font-weight: 700;
+      border-radius: 50px;
+      text-decoration: none;
+      font-size: 1rem;
+      transition: transform 0.3s, box-shadow 0.3s;
+      box-shadow: 0 4px 20px rgba(229,9,20,0.3);
+    }
+
+    .welcome-popup .btn-popup:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(229,9,20,0.4);
+    }
+
+    .welcome-popup .dismiss {
+      display: block;
+      margin-top: 1.25rem;
+      color: #64748b;
+      font-size: 0.8rem;
+      cursor: pointer;
+      background: none;
+      border: none;
+      text-decoration: underline;
+      font-family: 'Titillium Web', sans-serif !important;
+    }
+
+    .welcome-popup .dismiss:hover { color: #94a3b8; }
+
+    /* ====== ANIMATIONS ====== */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(40px);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ====== NAVBAR ====== -->
+  <nav class="navbar">
+    <a href="index.html" class="logo-text">TWINE<span>SHOTS</span></a>
+
+    <ul class="nav-links">
+      <li><a href="index.html"><ion-icon name="home-outline"></ion-icon> Home</a></li>
+      <li><a href="gallery.html"><ion-icon name="images-outline"></ion-icon> Gallery</a></li>
+      <li><a href="team.html"><ion-icon name="people-outline"></ion-icon> Our Team</a></li>
+      <li><a href="services.html" class="active"><ion-icon name="aperture-outline"></ion-icon> Services</a></li>
+      <li><a href="info.html"><ion-icon name="information-circle-outline"></ion-icon> Info</a></li>
+      <li><a href="contact.html"><ion-icon name="call-outline"></ion-icon> Contact Us</a></li>
+      <li><a href="careers.html"><ion-icon name="briefcase-outline"></ion-icon> Careers</a></li>
+    </ul>
+
+    <div class="nav-social">
+      <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+      <a href="#" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+      <a href="#" aria-label="X / Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+      <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+    </div>
+
+    <div class="hamburger" id="hamburger" onclick="toggleMobileMenu()">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu Overlay -->
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="index.html"><ion-icon name="home-outline"></ion-icon> Home</a>
+    <a href="gallery.html"><ion-icon name="images-outline"></ion-icon> Gallery</a>
+    <a href="team.html"><ion-icon name="people-outline"></ion-icon> Our Team</a>
+    <a href="services.html"><ion-icon name="aperture-outline"></ion-icon> Services</a>
+    <a href="info.html"><ion-icon name="information-circle-outline"></ion-icon> Info</a>
+    <a href="contact.html"><ion-icon name="call-outline"></ion-icon> Contact Us</a>
+    <a href="careers.html"><ion-icon name="briefcase-outline"></ion-icon> Careers</a>
+    <div class="mobile-social">
+      <a href="#"><i class="fa-brands fa-instagram"></i></a>
+      <a href="#"><i class="fa-brands fa-youtube"></i></a>
+      <a href="#"><i class="fa-brands fa-x-twitter"></i></a>
+      <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+    </div>
+  </div>
+
+  <!-- ====== SERVICES HERO ====== -->
+  <section class="services-hero">
+    <div style="position: relative; z-index: 2; padding: 0 2rem;">
+      <h1 class="fade-up">Our Services</h1>
+      <p class="fade-up">Comprehensive photography &amp; videography solutions</p>
+    </div>
+  </section>
+
+  <!-- ====== SERVICES GRID ====== -->
+  <section style="padding: 5rem 0; background: var(--light-bg);">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+        <!-- 1. Weddings -->
+        <div class="service-detail-card fade-up">
+          <div class="card-image" style="background: linear-gradient(135deg, #e11d48, #be123c);">
+            <ion-icon name="heart-outline"></ion-icon>
+          </div>
+          <div class="card-content">
+            <h3>Weddings</h3>
+            <p>From intimate ceremonies to grand celebrations, we capture every heartfelt moment of your special day. Our team delivers cinematic films and stunning photos that tell your unique love story for generations to come.</p>
+            <div class="price">Starting from UGX XXX,XXX</div>
+            <a href="contact.html" class="learn-more">Learn More <i class="fa-solid fa-arrow-right"></i></a>
+          </div>
+        </div>
+
+        <!-- 2. Corporate -->
+        <div class="service-detail-card fade-up">
+          <div class="card-image" style="background: linear-gradient(135deg, #1e3a8a, #3b82f6);">
+            <ion-icon name="business-outline"></ion-icon>
+          </div>
+          <div class="card-content">
+            <h3>Corporate</h3>
+            <p>Professional corporate coverage that elevates your brand image. We deliver polished photos and videos for annual reports, team profiles, product launches, and internal communications.</p>
+            <div class="price">Starting from UGX XXX,XXX</div>
+            <a href="contact.html" class="learn-more">Learn More <i class="fa-solid fa-arrow-right"></i></a>
+          </div>
+        </div>
+
+        <!-- 3. Portraits -->
+        <div class="service-detail-card fade-up">
+          <div class="card-image" style="background: linear-gradient(135deg, #7c3aed, #a78bfa);">
+            <ion-icon name="person-outline"></ion-icon>
+          </div>
+          <div class="card-content">
+            <h3>Portraits</h3>
+            <p>Express your personality through stunning portrait photography. Whether for professional headshots, family portraits, or creative personal branding, we bring out the best in every subject.</p>
+            <div class="price">Starting from UGX XXX,XXX</div>
+            <a href="contact.html" class="learn-more">Learn More <i class="fa-solid fa-arrow-right"></i></a>
+          </div>
+        </div>
+
+        <!-- 4. Kwanjula -->
+        <div class="service-detail-card fade-up">
+          <div class="card-image" style="background: linear-gradient(135deg, #d97706, #f59e0b);">
+            <ion-icon name="gift-outline"></ion-icon>
+          </div>
+          <div class="card-content">
+            <h3>Kwanjula</h3>
+            <p>We honor the beauty and tradition of Kwanjula ceremonies with culturally sensitive, vibrant coverage. Every ritual, dance, and family moment is preserved with artistic precision and deep respect.</p>
+            <div class="price">Starting from UGX XXX,XXX</div>
+            <a href="contact.html" class="learn-more">Learn More <i class="fa-solid fa-arrow-right"></i></a>
+          </div>
+        </div>
+
+        <!-- 5. Live Feed -->
+        <div class="service-detail-card fade-up">
+          <div class="card-image" style="background: linear-gradient(135deg, #059669, #34d399);">
+            <ion-icon name="tv-outline"></ion-icon>
+          </div>
+          <div class="card-content">
+            <h3>Live Feed</h3>
+            <p>Real-time photo and video feeds displayed on screens at your event. Guests see themselves featured live, creating excitement and engagement throughout the occasion.</p>
+            <div class="price">Starting from UGX XXX,XXX</div>
+            <a href="contact.html" class="learn-more">Learn More <i class="fa-solid fa-arrow-right"></i></a>
+          </div>
+        </div>
+
+        <!-- 6. Live Stream -->
+        <div class="service-detail-card fade-up">
+          <div class="card-image" style="background: linear-gradient(135deg, #dc2626, #ef4444);">
+            <ion-icon name="videocam-outline"></ion-icon>
+          </div>
+          <div class="card-content">
+            <h3>Live Stream</h3>
+            <p>Broadcast your event to audiences worldwide with professional multi-camera live streaming. We handle setup, production, and delivery on platforms like YouTube, Facebook, and custom portals.</p>
+            <div class="price">Starting from UGX XXX,XXX</div>
+            <a href="contact.html" class="learn-more">Learn More <i class="fa-solid fa-arrow-right"></i></a>
+          </div>
+        </div>
+
+        <!-- 7. Real Estate -->
+        <div class="service-detail-card fade-up">
+          <div class="card-image" style="background: linear-gradient(135deg, #0891b2, #67e8f9);">
+            <ion-icon name="home-outline"></ion-icon>
+          </div>
+          <div class="card-content">
+            <h3>Real Estate</h3>
+            <p>Showcase properties with professional photography and videography that sells. From aerial drone shots to interior walkthroughs, we present every listing in its best light.</p>
+            <div class="price">Starting from UGX XXX,XXX</div>
+            <a href="contact.html" class="learn-more">Learn More <i class="fa-solid fa-arrow-right"></i></a>
+          </div>
+        </div>
+
+        <!-- 8. Conference -->
+        <div class="service-detail-card fade-up">
+          <div class="card-image" style="background: linear-gradient(135deg, #4338ca, #6366f1);">
+            <ion-icon name="mic-outline"></ion-icon>
+          </div>
+          <div class="card-content">
+            <h3>Conference</h3>
+            <p>Comprehensive conference documentation including keynote speakers, panel discussions, networking moments, and venue atmosphere. Ideal for post-event marketing and archival purposes.</p>
+            <div class="price">Starting from UGX XXX,XXX</div>
+            <a href="contact.html" class="learn-more">Learn More <i class="fa-solid fa-arrow-right"></i></a>
+          </div>
+        </div>
+
+        <!-- 9. Workshops -->
+        <div class="service-detail-card fade-up">
+          <div class="card-image" style="background: linear-gradient(135deg, #9333ea, #c084fc);">
+            <ion-icon name="easel-outline"></ion-icon>
+          </div>
+          <div class="card-content">
+            <h3>Workshops</h3>
+            <p>We run hands-on photography and videography workshops for beginners and professionals. Learn composition, lighting, editing, and storytelling from experienced Twineshots creatives.</p>
+            <div class="price">Starting from UGX XXX,XXX</div>
+            <a href="contact.html" class="learn-more">Learn More <i class="fa-solid fa-arrow-right"></i></a>
+          </div>
+        </div>
+
+        <!-- 10. Documentaries -->
+        <div class="service-detail-card fade-up">
+          <div class="card-image" style="background: linear-gradient(135deg, #1e40af, #60a5fa);">
+            <ion-icon name="film-outline"></ion-icon>
+          </div>
+          <div class="card-content">
+            <h3>Documentaries</h3>
+            <p>Tell powerful stories through professionally produced documentaries. We handle research, scripting, filming, and post-production to deliver compelling narratives that resonate with audiences.</p>
+            <div class="price">Starting from UGX XXX,XXX</div>
+            <a href="contact.html" class="learn-more">Learn More <i class="fa-solid fa-arrow-right"></i></a>
+          </div>
+        </div>
+
+        <!-- 11. Trainings -->
+        <div class="service-detail-card fade-up">
+          <div class="card-image" style="background: linear-gradient(135deg, #0d9488, #5eead4);">
+            <ion-icon name="school-outline"></ion-icon>
+          </div>
+          <div class="card-content">
+            <h3>Trainings</h3>
+            <p>Professional training video production for organizations and institutions. We create structured, high-quality training content that educates and engages your teams effectively.</p>
+            <div class="price">Starting from UGX XXX,XXX</div>
+            <a href="contact.html" class="learn-more">Learn More <i class="fa-solid fa-arrow-right"></i></a>
+          </div>
+        </div>
+
+        <!-- 12. Equipment Hire -->
+        <div class="service-detail-card fade-up">
+          <div class="card-image" style="background: linear-gradient(135deg, #475569, #94a3b8);">
+            <ion-icon name="camera-outline"></ion-icon>
+          </div>
+          <div class="card-content">
+            <h3>Equipment Hire</h3>
+            <p>Access professional-grade cameras, lenses, lighting kits, tripods, and audio equipment for your own projects. Flexible rental periods with optional operator support available.</p>
+            <div class="price">Starting from UGX XXX,XXX</div>
+            <a href="contact.html" class="learn-more">Learn More <i class="fa-solid fa-arrow-right"></i></a>
+          </div>
+        </div>
+
+        <!-- 13. Commercials -->
+        <div class="service-detail-card fade-up">
+          <div class="card-image" style="background: linear-gradient(135deg, #b91c1c, #fca5a5);">
+            <ion-icon name="megaphone-outline"></ion-icon>
+          </div>
+          <div class="card-content">
+            <h3>Commercials</h3>
+            <p>High-impact commercial video production for TV, digital, and social media. From concept development to final cut, we create ads that capture attention and drive results for your brand.</p>
+            <div class="price">Starting from UGX XXX,XXX</div>
+            <a href="contact.html" class="learn-more">Learn More <i class="fa-solid fa-arrow-right"></i></a>
+          </div>
+        </div>
+
+        <!-- 14. Studio Hire -->
+        <div class="service-detail-card fade-up">
+          <div class="card-image" style="background: linear-gradient(135deg, #334155, #1e293b);">
+            <ion-icon name="cube-outline"></ion-icon>
+          </div>
+          <div class="card-content">
+            <h3>Studio Hire</h3>
+            <p>Book our fully equipped studio space for your photo or video shoots. Features professional lighting rigs, backdrops, props, and a controlled environment for flawless production.</p>
+            <div class="price">Starting from UGX XXX,XXX</div>
+            <a href="contact.html" class="learn-more">Learn More <i class="fa-solid fa-arrow-right"></i></a>
+          </div>
+        </div>
+
+        <!-- 15. Kukyaala -->
+        <div class="service-detail-card fade-up">
+          <div class="card-image" style="background: linear-gradient(135deg, #ca8a04, #facc15);">
+            <ion-icon name="flower-outline"></ion-icon>
+          </div>
+          <div class="card-content">
+            <h3>Kukyaala</h3>
+            <p>Beautifully documented Kukyaala ceremonies that capture the joy and tradition of the introduction visit. We blend candid and posed shots to tell the full story of your cultural celebration.</p>
+            <div class="price">Starting from UGX XXX,XXX</div>
+            <a href="contact.html" class="learn-more">Learn More <i class="fa-solid fa-arrow-right"></i></a>
+          </div>
+        </div>
+
+        <!-- 16. Birthdays -->
+        <div class="service-detail-card fade-up">
+          <div class="card-image" style="background: linear-gradient(135deg, #ec4899, #f9a8d4);">
+            <ion-icon name="balloon-outline"></ion-icon>
+          </div>
+          <div class="card-content">
+            <h3>Birthdays</h3>
+            <p>Make birthday celebrations unforgettable with vibrant photography and videography. From kids' parties to milestone events, we capture the laughter, surprises, and cake-cutting moments.</p>
+            <div class="price">Starting from UGX XXX,XXX</div>
+            <a href="contact.html" class="learn-more">Learn More <i class="fa-solid fa-arrow-right"></i></a>
+          </div>
+        </div>
+
+        <!-- 17. Social Events -->
+        <div class="service-detail-card fade-up">
+          <div class="card-image" style="background: linear-gradient(135deg, #2563eb, #93c5fd);">
+            <ion-icon name="people-outline"></ion-icon>
+          </div>
+          <div class="card-content">
+            <h3>Social Events</h3>
+            <p>Galas, fundraisers, reunions, and community gatherings deserve professional coverage. We document the energy, connections, and highlights that make your social events truly special.</p>
+            <div class="price">Starting from UGX XXX,XXX</div>
+            <a href="contact.html" class="learn-more">Learn More <i class="fa-solid fa-arrow-right"></i></a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== CTA SECTION ====== -->
+  <section style="padding: 5rem 0; background: #fff;">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="cta-card fade-up">
+        <h2>Ready to Book?</h2>
+        <p>Let us bring your vision to life. Get in touch to discuss your project and receive a custom quote tailored to your needs.</p>
+        <a href="contact.html" class="btn-cta">Contact Us Today</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== FLOATING BUTTONS ====== -->
+  <div class="float-review" onclick="window.location.href='index.html#reviews'" title="Leave a Review">
+    <i class="fa-solid fa-star"></i>
+  </div>
+
+  <div class="float-whatsapp" onclick="openWhatsAppModal()" title="Chat on WhatsApp">
+    <i class="fa-brands fa-whatsapp"></i>
+  </div>
+
+  <!-- WhatsApp Modal -->
+  <div class="wa-modal-backdrop" id="waModal">
+    <div class="wa-modal">
+      <button class="close-wa" onclick="closeWhatsAppModal()">&times;</button>
+      <h3><i class="fa-brands fa-whatsapp" style="color: #25D366; margin-right: 0.5rem;"></i> Chat with Us</h3>
+      <a href="https://wa.me/256752969130" target="_blank" class="wa-number">
+        <i class="fa-brands fa-whatsapp"></i> +256 752 969 130
+      </a>
+      <a href="https://wa.me/256200906818" target="_blank" class="wa-number">
+        <i class="fa-brands fa-whatsapp"></i> +256 200 906 818
+      </a>
+    </div>
+  </div>
+
+  <!-- ====== FOOTER ====== -->
+  <footer class="site-footer">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+        <!-- Col 1: About -->
+        <div>
+          <h4>Twineshots</h4>
+          <p>Twineshots is a professional photography and videography company based in Kampala, Uganda. We specialize in capturing life's most important moments with creativity, passion, and precision.</p>
+        </div>
+        <!-- Col 2: Contact -->
+        <div>
+          <h4>Contact</h4>
+          <p style="margin-bottom: 0.5rem;">
+            <i class="fa-solid fa-envelope" style="margin-right: 0.5rem; color: #e50914;"></i>
+            <a href="mailto:ask@twineshots.com">ask@twineshots.com</a>
+          </p>
+          <p style="margin-bottom: 0.5rem;">
+            <i class="fa-solid fa-phone" style="margin-right: 0.5rem; color: #e50914;"></i>
+            <a href="tel:+256752969130">+256 752 969 130</a>
+          </p>
+          <p>
+            <i class="fa-solid fa-phone" style="margin-right: 0.5rem; color: #e50914;"></i>
+            <a href="tel:+256200906818">+256 200 906 818</a>
+          </p>
+        </div>
+        <!-- Col 3: Location -->
+        <div>
+          <h4>Location</h4>
+          <p>
+            <i class="fa-solid fa-location-dot" style="margin-right: 0.5rem; color: #e50914;"></i>
+            Elements Courts, alongside Makerere Kasubi road, Room G001
+          </p>
+        </div>
+        <!-- Col 4: Follow Us -->
+        <div>
+          <h4>Follow Us</h4>
+          <div class="footer-social">
+            <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+            <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+            <a href="#" aria-label="X / Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+            <a href="#" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+            <a href="#" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2026 Twineshots. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ====== WELCOME POPUP ====== -->
+  <div class="welcome-popup-backdrop" id="welcomePopup">
+    <div class="welcome-popup">
+      <button class="close-popup" onclick="closeWelcomePopup()">&times;</button>
+      <h2>Welcome to Twineshots</h2>
+      <p class="tagline">Capture Moments. Create Memories.</p>
+      <div class="features">
+        <div class="feature-item">
+          <ion-icon name="flash-outline"></ion-icon>
+          <span><strong>Instant Impact</strong> &mdash; We deliver stunning visuals that make a lasting first impression.</span>
+        </div>
+        <div class="feature-item">
+          <ion-icon name="diamond-outline"></ion-icon>
+          <span><strong>Premium Quality</strong> &mdash; Industry-leading equipment and post-production excellence.</span>
+        </div>
+        <div class="feature-item">
+          <ion-icon name="heart-outline"></ion-icon>
+          <span><strong>Client First</strong> &mdash; Your vision drives every frame we capture.</span>
+        </div>
+      </div>
+      <a href="gallery.html" class="btn-popup">Explore Our Gallery</a>
+      <button class="dismiss" onclick="dismissWelcomePopup()">Don't show again today</button>
+    </div>
+  </div>
+
+  <!-- ====== JAVASCRIPT ====== -->
+  <script>
+    // === Mobile Menu ===
+    function toggleMobileMenu() {
+      const menu = document.getElementById('mobileMenu');
+      const hamburger = document.getElementById('hamburger');
+      menu.classList.toggle('open');
+      hamburger.classList.toggle('open');
+      document.body.style.overflow = menu.classList.contains('open') ? 'hidden' : '';
+    }
+
+    // Close mobile menu on link click
+    document.querySelectorAll('.mobile-menu a').forEach(link => {
+      link.addEventListener('click', () => {
+        document.getElementById('mobileMenu').classList.remove('open');
+        document.getElementById('hamburger').classList.remove('open');
+        document.body.style.overflow = '';
+      });
+    });
+
+    // === WhatsApp Modal ===
+    function openWhatsAppModal() {
+      document.getElementById('waModal').classList.add('show');
+    }
+
+    function closeWhatsAppModal() {
+      document.getElementById('waModal').classList.remove('show');
+    }
+
+    document.getElementById('waModal').addEventListener('click', function(e) {
+      if (e.target === this) closeWhatsAppModal();
+    });
+
+    // === Welcome Popup ===
+    function showWelcomePopup() {
+      const lastShown = localStorage.getItem('twineshots_popup_date');
+      const today = new Date().toDateString();
+      if (lastShown !== today) {
+        setTimeout(() => {
+          document.getElementById('welcomePopup').classList.add('show');
+        }, 1500);
+      }
+    }
+
+    function closeWelcomePopup() {
+      document.getElementById('welcomePopup').classList.remove('show');
+    }
+
+    function dismissWelcomePopup() {
+      const today = new Date().toDateString();
+      localStorage.setItem('twineshots_popup_date', today);
+      closeWelcomePopup();
+    }
+
+    // Close popup on backdrop click
+    document.getElementById('welcomePopup').addEventListener('click', function(e) {
+      if (e.target === this) closeWelcomePopup();
+    });
+
+    // Show popup on load
+    window.addEventListener('DOMContentLoaded', showWelcomePopup);
+
+    // === GSAP ScrollTrigger Animations ===
+    gsap.registerPlugin(ScrollTrigger);
+
+    gsap.utils.toArray('.fade-up').forEach((el) => {
+      gsap.fromTo(el,
+        { opacity: 0, y: 40 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: el,
+            start: 'top 85%',
+            toggleActions: 'play none none none',
+          },
+        }
+      );
+    });
+
+    // Navbar background opacity on scroll
+    window.addEventListener('scroll', () => {
+      const navbar = document.querySelector('.navbar');
+      if (window.scrollY > 100) {
+        navbar.style.boxShadow = '0 4px 30px rgba(0,0,0,0.5)';
+      } else {
+        navbar.style.boxShadow = '0 2px 20px rgba(0,0,0,0.3)';
+      }
+    });
+  </script>
+
+  <!-- External JS -->
+  <script src="script.js"></script>
+</body>
+</html>
