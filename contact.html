@@ -831,7 +831,7 @@
               <p>Tell us about your event and we will craft the perfect package for you.</p>
             </div>
             <div class="form-body">
-              <form id="bookingForm" onsubmit="event.preventDefault(); alert('Thank you! Your message has been received. We will contact you soon.');">
+              <form id="contact-form" onsubmit="event.preventDefault(); alert('Thank you! Your message has been received. We will contact you soon.');">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6">
                   <div>
                     <label for="firstName">First Name *</label>
@@ -1158,6 +1158,9 @@
   </script>
 
   <!-- External JS -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-config.js"></script>
+  <script src="js/content-loader.js"></script>
   <script src="script.js"></script>
 </body>
 </html>

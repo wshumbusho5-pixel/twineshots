@@ -1,0 +1,1165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Twineshots Admin</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700;900&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwindcss.config = {
+      theme: {
+        extend: {
+          fontFamily: { titillium: ['"Titillium Web"', 'sans-serif'] },
+          colors: {
+            accent: '#e50914',
+            nearblack: '#010B13',
+            sidebar: '#010B13',
+          },
+        },
+      },
+    };
+  </script>
+
+  <!-- Font Awesome 6.5.1 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <!-- Supabase JS v2 -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    * { font-family: 'Titillium Web', sans-serif; }
+    .sidebar-item { transition: all 0.15s ease; }
+    .sidebar-item:hover, .sidebar-item.active { background: rgba(229,9,20,0.15); border-right: 3px solid #e50914; color: #e50914; }
+    .modal-overlay { background: rgba(0,0,0,0.5); }
+    .toast { animation: slideIn 0.3s ease, fadeOut 0.3s ease 2.7s; }
+    @keyframes slideIn { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+    table tbody tr:nth-child(even) { background: #f9fafb; }
+    table tbody tr:hover { background: #f3f4f6; }
+    .spinner { border: 3px solid #f3f3f3; border-top: 3px solid #e50914; border-radius: 50%; width: 24px; height: 24px; animation: spin 0.8s linear infinite; display: inline-block; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+  </style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+
+  <!-- ==================== TOAST CONTAINER ==================== -->
+  <div id="toast-container" class="fixed top-4 right-4 z-[9999] flex flex-col gap-2"></div>
+
+  <!-- ==================== LOGIN SCREEN ==================== -->
+  <div id="login-screen" class="min-h-screen flex items-center justify-center bg-nearblack">
+    <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md">
+      <div class="text-center mb-8">
+        <h1 class="text-3xl font-bold text-nearblack">Twineshots</h1>
+        <p class="text-gray-500 mt-1">Admin Panel</p>
+      </div>
+      <form id="login-form" class="space-y-4">
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-1">Email</label>
+          <input type="email" id="login-email" required class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-accent focus:border-accent outline-none" placeholder="admin@twineshots.com" />
+        </div>
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-1">Password</label>
+          <input type="password" id="login-password" required class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-accent focus:border-accent outline-none" placeholder="Enter password" />
+        </div>
+        <div id="login-error" class="text-red-500 text-sm hidden"></div>
+        <button type="submit" id="login-btn" class="w-full bg-accent text-white font-bold py-2.5 rounded-lg hover:bg-red-700 transition">Sign In</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==================== ADMIN LAYOUT ==================== -->
+  <div id="admin-layout" class="hidden flex min-h-screen">
+
+    <!-- SIDEBAR -->
+    <aside id="sidebar" class="w-[260px] bg-sidebar text-gray-300 flex-shrink-0 flex flex-col fixed h-full z-50 overflow-y-auto">
+      <div class="p-5 border-b border-gray-800">
+        <h1 class="text-xl font-bold text-white">Twineshots</h1>
+        <p class="text-xs text-gray-500">Admin Panel</p>
+      </div>
+      <nav class="flex-1 py-2" id="sidebar-nav">
+        <a href="#" data-section="dashboard" class="sidebar-item active flex items-center gap-3 px-5 py-3 text-sm cursor-pointer"><i class="fa-solid fa-gauge-high w-5 text-center"></i> Dashboard</a>
+        <a href="#" data-section="hero" class="sidebar-item flex items-center gap-3 px-5 py-3 text-sm cursor-pointer"><i class="fa-solid fa-images w-5 text-center"></i> Hero Slides</a>
+        <a href="#" data-section="services" class="sidebar-item flex items-center gap-3 px-5 py-3 text-sm cursor-pointer"><i class="fa-solid fa-camera w-5 text-center"></i> Services</a>
+        <a href="#" data-section="gallery" class="sidebar-item flex items-center gap-3 px-5 py-3 text-sm cursor-pointer"><i class="fa-solid fa-photo-film w-5 text-center"></i> Gallery</a>
+        <a href="#" data-section="team" class="sidebar-item flex items-center gap-3 px-5 py-3 text-sm cursor-pointer"><i class="fa-solid fa-users w-5 text-center"></i> Team</a>
+        <a href="#" data-section="reviews" class="sidebar-item flex items-center gap-3 px-5 py-3 text-sm cursor-pointer"><i class="fa-solid fa-star w-5 text-center"></i> Reviews</a>
+        <a href="#" data-section="partners" class="sidebar-item flex items-center gap-3 px-5 py-3 text-sm cursor-pointer"><i class="fa-solid fa-handshake w-5 text-center"></i> Partners</a>
+        <a href="#" data-section="values" class="sidebar-item flex items-center gap-3 px-5 py-3 text-sm cursor-pointer"><i class="fa-solid fa-heart w-5 text-center"></i> Values</a>
+        <a href="#" data-section="jobs" class="sidebar-item flex items-center gap-3 px-5 py-3 text-sm cursor-pointer"><i class="fa-solid fa-briefcase w-5 text-center"></i> Jobs</a>
+        <a href="#" data-section="applications" class="sidebar-item flex items-center gap-3 px-5 py-3 text-sm cursor-pointer"><i class="fa-solid fa-file-lines w-5 text-center"></i> Applications</a>
+        <a href="#" data-section="messages" class="sidebar-item flex items-center gap-3 px-5 py-3 text-sm cursor-pointer"><i class="fa-solid fa-envelope w-5 text-center"></i> Messages <span id="unread-badge" class="hidden ml-auto bg-accent text-white text-xs rounded-full px-2 py-0.5"></span></a>
+        <a href="#" data-section="instagram" class="sidebar-item flex items-center gap-3 px-5 py-3 text-sm cursor-pointer"><i class="fa-brands fa-instagram w-5 text-center"></i> Instagram</a>
+        <a href="#" data-section="discover" class="sidebar-item flex items-center gap-3 px-5 py-3 text-sm cursor-pointer"><i class="fa-solid fa-compass w-5 text-center"></i> Discover</a>
+        <a href="#" data-section="stats" class="sidebar-item flex items-center gap-3 px-5 py-3 text-sm cursor-pointer"><i class="fa-solid fa-chart-bar w-5 text-center"></i> Stats</a>
+        <a href="#" data-section="settings" class="sidebar-item flex items-center gap-3 px-5 py-3 text-sm cursor-pointer"><i class="fa-solid fa-gear w-5 text-center"></i> Settings</a>
+        <div class="border-t border-gray-800 mt-2"></div>
+        <a href="#" id="logout-btn" class="sidebar-item flex items-center gap-3 px-5 py-3 text-sm cursor-pointer text-red-400 hover:text-red-300"><i class="fa-solid fa-right-from-bracket w-5 text-center"></i> Logout</a>
+      </nav>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="ml-[260px] flex-1 p-6 overflow-y-auto min-h-screen bg-white">
+
+      <!-- DASHBOARD -->
+      <div id="section-dashboard" class="section">
+        <h2 class="text-2xl font-bold text-gray-800 mb-1">Dashboard</h2>
+        <p class="text-gray-500 mb-6">Welcome back! Here's an overview of your site.</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4" id="dashboard-cards">
+          <div class="bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-xl p-5 shadow">
+            <div class="text-sm opacity-80">Total Services</div>
+            <div class="text-3xl font-bold mt-1" id="stat-services">-</div>
+          </div>
+          <div class="bg-gradient-to-br from-purple-500 to-purple-600 text-white rounded-xl p-5 shadow">
+            <div class="text-sm opacity-80">Team Members</div>
+            <div class="text-3xl font-bold mt-1" id="stat-team">-</div>
+          </div>
+          <div class="bg-gradient-to-br from-green-500 to-green-600 text-white rounded-xl p-5 shadow">
+            <div class="text-sm opacity-80">Gallery Items</div>
+            <div class="text-3xl font-bold mt-1" id="stat-gallery">-</div>
+          </div>
+          <div class="bg-gradient-to-br from-red-500 to-red-600 text-white rounded-xl p-5 shadow">
+            <div class="text-sm opacity-80">Unread Messages</div>
+            <div class="text-3xl font-bold mt-1" id="stat-messages">-</div>
+          </div>
+          <div class="bg-gradient-to-br from-yellow-500 to-yellow-600 text-white rounded-xl p-5 shadow">
+            <div class="text-sm opacity-80">Pending Applications</div>
+            <div class="text-3xl font-bold mt-1" id="stat-applications">-</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- HERO SLIDES -->
+      <div id="section-hero" class="section hidden">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-2xl font-bold text-gray-800">Hero Slides</h2>
+          <button onclick="openHeroModal()" class="bg-accent text-white px-4 py-2 rounded-lg hover:bg-red-700 text-sm font-semibold"><i class="fa-solid fa-plus mr-1"></i> Add Slide</button>
+        </div>
+        <div class="overflow-x-auto"><table class="w-full text-sm text-left" id="hero-table">
+          <thead class="bg-gray-50 text-gray-600 uppercase text-xs"><tr><th class="px-4 py-3">Image</th><th class="px-4 py-3">Title</th><th class="px-4 py-3">Description</th><th class="px-4 py-3">Order</th><th class="px-4 py-3">Active</th><th class="px-4 py-3">Actions</th></tr></thead>
+          <tbody id="hero-tbody"></tbody>
+        </table></div>
+        <div id="hero-loading" class="text-center py-8"><div class="spinner mx-auto"></div></div>
+      </div>
+
+      <!-- SERVICES -->
+      <div id="section-services" class="section hidden">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-2xl font-bold text-gray-800">Services</h2>
+          <button onclick="openServiceModal()" class="bg-accent text-white px-4 py-2 rounded-lg hover:bg-red-700 text-sm font-semibold"><i class="fa-solid fa-plus mr-1"></i> Add Service</button>
+        </div>
+        <div class="overflow-x-auto"><table class="w-full text-sm text-left" id="services-table">
+          <thead class="bg-gray-50 text-gray-600 uppercase text-xs"><tr><th class="px-4 py-3">Image</th><th class="px-4 py-3">Name</th><th class="px-4 py-3">Price</th><th class="px-4 py-3">Order</th><th class="px-4 py-3">Active</th><th class="px-4 py-3">Actions</th></tr></thead>
+          <tbody id="services-tbody"></tbody>
+        </table></div>
+        <div id="services-loading" class="text-center py-8"><div class="spinner mx-auto"></div></div>
+      </div>
+
+      <!-- GALLERY -->
+      <div id="section-gallery" class="section hidden">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-2xl font-bold text-gray-800">Gallery</h2>
+          <div class="flex gap-2 items-center">
+            <select id="gallery-filter" onchange="loadGallery()" class="border border-gray-300 rounded-lg px-3 py-2 text-sm">
+              <option value="">All Categories</option>
+              <option value="Weddings">Weddings</option>
+              <option value="Corporate">Corporate</option>
+              <option value="Portraits">Portraits</option>
+              <option value="Kwanjula">Kwanjula</option>
+              <option value="Studio">Studio</option>
+              <option value="Events">Events</option>
+              <option value="Real Estate">Real Estate</option>
+              <option value="Other">Other</option>
+            </select>
+            <button onclick="openGalleryModal()" class="bg-accent text-white px-4 py-2 rounded-lg hover:bg-red-700 text-sm font-semibold"><i class="fa-solid fa-plus mr-1"></i> Add Image</button>
+          </div>
+        </div>
+        <div id="gallery-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
+        <div id="gallery-loading" class="text-center py-8"><div class="spinner mx-auto"></div></div>
+      </div>
+
+      <!-- TEAM -->
+      <div id="section-team" class="section hidden">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-2xl font-bold text-gray-800">Team Members</h2>
+          <button onclick="openTeamModal()" class="bg-accent text-white px-4 py-2 rounded-lg hover:bg-red-700 text-sm font-semibold"><i class="fa-solid fa-plus mr-1"></i> Add Member</button>
+        </div>
+        <div class="overflow-x-auto"><table class="w-full text-sm text-left">
+          <thead class="bg-gray-50 text-gray-600 uppercase text-xs"><tr><th class="px-4 py-3">Avatar</th><th class="px-4 py-3">Name</th><th class="px-4 py-3">Role</th><th class="px-4 py-3">Order</th><th class="px-4 py-3">Active</th><th class="px-4 py-3">Actions</th></tr></thead>
+          <tbody id="team-tbody"></tbody>
+        </table></div>
+        <div id="team-loading" class="text-center py-8"><div class="spinner mx-auto"></div></div>
+      </div>
+
+      <!-- REVIEWS -->
+      <div id="section-reviews" class="section hidden">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-2xl font-bold text-gray-800">Reviews</h2>
+          <button onclick="openReviewModal()" class="bg-accent text-white px-4 py-2 rounded-lg hover:bg-red-700 text-sm font-semibold"><i class="fa-solid fa-plus mr-1"></i> Add Review</button>
+        </div>
+        <div class="overflow-x-auto"><table class="w-full text-sm text-left">
+          <thead class="bg-gray-50 text-gray-600 uppercase text-xs"><tr><th class="px-4 py-3">Author</th><th class="px-4 py-3">Event Type</th><th class="px-4 py-3">Rating</th><th class="px-4 py-3">Featured</th><th class="px-4 py-3">Active</th><th class="px-4 py-3">Actions</th></tr></thead>
+          <tbody id="reviews-tbody"></tbody>
+        </table></div>
+        <div id="reviews-loading" class="text-center py-8"><div class="spinner mx-auto"></div></div>
+      </div>
+
+      <!-- PARTNERS -->
+      <div id="section-partners" class="section hidden">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-2xl font-bold text-gray-800">Partners</h2>
+          <button onclick="openPartnerModal()" class="bg-accent text-white px-4 py-2 rounded-lg hover:bg-red-700 text-sm font-semibold"><i class="fa-solid fa-plus mr-1"></i> Add Partner</button>
+        </div>
+        <div id="partners-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
+        <div id="partners-loading" class="text-center py-8"><div class="spinner mx-auto"></div></div>
+      </div>
+
+      <!-- VALUES -->
+      <div id="section-values" class="section hidden">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-2xl font-bold text-gray-800">Values (Why Choose Us)</h2>
+          <button onclick="openValueModal()" class="bg-accent text-white px-4 py-2 rounded-lg hover:bg-red-700 text-sm font-semibold"><i class="fa-solid fa-plus mr-1"></i> Add Value</button>
+        </div>
+        <div class="overflow-x-auto"><table class="w-full text-sm text-left">
+          <thead class="bg-gray-50 text-gray-600 uppercase text-xs"><tr><th class="px-4 py-3">Title</th><th class="px-4 py-3">Icon</th><th class="px-4 py-3">Order</th><th class="px-4 py-3">Active</th><th class="px-4 py-3">Actions</th></tr></thead>
+          <tbody id="values-tbody"></tbody>
+        </table></div>
+        <div id="values-loading" class="text-center py-8"><div class="spinner mx-auto"></div></div>
+      </div>
+
+      <!-- JOBS -->
+      <div id="section-jobs" class="section hidden">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-2xl font-bold text-gray-800">Job Listings</h2>
+          <button onclick="openJobModal()" class="bg-accent text-white px-4 py-2 rounded-lg hover:bg-red-700 text-sm font-semibold"><i class="fa-solid fa-plus mr-1"></i> Add Job</button>
+        </div>
+        <div class="overflow-x-auto"><table class="w-full text-sm text-left">
+          <thead class="bg-gray-50 text-gray-600 uppercase text-xs"><tr><th class="px-4 py-3">Title</th><th class="px-4 py-3">Type</th><th class="px-4 py-3">Location</th><th class="px-4 py-3">Active</th><th class="px-4 py-3">Actions</th></tr></thead>
+          <tbody id="jobs-tbody"></tbody>
+        </table></div>
+        <div id="jobs-loading" class="text-center py-8"><div class="spinner mx-auto"></div></div>
+      </div>
+
+      <!-- APPLICATIONS -->
+      <div id="section-applications" class="section hidden">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-2xl font-bold text-gray-800">Job Applications</h2>
+        </div>
+        <div class="overflow-x-auto"><table class="w-full text-sm text-left">
+          <thead class="bg-gray-50 text-gray-600 uppercase text-xs"><tr><th class="px-4 py-3">Name</th><th class="px-4 py-3">Email</th><th class="px-4 py-3">Position</th><th class="px-4 py-3">Date</th><th class="px-4 py-3">Reviewed</th><th class="px-4 py-3">Actions</th></tr></thead>
+          <tbody id="applications-tbody"></tbody>
+        </table></div>
+        <div id="applications-loading" class="text-center py-8"><div class="spinner mx-auto"></div></div>
+      </div>
+
+      <!-- MESSAGES -->
+      <div id="section-messages" class="section hidden">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-2xl font-bold text-gray-800">Contact Messages</h2>
+        </div>
+        <div class="overflow-x-auto"><table class="w-full text-sm text-left">
+          <thead class="bg-gray-50 text-gray-600 uppercase text-xs"><tr><th class="px-4 py-3">Name</th><th class="px-4 py-3">Email</th><th class="px-4 py-3">Service</th><th class="px-4 py-3">Date</th><th class="px-4 py-3">Status</th><th class="px-4 py-3">Actions</th></tr></thead>
+          <tbody id="messages-tbody"></tbody>
+        </table></div>
+        <div id="messages-loading" class="text-center py-8"><div class="spinner mx-auto"></div></div>
+      </div>
+
+      <!-- INSTAGRAM -->
+      <div id="section-instagram" class="section hidden">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-2xl font-bold text-gray-800">Instagram Posts</h2>
+          <button onclick="openInstagramModal()" class="bg-accent text-white px-4 py-2 rounded-lg hover:bg-red-700 text-sm font-semibold"><i class="fa-solid fa-plus mr-1"></i> Add Post</button>
+        </div>
+        <div id="instagram-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
+        <div id="instagram-loading" class="text-center py-8"><div class="spinner mx-auto"></div></div>
+      </div>
+
+      <!-- DISCOVER -->
+      <div id="section-discover" class="section hidden">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-2xl font-bold text-gray-800">Discover Cards</h2>
+          <button onclick="openDiscoverModal()" class="bg-accent text-white px-4 py-2 rounded-lg hover:bg-red-700 text-sm font-semibold"><i class="fa-solid fa-plus mr-1"></i> Add Card</button>
+        </div>
+        <div class="overflow-x-auto"><table class="w-full text-sm text-left">
+          <thead class="bg-gray-50 text-gray-600 uppercase text-xs"><tr><th class="px-4 py-3">Image</th><th class="px-4 py-3">Title</th><th class="px-4 py-3">Link</th><th class="px-4 py-3">Order</th><th class="px-4 py-3">Active</th><th class="px-4 py-3">Actions</th></tr></thead>
+          <tbody id="discover-tbody"></tbody>
+        </table></div>
+        <div id="discover-loading" class="text-center py-8"><div class="spinner mx-auto"></div></div>
+      </div>
+
+      <!-- STATS -->
+      <div id="section-stats" class="section hidden">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-2xl font-bold text-gray-800">Stats</h2>
+          <button onclick="openStatModal()" class="bg-accent text-white px-4 py-2 rounded-lg hover:bg-red-700 text-sm font-semibold"><i class="fa-solid fa-plus mr-1"></i> Add Stat</button>
+        </div>
+        <div class="overflow-x-auto"><table class="w-full text-sm text-left">
+          <thead class="bg-gray-50 text-gray-600 uppercase text-xs"><tr><th class="px-4 py-3">Label</th><th class="px-4 py-3">Value</th><th class="px-4 py-3">Order</th><th class="px-4 py-3">Active</th><th class="px-4 py-3">Actions</th></tr></thead>
+          <tbody id="stats-tbody"></tbody>
+        </table></div>
+        <div id="stats-loading" class="text-center py-8"><div class="spinner mx-auto"></div></div>
+      </div>
+
+      <!-- SETTINGS -->
+      <div id="section-settings" class="section hidden">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6">Site Settings</h2>
+        <div id="settings-form" class="max-w-2xl space-y-8">
+          <div id="settings-loading" class="text-center py-8"><div class="spinner mx-auto"></div></div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- ==================== MODAL CONTAINER ==================== -->
+  <div id="modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center modal-overlay">
+    <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto mx-4" id="modal-content">
+      <div class="flex items-center justify-between p-5 border-b">
+        <h3 class="text-lg font-bold text-gray-800" id="modal-title">Modal</h3>
+        <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 text-xl"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="p-5" id="modal-body"></div>
+    </div>
+  </div>
+
+
+  <!-- ==================== JAVASCRIPT ==================== -->
+  <script>
+    // ===== CONFIG =====
+    const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+    const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    // ===== TOAST =====
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      const bg = type === 'success' ? 'bg-green-500' : type === 'error' ? 'bg-red-500' : 'bg-blue-500';
+      toast.className = `toast ${bg} text-white px-5 py-3 rounded-lg shadow-lg text-sm font-medium`;
+      toast.textContent = message;
+      container.appendChild(toast);
+      setTimeout(() => toast.remove(), 3000);
+    }
+
+    // ===== MODAL =====
+    function openModal(title, bodyHtml) {
+      document.getElementById('modal-title').textContent = title;
+      document.getElementById('modal-body').innerHTML = bodyHtml;
+      document.getElementById('modal').classList.remove('hidden');
+    }
+    function closeModal() {
+      document.getElementById('modal').classList.add('hidden');
+    }
+    document.getElementById('modal').addEventListener('click', (e) => {
+      if (e.target === document.getElementById('modal')) closeModal();
+    });
+
+    // ===== AUTH =====
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('login-email').value;
+      const password = document.getElementById('login-password').value;
+      const errEl = document.getElementById('login-error');
+      errEl.classList.add('hidden');
+      document.getElementById('login-btn').textContent = 'Signing in...';
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      document.getElementById('login-btn').textContent = 'Sign In';
+      if (error) { errEl.textContent = error.message; errEl.classList.remove('hidden'); }
+    });
+
+    document.getElementById('logout-btn').addEventListener('click', async (e) => {
+      e.preventDefault();
+      await supabase.auth.signOut();
+    });
+
+    supabase.auth.onAuthStateChange((event, session) => {
+      if (session) {
+        document.getElementById('login-screen').classList.add('hidden');
+        document.getElementById('admin-layout').classList.remove('hidden');
+        document.getElementById('admin-layout').classList.add('flex');
+        loadDashboard();
+      } else {
+        document.getElementById('login-screen').classList.remove('hidden');
+        document.getElementById('admin-layout').classList.add('hidden');
+        document.getElementById('admin-layout').classList.remove('flex');
+      }
+    });
+
+    // Check session on load
+    (async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        document.getElementById('login-screen').classList.add('hidden');
+        document.getElementById('admin-layout').classList.remove('hidden');
+        document.getElementById('admin-layout').classList.add('flex');
+        loadDashboard();
+      }
+    })();
+
+    // ===== SIDEBAR NAVIGATION =====
+    document.querySelectorAll('#sidebar-nav [data-section]').forEach(item => {
+      item.addEventListener('click', (e) => {
+        e.preventDefault();
+        const section = item.dataset.section;
+        document.querySelectorAll('.section').forEach(s => s.classList.add('hidden'));
+        document.getElementById(`section-${section}`).classList.remove('hidden');
+        document.querySelectorAll('#sidebar-nav .sidebar-item').forEach(i => i.classList.remove('active'));
+        item.classList.add('active');
+        // Load data for section
+        const loaders = {
+          dashboard: loadDashboard, hero: loadHero, services: loadServices, gallery: loadGallery,
+          team: loadTeam, reviews: loadReviews, partners: loadPartners, values: loadValues,
+          jobs: loadJobs, applications: loadApplications, messages: loadMessages,
+          instagram: loadInstagram, discover: loadDiscover, stats: loadStats, settings: loadSettings
+        };
+        if (loaders[section]) loaders[section]();
+      });
+    });
+
+    // ===== HELPERS =====
+    function imgPreview(url, size = 'w-12 h-12') {
+      if (!url) return `<div class="${size} bg-gray-200 rounded flex items-center justify-center text-gray-400"><i class="fa-solid fa-image"></i></div>`;
+      return `<img src="${url}" class="${size} object-cover rounded" onerror="this.src=''" />`;
+    }
+    function toggleHtml(val) {
+      return val ? '<span class="text-green-600 font-semibold">Yes</span>' : '<span class="text-gray-400">No</span>';
+    }
+    function starsHtml(n) {
+      return Array.from({length:5}, (_,i) => `<i class="fa-solid fa-star ${i < n ? 'text-yellow-400' : 'text-gray-300'} text-xs"></i>`).join('');
+    }
+    function fmtDate(d) {
+      if (!d) return '-';
+      return new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    }
+
+    async function uploadFile(bucket, file) {
+      const ext = file.name.split('.').pop();
+      const path = `${Date.now()}-${Math.random().toString(36).substring(2,8)}.${ext}`;
+      const { error } = await supabase.storage.from(bucket).upload(path, file);
+      if (error) throw error;
+      const { data } = supabase.storage.from(bucket).getPublicUrl(path);
+      return data.publicUrl;
+    }
+
+    // ===== DASHBOARD =====
+    async function loadDashboard() {
+      const [services, team, gallery, messages, applications] = await Promise.all([
+        supabase.from('services').select('id', { count: 'exact', head: true }),
+        supabase.from('team_members').select('id', { count: 'exact', head: true }),
+        supabase.from('gallery_items').select('id', { count: 'exact', head: true }),
+        supabase.from('contact_submissions').select('id', { count: 'exact', head: true }).eq('is_read', false),
+        supabase.from('job_applications').select('id', { count: 'exact', head: true }).eq('is_reviewed', false),
+      ]);
+      document.getElementById('stat-services').textContent = services.count ?? 0;
+      document.getElementById('stat-team').textContent = team.count ?? 0;
+      document.getElementById('stat-gallery').textContent = gallery.count ?? 0;
+      document.getElementById('stat-messages').textContent = messages.count ?? 0;
+      document.getElementById('stat-applications').textContent = applications.count ?? 0;
+
+      // Update unread badge
+      const unread = messages.count ?? 0;
+      const badge = document.getElementById('unread-badge');
+      if (unread > 0) { badge.textContent = unread; badge.classList.remove('hidden'); }
+      else { badge.classList.add('hidden'); }
+    }
+
+    // ===== HERO SLIDES =====
+    async function loadHero() {
+      document.getElementById('hero-loading').classList.remove('hidden');
+      const { data, error } = await supabase.from('hero_slides').select('*').order('display_order');
+      document.getElementById('hero-loading').classList.add('hidden');
+      if (error) return showToast(error.message, 'error');
+      document.getElementById('hero-tbody').innerHTML = data.map(r => `
+        <tr>
+          <td class="px-4 py-3">${imgPreview(r.image_url)}</td>
+          <td class="px-4 py-3 font-medium">${r.title || ''}</td>
+          <td class="px-4 py-3 text-gray-500 max-w-xs truncate">${r.description || ''}</td>
+          <td class="px-4 py-3">${r.display_order}</td>
+          <td class="px-4 py-3">${toggleHtml(r.is_active)}</td>
+          <td class="px-4 py-3 space-x-2">
+            <button onclick='openHeroModal(${JSON.stringify(r).replace(/'/g,"&#39;")})' class="text-blue-600 hover:text-blue-800"><i class="fa-solid fa-pen-to-square"></i></button>
+            <button onclick="deleteRow('hero_slides','${r.id}', loadHero)" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button>
+          </td>
+        </tr>`).join('');
+    }
+
+    function openHeroModal(item = null) {
+      const isEdit = !!item;
+      openModal(isEdit ? 'Edit Hero Slide' : 'Add Hero Slide', `
+        <form id="hero-form" class="space-y-4">
+          <div><label class="block text-sm font-semibold mb-1">Title</label><input name="title" value="${item?.title||''}" class="w-full border rounded-lg px-3 py-2 text-sm" required /></div>
+          <div><label class="block text-sm font-semibold mb-1">Description</label><textarea name="description" class="w-full border rounded-lg px-3 py-2 text-sm" rows="3">${item?.description||''}</textarea></div>
+          <div><label class="block text-sm font-semibold mb-1">Image</label>
+            ${item?.image_url ? `<img src="${item.image_url}" class="w-24 h-16 object-cover rounded mb-2" />` : ''}
+            <input type="file" name="image" accept="image/*" class="w-full text-sm" />
+          </div>
+          <div class="grid grid-cols-2 gap-4">
+            <div><label class="block text-sm font-semibold mb-1">Display Order</label><input name="display_order" type="number" value="${item?.display_order??0}" class="w-full border rounded-lg px-3 py-2 text-sm" /></div>
+            <div class="flex items-center gap-2 pt-6"><input type="checkbox" name="is_active" ${item?.is_active!==false?'checked':''} class="w-4 h-4" /><label class="text-sm">Active</label></div>
+          </div>
+          <button type="submit" class="w-full bg-accent text-white py-2 rounded-lg font-semibold hover:bg-red-700">${isEdit?'Update':'Create'}</button>
+        </form>
+      `);
+      document.getElementById('hero-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const fd = new FormData(e.target);
+        const payload = { title: fd.get('title'), description: fd.get('description'), display_order: parseInt(fd.get('display_order'))||0, is_active: fd.has('is_active') };
+        try {
+          const file = fd.get('image');
+          if (file && file.size > 0) payload.image_url = await uploadFile('hero', file);
+          if (isEdit) { const { error } = await supabase.from('hero_slides').update(payload).eq('id', item.id); if (error) throw error; }
+          else { const { error } = await supabase.from('hero_slides').insert(payload); if (error) throw error; }
+          showToast(isEdit ? 'Slide updated' : 'Slide created');
+          closeModal(); loadHero();
+        } catch (err) { showToast(err.message, 'error'); }
+      });
+    }
+
+    // ===== SERVICES =====
+    async function loadServices() {
+      document.getElementById('services-loading').classList.remove('hidden');
+      const { data, error } = await supabase.from('services').select('*').order('display_order');
+      document.getElementById('services-loading').classList.add('hidden');
+      if (error) return showToast(error.message, 'error');
+      document.getElementById('services-tbody').innerHTML = data.map(r => `
+        <tr>
+          <td class="px-4 py-3">${imgPreview(r.image_url)}</td>
+          <td class="px-4 py-3 font-medium">${r.name}</td>
+          <td class="px-4 py-3">${r.price||'-'}</td>
+          <td class="px-4 py-3">${r.display_order}</td>
+          <td class="px-4 py-3">${toggleHtml(r.is_active)}</td>
+          <td class="px-4 py-3 space-x-2">
+            <button onclick='openServiceModal(${JSON.stringify(r).replace(/'/g,"&#39;")})' class="text-blue-600 hover:text-blue-800"><i class="fa-solid fa-pen-to-square"></i></button>
+            <button onclick="deleteRow('services','${r.id}', loadServices)" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button>
+          </td>
+        </tr>`).join('');
+    }
+
+    function openServiceModal(item = null) {
+      const isEdit = !!item;
+      openModal(isEdit ? 'Edit Service' : 'Add Service', `
+        <form id="service-form" class="space-y-4">
+          <div><label class="block text-sm font-semibold mb-1">Name</label><input name="name" value="${item?.name||''}" class="w-full border rounded-lg px-3 py-2 text-sm" required /></div>
+          <div><label class="block text-sm font-semibold mb-1">Description</label><textarea name="description" class="w-full border rounded-lg px-3 py-2 text-sm" rows="3">${item?.description||''}</textarea></div>
+          <div><label class="block text-sm font-semibold mb-1">Price</label><input name="price" value="${item?.price||''}" class="w-full border rounded-lg px-3 py-2 text-sm" /></div>
+          <div><label class="block text-sm font-semibold mb-1">Image</label>
+            ${item?.image_url ? `<img src="${item.image_url}" class="w-24 h-16 object-cover rounded mb-2" />` : ''}
+            <input type="file" name="image" accept="image/*" class="w-full text-sm" />
+          </div>
+          <div class="grid grid-cols-2 gap-4">
+            <div><label class="block text-sm font-semibold mb-1">Display Order</label><input name="display_order" type="number" value="${item?.display_order??0}" class="w-full border rounded-lg px-3 py-2 text-sm" /></div>
+            <div class="flex items-center gap-2 pt-6"><input type="checkbox" name="is_active" ${item?.is_active!==false?'checked':''} class="w-4 h-4" /><label class="text-sm">Active</label></div>
+          </div>
+          <button type="submit" class="w-full bg-accent text-white py-2 rounded-lg font-semibold hover:bg-red-700">${isEdit?'Update':'Create'}</button>
+        </form>
+      `);
+      document.getElementById('service-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const fd = new FormData(e.target);
+        const payload = { name: fd.get('name'), description: fd.get('description'), price: fd.get('price'), display_order: parseInt(fd.get('display_order'))||0, is_active: fd.has('is_active') };
+        try {
+          const file = fd.get('image');
+          if (file && file.size > 0) payload.image_url = await uploadFile('services', file);
+          if (isEdit) { const { error } = await supabase.from('services').update(payload).eq('id', item.id); if (error) throw error; }
+          else { const { error } = await supabase.from('services').insert(payload); if (error) throw error; }
+          showToast(isEdit ? 'Service updated' : 'Service created');
+          closeModal(); loadServices();
+        } catch (err) { showToast(err.message, 'error'); }
+      });
+    }
+
+    // ===== GALLERY =====
+    async function loadGallery() {
+      document.getElementById('gallery-loading').classList.remove('hidden');
+      let query = supabase.from('gallery_items').select('*').order('display_order');
+      const filter = document.getElementById('gallery-filter').value;
+      if (filter) query = query.eq('category', filter);
+      const { data, error } = await query;
+      document.getElementById('gallery-loading').classList.add('hidden');
+      if (error) return showToast(error.message, 'error');
+      document.getElementById('gallery-grid').innerHTML = data.map(r => `
+        <div class="relative group rounded-xl overflow-hidden shadow bg-gray-100">
+          <img src="${r.image_url}" class="w-full h-48 object-cover" onerror="this.style.display='none'" />
+          <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition flex flex-col items-center justify-center text-white text-sm gap-2">
+            <span class="font-semibold">${r.title||'Untitled'}</span>
+            <span class="text-xs bg-white/20 px-2 py-0.5 rounded">${r.category}</span>
+            <button onclick="deleteRow('gallery_items','${r.id}', loadGallery)" class="mt-1 bg-red-600 px-3 py-1 rounded text-xs hover:bg-red-700"><i class="fa-solid fa-trash mr-1"></i>Delete</button>
+          </div>
+        </div>`).join('');
+    }
+
+    function openGalleryModal() {
+      openModal('Add Gallery Image', `
+        <form id="gallery-form" class="space-y-4">
+          <div><label class="block text-sm font-semibold mb-1">Image</label><input type="file" name="image" accept="image/*" class="w-full text-sm" required /></div>
+          <div><label class="block text-sm font-semibold mb-1">Title</label><input name="title" class="w-full border rounded-lg px-3 py-2 text-sm" /></div>
+          <div><label class="block text-sm font-semibold mb-1">Category</label>
+            <select name="category" class="w-full border rounded-lg px-3 py-2 text-sm">
+              <option>Weddings</option><option>Corporate</option><option>Portraits</option><option>Kwanjula</option><option>Studio</option><option>Events</option><option>Real Estate</option><option>Other</option>
+            </select>
+          </div>
+          <div><label class="block text-sm font-semibold mb-1">Description</label><textarea name="description" class="w-full border rounded-lg px-3 py-2 text-sm" rows="2"></textarea></div>
+          <button type="submit" class="w-full bg-accent text-white py-2 rounded-lg font-semibold hover:bg-red-700">Upload</button>
+        </form>
+      `);
+      document.getElementById('gallery-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const fd = new FormData(e.target);
+        try {
+          const url = await uploadFile('gallery', fd.get('image'));
+          const { error } = await supabase.from('gallery_items').insert({ title: fd.get('title'), category: fd.get('category'), image_url: url, description: fd.get('description') });
+          if (error) throw error;
+          showToast('Image added to gallery');
+          closeModal(); loadGallery();
+        } catch (err) { showToast(err.message, 'error'); }
+      });
+    }
+
+    // ===== TEAM =====
+    async function loadTeam() {
+      document.getElementById('team-loading').classList.remove('hidden');
+      const { data, error } = await supabase.from('team_members').select('*').order('display_order');
+      document.getElementById('team-loading').classList.add('hidden');
+      if (error) return showToast(error.message, 'error');
+      document.getElementById('team-tbody').innerHTML = data.map(r => `
+        <tr>
+          <td class="px-4 py-3">${imgPreview(r.avatar_url, 'w-10 h-10 rounded-full')}</td>
+          <td class="px-4 py-3 font-medium">${r.name}</td>
+          <td class="px-4 py-3 text-gray-500">${r.role||'-'}</td>
+          <td class="px-4 py-3">${r.display_order}</td>
+          <td class="px-4 py-3">${toggleHtml(r.is_active)}</td>
+          <td class="px-4 py-3 space-x-2">
+            <button onclick='openTeamModal(${JSON.stringify(r).replace(/'/g,"&#39;")})' class="text-blue-600 hover:text-blue-800"><i class="fa-solid fa-pen-to-square"></i></button>
+            <button onclick="deleteRow('team_members','${r.id}', loadTeam)" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button>
+          </td>
+        </tr>`).join('');
+    }
+
+    function openTeamModal(item = null) {
+      const isEdit = !!item;
+      openModal(isEdit ? 'Edit Team Member' : 'Add Team Member', `
+        <form id="team-form" class="space-y-4">
+          <div><label class="block text-sm font-semibold mb-1">Name</label><input name="name" value="${item?.name||''}" class="w-full border rounded-lg px-3 py-2 text-sm" required /></div>
+          <div><label class="block text-sm font-semibold mb-1">Role</label><input name="role" value="${item?.role||''}" class="w-full border rounded-lg px-3 py-2 text-sm" /></div>
+          <div><label class="block text-sm font-semibold mb-1">Bio</label><textarea name="bio" class="w-full border rounded-lg px-3 py-2 text-sm" rows="3">${item?.bio||''}</textarea></div>
+          <div><label class="block text-sm font-semibold mb-1">Avatar</label>
+            ${item?.avatar_url ? `<img src="${item.avatar_url}" class="w-16 h-16 rounded-full object-cover mb-2" />` : ''}
+            <input type="file" name="avatar" accept="image/*" class="w-full text-sm" />
+          </div>
+          <div class="grid grid-cols-3 gap-3">
+            <div><label class="block text-sm font-semibold mb-1">Instagram</label><input name="instagram" value="${item?.instagram||''}" class="w-full border rounded-lg px-3 py-2 text-sm" /></div>
+            <div><label class="block text-sm font-semibold mb-1">Twitter</label><input name="twitter" value="${item?.twitter||''}" class="w-full border rounded-lg px-3 py-2 text-sm" /></div>
+            <div><label class="block text-sm font-semibold mb-1">LinkedIn</label><input name="linkedin" value="${item?.linkedin||''}" class="w-full border rounded-lg px-3 py-2 text-sm" /></div>
+          </div>
+          <div class="grid grid-cols-2 gap-4">
+            <div><label class="block text-sm font-semibold mb-1">Display Order</label><input name="display_order" type="number" value="${item?.display_order??0}" class="w-full border rounded-lg px-3 py-2 text-sm" /></div>
+            <div class="flex items-center gap-2 pt-6"><input type="checkbox" name="is_active" ${item?.is_active!==false?'checked':''} class="w-4 h-4" /><label class="text-sm">Active</label></div>
+          </div>
+          <button type="submit" class="w-full bg-accent text-white py-2 rounded-lg font-semibold hover:bg-red-700">${isEdit?'Update':'Create'}</button>
+        </form>
+      `);
+      document.getElementById('team-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const fd = new FormData(e.target);
+        const payload = { name: fd.get('name'), role: fd.get('role'), bio: fd.get('bio'), instagram: fd.get('instagram'), twitter: fd.get('twitter'), linkedin: fd.get('linkedin'), display_order: parseInt(fd.get('display_order'))||0, is_active: fd.has('is_active') };
+        try {
+          const file = fd.get('avatar');
+          if (file && file.size > 0) payload.avatar_url = await uploadFile('team', file);
+          if (isEdit) { const { error } = await supabase.from('team_members').update(payload).eq('id', item.id); if (error) throw error; }
+          else { const { error } = await supabase.from('team_members').insert(payload); if (error) throw error; }
+          showToast(isEdit ? 'Member updated' : 'Member added');
+          closeModal(); loadTeam();
+        } catch (err) { showToast(err.message, 'error'); }
+      });
+    }
+
+    // ===== REVIEWS =====
+    async function loadReviews() {
+      document.getElementById('reviews-loading').classList.remove('hidden');
+      const { data, error } = await supabase.from('reviews').select('*').order('created_at', { ascending: false });
+      document.getElementById('reviews-loading').classList.add('hidden');
+      if (error) return showToast(error.message, 'error');
+      document.getElementById('reviews-tbody').innerHTML = data.map(r => `
+        <tr>
+          <td class="px-4 py-3 font-medium">${r.author_name}</td>
+          <td class="px-4 py-3 text-gray-500">${r.event_type||'-'}</td>
+          <td class="px-4 py-3">${starsHtml(r.rating)}</td>
+          <td class="px-4 py-3">${toggleHtml(r.is_featured)}</td>
+          <td class="px-4 py-3">${toggleHtml(r.is_active)}</td>
+          <td class="px-4 py-3 space-x-2">
+            <button onclick='openReviewModal(${JSON.stringify(r).replace(/'/g,"&#39;")})' class="text-blue-600 hover:text-blue-800"><i class="fa-solid fa-pen-to-square"></i></button>
+            <button onclick="deleteRow('reviews','${r.id}', loadReviews)" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button>
+          </td>
+        </tr>`).join('');
+    }
+
+    function openReviewModal(item = null) {
+      const isEdit = !!item;
+      openModal(isEdit ? 'Edit Review' : 'Add Review', `
+        <form id="review-form" class="space-y-4">
+          <div><label class="block text-sm font-semibold mb-1">Author Name</label><input name="author_name" value="${item?.author_name||''}" class="w-full border rounded-lg px-3 py-2 text-sm" required /></div>
+          <div><label class="block text-sm font-semibold mb-1">Author Role</label><input name="author_role" value="${item?.author_role||''}" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="e.g. Bride, CEO" /></div>
+          <div><label class="block text-sm font-semibold mb-1">Event Type</label><input name="event_type" value="${item?.event_type||''}" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="e.g. Wedding, Corporate" /></div>
+          <div><label class="block text-sm font-semibold mb-1">Content</label><textarea name="content" class="w-full border rounded-lg px-3 py-2 text-sm" rows="4" required>${item?.content||''}</textarea></div>
+          <div><label class="block text-sm font-semibold mb-1">Rating</label>
+            <select name="rating" class="w-full border rounded-lg px-3 py-2 text-sm">
+              ${[5,4,3,2,1].map(n => `<option value="${n}" ${item?.rating===n?'selected':''}>${n} Star${n>1?'s':''}</option>`).join('')}
+            </select>
+          </div>
+          <div class="flex gap-6">
+            <div class="flex items-center gap-2"><input type="checkbox" name="is_featured" ${item?.is_featured?'checked':''} class="w-4 h-4" /><label class="text-sm">Featured</label></div>
+            <div class="flex items-center gap-2"><input type="checkbox" name="is_active" ${item?.is_active!==false?'checked':''} class="w-4 h-4" /><label class="text-sm">Active</label></div>
+          </div>
+          <button type="submit" class="w-full bg-accent text-white py-2 rounded-lg font-semibold hover:bg-red-700">${isEdit?'Update':'Create'}</button>
+        </form>
+      `);
+      document.getElementById('review-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const fd = new FormData(e.target);
+        const payload = { author_name: fd.get('author_name'), author_role: fd.get('author_role'), event_type: fd.get('event_type'), content: fd.get('content'), rating: parseInt(fd.get('rating')), is_featured: fd.has('is_featured'), is_active: fd.has('is_active') };
+        try {
+          if (isEdit) { const { error } = await supabase.from('reviews').update(payload).eq('id', item.id); if (error) throw error; }
+          else { const { error } = await supabase.from('reviews').insert(payload); if (error) throw error; }
+          showToast(isEdit ? 'Review updated' : 'Review added');
+          closeModal(); loadReviews();
+        } catch (err) { showToast(err.message, 'error'); }
+      });
+    }
+
+    // ===== PARTNERS =====
+    async function loadPartners() {
+      document.getElementById('partners-loading').classList.remove('hidden');
+      const { data, error } = await supabase.from('partners').select('*').order('display_order');
+      document.getElementById('partners-loading').classList.add('hidden');
+      if (error) return showToast(error.message, 'error');
+      document.getElementById('partners-grid').innerHTML = data.map(r => `
+        <div class="relative group bg-white border rounded-xl p-4 flex flex-col items-center gap-2 shadow-sm">
+          <img src="${r.logo_url||''}" class="h-20 object-contain" onerror="this.style.display='none'" />
+          <span class="text-sm font-semibold text-gray-700">${r.name}</span>
+          ${r.website_url ? `<a href="${r.website_url}" target="_blank" class="text-xs text-blue-500 hover:underline">${r.website_url}</a>` : ''}
+          <button onclick="deleteRow('partners','${r.id}', loadPartners)" class="absolute top-2 right-2 text-red-400 hover:text-red-600 opacity-0 group-hover:opacity-100 transition"><i class="fa-solid fa-trash text-sm"></i></button>
+        </div>`).join('');
+    }
+
+    function openPartnerModal() {
+      openModal('Add Partner', `
+        <form id="partner-form" class="space-y-4">
+          <div><label class="block text-sm font-semibold mb-1">Name</label><input name="name" class="w-full border rounded-lg px-3 py-2 text-sm" required /></div>
+          <div><label class="block text-sm font-semibold mb-1">Logo</label><input type="file" name="logo" accept="image/*" class="w-full text-sm" required /></div>
+          <div><label class="block text-sm font-semibold mb-1">Website URL</label><input name="website_url" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="https://..." /></div>
+          <button type="submit" class="w-full bg-accent text-white py-2 rounded-lg font-semibold hover:bg-red-700">Add Partner</button>
+        </form>
+      `);
+      document.getElementById('partner-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const fd = new FormData(e.target);
+        try {
+          const url = await uploadFile('partners', fd.get('logo'));
+          const { error } = await supabase.from('partners').insert({ name: fd.get('name'), logo_url: url, website_url: fd.get('website_url') });
+          if (error) throw error;
+          showToast('Partner added');
+          closeModal(); loadPartners();
+        } catch (err) { showToast(err.message, 'error'); }
+      });
+    }
+
+    // ===== VALUES =====
+    async function loadValues() {
+      document.getElementById('values-loading').classList.remove('hidden');
+      const { data, error } = await supabase.from('values_cards').select('*').order('display_order');
+      document.getElementById('values-loading').classList.add('hidden');
+      if (error) return showToast(error.message, 'error');
+      document.getElementById('values-tbody').innerHTML = data.map(r => `
+        <tr>
+          <td class="px-4 py-3 font-medium">${r.title}</td>
+          <td class="px-4 py-3 text-gray-500">${r.icon||'-'}</td>
+          <td class="px-4 py-3">${r.display_order}</td>
+          <td class="px-4 py-3">${toggleHtml(r.is_active)}</td>
+          <td class="px-4 py-3 space-x-2">
+            <button onclick='openValueModal(${JSON.stringify(r).replace(/'/g,"&#39;")})' class="text-blue-600 hover:text-blue-800"><i class="fa-solid fa-pen-to-square"></i></button>
+            <button onclick="deleteRow('values_cards','${r.id}', loadValues)" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button>
+          </td>
+        </tr>`).join('');
+    }
+
+    function openValueModal(item = null) {
+      const isEdit = !!item;
+      openModal(isEdit ? 'Edit Value' : 'Add Value', `
+        <form id="value-form" class="space-y-4">
+          <div><label class="block text-sm font-semibold mb-1">Title</label><input name="title" value="${item?.title||''}" class="w-full border rounded-lg px-3 py-2 text-sm" required /></div>
+          <div><label class="block text-sm font-semibold mb-1">Description</label><textarea name="description" class="w-full border rounded-lg px-3 py-2 text-sm" rows="3">${item?.description||''}</textarea></div>
+          <div><label class="block text-sm font-semibold mb-1">Icon (Ionicon name)</label><input name="icon" value="${item?.icon||'bulb-outline'}" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="e.g. bulb-outline" /></div>
+          <div class="grid grid-cols-2 gap-4">
+            <div><label class="block text-sm font-semibold mb-1">Display Order</label><input name="display_order" type="number" value="${item?.display_order??0}" class="w-full border rounded-lg px-3 py-2 text-sm" /></div>
+            <div class="flex items-center gap-2 pt-6"><input type="checkbox" name="is_active" ${item?.is_active!==false?'checked':''} class="w-4 h-4" /><label class="text-sm">Active</label></div>
+          </div>
+          <button type="submit" class="w-full bg-accent text-white py-2 rounded-lg font-semibold hover:bg-red-700">${isEdit?'Update':'Create'}</button>
+        </form>
+      `);
+      document.getElementById('value-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const fd = new FormData(e.target);
+        const payload = { title: fd.get('title'), description: fd.get('description'), icon: fd.get('icon'), display_order: parseInt(fd.get('display_order'))||0, is_active: fd.has('is_active') };
+        try {
+          if (isEdit) { const { error } = await supabase.from('values_cards').update(payload).eq('id', item.id); if (error) throw error; }
+          else { const { error } = await supabase.from('values_cards').insert(payload); if (error) throw error; }
+          showToast(isEdit ? 'Value updated' : 'Value added');
+          closeModal(); loadValues();
+        } catch (err) { showToast(err.message, 'error'); }
+      });
+    }
+
+    // ===== JOBS =====
+    async function loadJobs() {
+      document.getElementById('jobs-loading').classList.remove('hidden');
+      const { data, error } = await supabase.from('job_listings').select('*').order('display_order');
+      document.getElementById('jobs-loading').classList.add('hidden');
+      if (error) return showToast(error.message, 'error');
+      document.getElementById('jobs-tbody').innerHTML = data.map(r => `
+        <tr>
+          <td class="px-4 py-3 font-medium">${r.title}</td>
+          <td class="px-4 py-3">${r.type||'-'}</td>
+          <td class="px-4 py-3 text-gray-500">${r.location||'-'}</td>
+          <td class="px-4 py-3">${toggleHtml(r.is_active)}</td>
+          <td class="px-4 py-3 space-x-2">
+            <button onclick='openJobModal(${JSON.stringify(r).replace(/'/g,"&#39;")})' class="text-blue-600 hover:text-blue-800"><i class="fa-solid fa-pen-to-square"></i></button>
+            <button onclick="deleteRow('job_listings','${r.id}', loadJobs)" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button>
+          </td>
+        </tr>`).join('');
+    }
+
+    function openJobModal(item = null) {
+      const isEdit = !!item;
+      openModal(isEdit ? 'Edit Job' : 'Add Job', `
+        <form id="job-form" class="space-y-4">
+          <div><label class="block text-sm font-semibold mb-1">Title</label><input name="title" value="${item?.title||''}" class="w-full border rounded-lg px-3 py-2 text-sm" required /></div>
+          <div><label class="block text-sm font-semibold mb-1">Type</label>
+            <select name="type" class="w-full border rounded-lg px-3 py-2 text-sm">
+              ${['Full-time','Part-time','Contract','Remote'].map(t => `<option ${item?.type===t?'selected':''}>${t}</option>`).join('')}
+            </select>
+          </div>
+          <div><label class="block text-sm font-semibold mb-1">Location</label><input name="location" value="${item?.location||'Kampala'}" class="w-full border rounded-lg px-3 py-2 text-sm" /></div>
+          <div><label class="block text-sm font-semibold mb-1">Description</label><textarea name="description" class="w-full border rounded-lg px-3 py-2 text-sm" rows="4">${item?.description||''}</textarea></div>
+          <div><label class="block text-sm font-semibold mb-1">Requirements</label><textarea name="requirements" class="w-full border rounded-lg px-3 py-2 text-sm" rows="4" placeholder="One requirement per line">${item?.requirements||''}</textarea></div>
+          <div class="flex items-center gap-2"><input type="checkbox" name="is_active" ${item?.is_active!==false?'checked':''} class="w-4 h-4" /><label class="text-sm">Active</label></div>
+          <button type="submit" class="w-full bg-accent text-white py-2 rounded-lg font-semibold hover:bg-red-700">${isEdit?'Update':'Create'}</button>
+        </form>
+      `);
+      document.getElementById('job-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const fd = new FormData(e.target);
+        const payload = { title: fd.get('title'), type: fd.get('type'), location: fd.get('location'), description: fd.get('description'), requirements: fd.get('requirements'), is_active: fd.has('is_active') };
+        try {
+          if (isEdit) { const { error } = await supabase.from('job_listings').update(payload).eq('id', item.id); if (error) throw error; }
+          else { const { error } = await supabase.from('job_listings').insert(payload); if (error) throw error; }
+          showToast(isEdit ? 'Job updated' : 'Job created');
+          closeModal(); loadJobs();
+        } catch (err) { showToast(err.message, 'error'); }
+      });
+    }
+
+    // ===== APPLICATIONS =====
+    async function loadApplications() {
+      document.getElementById('applications-loading').classList.remove('hidden');
+      const { data, error } = await supabase.from('job_applications').select('*').order('created_at', { ascending: false });
+      document.getElementById('applications-loading').classList.add('hidden');
+      if (error) return showToast(error.message, 'error');
+      document.getElementById('applications-tbody').innerHTML = data.map(r => `
+        <tr class="${r.is_reviewed ? '' : 'font-semibold'}">
+          <td class="px-4 py-3">${r.name}</td>
+          <td class="px-4 py-3 text-gray-500">${r.email}</td>
+          <td class="px-4 py-3">${r.position||'-'}</td>
+          <td class="px-4 py-3 text-gray-500">${fmtDate(r.created_at)}</td>
+          <td class="px-4 py-3">${r.is_reviewed ? '<span class="text-green-600">Reviewed</span>' : '<span class="text-yellow-600">Pending</span>'}</td>
+          <td class="px-4 py-3">
+            <button onclick='viewApplication(${JSON.stringify(r).replace(/'/g,"&#39;")})' class="text-blue-600 hover:text-blue-800 mr-2"><i class="fa-solid fa-eye"></i></button>
+          </td>
+        </tr>`).join('');
+    }
+
+    function viewApplication(app) {
+      openModal('Application Details', `
+        <div class="space-y-3 text-sm">
+          <div><span class="font-semibold text-gray-600">Name:</span> ${app.name}</div>
+          <div><span class="font-semibold text-gray-600">Email:</span> <a href="mailto:${app.email}" class="text-blue-600">${app.email}</a></div>
+          <div><span class="font-semibold text-gray-600">Position:</span> ${app.position||'-'}</div>
+          <div><span class="font-semibold text-gray-600">Portfolio:</span> ${app.portfolio_url ? `<a href="${app.portfolio_url}" target="_blank" class="text-blue-600 hover:underline">${app.portfolio_url}</a>` : '-'}</div>
+          <div><span class="font-semibold text-gray-600">Cover Letter:</span><p class="mt-1 text-gray-700 whitespace-pre-wrap bg-gray-50 p-3 rounded">${app.cover_letter||'N/A'}</p></div>
+          ${app.cv_url ? `<div><a href="${app.cv_url}" target="_blank" class="inline-flex items-center gap-1 bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700"><i class="fa-solid fa-download"></i> Download CV</a></div>` : ''}
+          <div class="pt-3 border-t">
+            ${app.is_reviewed ? '<span class="text-green-600 font-semibold">Already reviewed</span>' : `<button onclick="markAppReviewed('${app.id}')" class="bg-green-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-green-700">Mark as Reviewed</button>`}
+          </div>
+        </div>
+      `);
+    }
+
+    async function markAppReviewed(id) {
+      const { error } = await supabase.from('job_applications').update({ is_reviewed: true }).eq('id', id);
+      if (error) return showToast(error.message, 'error');
+      showToast('Application marked as reviewed');
+      closeModal(); loadApplications(); loadDashboard();
+    }
+
+    // ===== MESSAGES =====
+    async function loadMessages() {
+      document.getElementById('messages-loading').classList.remove('hidden');
+      const { data, error } = await supabase.from('contact_submissions').select('*').order('created_at', { ascending: false });
+      document.getElementById('messages-loading').classList.add('hidden');
+      if (error) return showToast(error.message, 'error');
+      document.getElementById('messages-tbody').innerHTML = data.map(r => `
+        <tr class="${r.is_read ? '' : 'font-semibold bg-red-50'}">
+          <td class="px-4 py-3">${r.first_name} ${r.last_name||''}</td>
+          <td class="px-4 py-3 text-gray-500">${r.email}</td>
+          <td class="px-4 py-3">${r.service||'-'}</td>
+          <td class="px-4 py-3 text-gray-500">${fmtDate(r.created_at)}</td>
+          <td class="px-4 py-3">${r.is_read ? '<span class="text-green-600">Read</span>' : '<span class="text-red-600">Unread</span>'}</td>
+          <td class="px-4 py-3">
+            <button onclick='viewMessage(${JSON.stringify(r).replace(/'/g,"&#39;")})' class="text-blue-600 hover:text-blue-800"><i class="fa-solid fa-eye"></i></button>
+          </td>
+        </tr>`).join('');
+    }
+
+    function viewMessage(msg) {
+      openModal('Message Details', `
+        <div class="space-y-3 text-sm">
+          <div><span class="font-semibold text-gray-600">Name:</span> ${msg.first_name} ${msg.last_name||''}</div>
+          <div><span class="font-semibold text-gray-600">Email:</span> <a href="mailto:${msg.email}" class="text-blue-600">${msg.email}</a></div>
+          <div><span class="font-semibold text-gray-600">Phone:</span> ${msg.phone||'-'}</div>
+          <div><span class="font-semibold text-gray-600">Service:</span> ${msg.service||'-'}</div>
+          <div><span class="font-semibold text-gray-600">Venue:</span> ${msg.venue||'-'}</div>
+          <div><span class="font-semibold text-gray-600">Event Date:</span> ${msg.event_date ? fmtDate(msg.event_date) : '-'}</div>
+          <div><span class="font-semibold text-gray-600">City:</span> ${msg.city||'-'}</div>
+          <div><span class="font-semibold text-gray-600">Message:</span><p class="mt-1 text-gray-700 whitespace-pre-wrap bg-gray-50 p-3 rounded">${msg.message||'N/A'}</p></div>
+          <div class="pt-3 border-t">
+            ${msg.is_read ? '<span class="text-green-600 font-semibold">Already read</span>' : `<button onclick="markMsgRead('${msg.id}')" class="bg-green-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-green-700">Mark as Read</button>`}
+          </div>
+        </div>
+      `);
+    }
+
+    async function markMsgRead(id) {
+      const { error } = await supabase.from('contact_submissions').update({ is_read: true }).eq('id', id);
+      if (error) return showToast(error.message, 'error');
+      showToast('Message marked as read');
+      closeModal(); loadMessages(); loadDashboard();
+    }
+
+    // ===== INSTAGRAM =====
+    async function loadInstagram() {
+      document.getElementById('instagram-loading').classList.remove('hidden');
+      const { data, error } = await supabase.from('instagram_posts').select('*').order('display_order');
+      document.getElementById('instagram-loading').classList.add('hidden');
+      if (error) return showToast(error.message, 'error');
+      document.getElementById('instagram-grid').innerHTML = data.map(r => `
+        <div class="relative group rounded-xl overflow-hidden shadow bg-gray-100">
+          <img src="${r.image_url||''}" class="w-full h-48 object-cover" onerror="this.style.display='none'" />
+          <div class="absolute bottom-0 left-0 right-0 bg-black/60 text-white text-xs px-3 py-2 flex items-center justify-between">
+            <span class="capitalize">${r.post_type||'image'}</span>
+            ${r.post_url ? `<a href="${r.post_url}" target="_blank" class="hover:text-blue-300"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>` : ''}
+          </div>
+          <button onclick="deleteRow('instagram_posts','${r.id}', loadInstagram)" class="absolute top-2 right-2 bg-red-600 text-white w-7 h-7 rounded-full flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition hover:bg-red-700"><i class="fa-solid fa-trash"></i></button>
+        </div>`).join('');
+    }
+
+    function openInstagramModal() {
+      openModal('Add Instagram Post', `
+        <form id="instagram-form" class="space-y-4">
+          <div><label class="block text-sm font-semibold mb-1">Image</label><input type="file" name="image" accept="image/*" class="w-full text-sm" /></div>
+          <div><label class="block text-sm font-semibold mb-1">Or Image URL</label><input name="image_url" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="https://..." /></div>
+          <div><label class="block text-sm font-semibold mb-1">Post URL</label><input name="post_url" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="https://instagram.com/p/..." /></div>
+          <div><label class="block text-sm font-semibold mb-1">Type</label>
+            <select name="post_type" class="w-full border rounded-lg px-3 py-2 text-sm">
+              <option value="image">Image</option><option value="reel">Reel</option>
+            </select>
+          </div>
+          <button type="submit" class="w-full bg-accent text-white py-2 rounded-lg font-semibold hover:bg-red-700">Add Post</button>
+        </form>
+      `);
+      document.getElementById('instagram-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const fd = new FormData(e.target);
+        try {
+          let imageUrl = fd.get('image_url');
+          const file = fd.get('image');
+          if (file && file.size > 0) imageUrl = await uploadFile('general', file);
+          if (!imageUrl) { showToast('Please provide an image', 'error'); return; }
+          const { error } = await supabase.from('instagram_posts').insert({ image_url: imageUrl, post_url: fd.get('post_url'), post_type: fd.get('post_type') });
+          if (error) throw error;
+          showToast('Instagram post added');
+          closeModal(); loadInstagram();
+        } catch (err) { showToast(err.message, 'error'); }
+      });
+    }
+
+    // ===== DISCOVER =====
+    async function loadDiscover() {
+      document.getElementById('discover-loading').classList.remove('hidden');
+      const { data, error } = await supabase.from('discover_cards').select('*').order('display_order');
+      document.getElementById('discover-loading').classList.add('hidden');
+      if (error) return showToast(error.message, 'error');
+      document.getElementById('discover-tbody').innerHTML = data.map(r => `
+        <tr>
+          <td class="px-4 py-3">${imgPreview(r.image_url)}</td>
+          <td class="px-4 py-3 font-medium">${r.title}</td>
+          <td class="px-4 py-3 text-gray-500">${r.link_url ? `<a href="${r.link_url}" target="_blank" class="text-blue-600 hover:underline text-xs">${r.link_url}</a>` : '-'}</td>
+          <td class="px-4 py-3">${r.display_order}</td>
+          <td class="px-4 py-3">${toggleHtml(r.is_active)}</td>
+          <td class="px-4 py-3 space-x-2">
+            <button onclick='openDiscoverModal(${JSON.stringify(r).replace(/'/g,"&#39;")})' class="text-blue-600 hover:text-blue-800"><i class="fa-solid fa-pen-to-square"></i></button>
+            <button onclick="deleteRow('discover_cards','${r.id}', loadDiscover)" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button>
+          </td>
+        </tr>`).join('');
+    }
+
+    function openDiscoverModal(item = null) {
+      const isEdit = !!item;
+      openModal(isEdit ? 'Edit Discover Card' : 'Add Discover Card', `
+        <form id="discover-form" class="space-y-4">
+          <div><label class="block text-sm font-semibold mb-1">Title</label><input name="title" value="${item?.title||''}" class="w-full border rounded-lg px-3 py-2 text-sm" required /></div>
+          <div><label class="block text-sm font-semibold mb-1">Description</label><textarea name="description" class="w-full border rounded-lg px-3 py-2 text-sm" rows="3">${item?.description||''}</textarea></div>
+          <div><label class="block text-sm font-semibold mb-1">Link URL</label><input name="link_url" value="${item?.link_url||''}" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="https://..." /></div>
+          <div><label class="block text-sm font-semibold mb-1">Image</label>
+            ${item?.image_url ? `<img src="${item.image_url}" class="w-24 h-16 object-cover rounded mb-2" />` : ''}
+            <input type="file" name="image" accept="image/*" class="w-full text-sm" />
+          </div>
+          <div class="grid grid-cols-2 gap-4">
+            <div><label class="block text-sm font-semibold mb-1">Display Order</label><input name="display_order" type="number" value="${item?.display_order??0}" class="w-full border rounded-lg px-3 py-2 text-sm" /></div>
+            <div class="flex items-center gap-2 pt-6"><input type="checkbox" name="is_active" ${item?.is_active!==false?'checked':''} class="w-4 h-4" /><label class="text-sm">Active</label></div>
+          </div>
+          <button type="submit" class="w-full bg-accent text-white py-2 rounded-lg font-semibold hover:bg-red-700">${isEdit?'Update':'Create'}</button>
+        </form>
+      `);
+      document.getElementById('discover-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const fd = new FormData(e.target);
+        const payload = { title: fd.get('title'), description: fd.get('description'), link_url: fd.get('link_url'), display_order: parseInt(fd.get('display_order'))||0, is_active: fd.has('is_active') };
+        try {
+          const file = fd.get('image');
+          if (file && file.size > 0) payload.image_url = await uploadFile('general', file);
+          if (isEdit) { const { error } = await supabase.from('discover_cards').update(payload).eq('id', item.id); if (error) throw error; }
+          else { const { error } = await supabase.from('discover_cards').insert(payload); if (error) throw error; }
+          showToast(isEdit ? 'Card updated' : 'Card created');
+          closeModal(); loadDiscover();
+        } catch (err) { showToast(err.message, 'error'); }
+      });
+    }
+
+    // ===== STATS =====
+    async function loadStats() {
+      document.getElementById('stats-loading').classList.remove('hidden');
+      const { data, error } = await supabase.from('stats').select('*').order('display_order');
+      document.getElementById('stats-loading').classList.add('hidden');
+      if (error) return showToast(error.message, 'error');
+      document.getElementById('stats-tbody').innerHTML = data.map(r => `
+        <tr>
+          <td class="px-4 py-3 font-medium">${r.label}</td>
+          <td class="px-4 py-3">${r.value}</td>
+          <td class="px-4 py-3">${r.display_order}</td>
+          <td class="px-4 py-3">${toggleHtml(r.is_active)}</td>
+          <td class="px-4 py-3 space-x-2">
+            <button onclick='openStatModal(${JSON.stringify(r).replace(/'/g,"&#39;")})' class="text-blue-600 hover:text-blue-800"><i class="fa-solid fa-pen-to-square"></i></button>
+            <button onclick="deleteRow('stats','${r.id}', loadStats)" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button>
+          </td>
+        </tr>`).join('');
+    }
+
+    function openStatModal(item = null) {
+      const isEdit = !!item;
+      openModal(isEdit ? 'Edit Stat' : 'Add Stat', `
+        <form id="stat-form" class="space-y-4">
+          <div><label class="block text-sm font-semibold mb-1">Label</label><input name="label" value="${item?.label||''}" class="w-full border rounded-lg px-3 py-2 text-sm" required /></div>
+          <div><label class="block text-sm font-semibold mb-1">Value</label><input name="value" value="${item?.value||''}" class="w-full border rounded-lg px-3 py-2 text-sm" required /></div>
+          <div class="grid grid-cols-2 gap-4">
+            <div><label class="block text-sm font-semibold mb-1">Display Order</label><input name="display_order" type="number" value="${item?.display_order??0}" class="w-full border rounded-lg px-3 py-2 text-sm" /></div>
+            <div class="flex items-center gap-2 pt-6"><input type="checkbox" name="is_active" ${item?.is_active!==false?'checked':''} class="w-4 h-4" /><label class="text-sm">Active</label></div>
+          </div>
+          <button type="submit" class="w-full bg-accent text-white py-2 rounded-lg font-semibold hover:bg-red-700">${isEdit?'Update':'Create'}</button>
+        </form>
+      `);
+      document.getElementById('stat-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const fd = new FormData(e.target);
+        const payload = { label: fd.get('label'), value: fd.get('value'), display_order: parseInt(fd.get('display_order'))||0, is_active: fd.has('is_active') };
+        try {
+          if (isEdit) { const { error } = await supabase.from('stats').update(payload).eq('id', item.id); if (error) throw error; }
+          else { const { error } = await supabase.from('stats').insert(payload); if (error) throw error; }
+          showToast(isEdit ? 'Stat updated' : 'Stat created');
+          closeModal(); loadStats();
+        } catch (err) { showToast(err.message, 'error'); }
+      });
+    }
+
+    // ===== SETTINGS =====
+    const settingGroups = {
+      'Company Info': ['company_name', 'company_description', 'address', 'city'],
+      'Contact': ['company_email', 'phone_primary', 'phone_secondary'],
+      'Social Media': ['instagram_url', 'facebook_url', 'twitter_url', 'youtube_url', 'tiktok_url'],
+      'WhatsApp': ['whatsapp_events', 'whatsapp_studio'],
+    };
+
+    async function loadSettings() {
+      document.getElementById('settings-loading').classList.remove('hidden');
+      const { data, error } = await supabase.from('site_settings').select('*');
+      document.getElementById('settings-loading').classList.add('hidden');
+      if (error) return showToast(error.message, 'error');
+
+      const settingsMap = {};
+      data.forEach(s => settingsMap[s.setting_key] = s);
+
+      let html = '';
+      for (const [group, keys] of Object.entries(settingGroups)) {
+        html += `<div><h3 class="text-lg font-bold text-gray-700 mb-3 pb-2 border-b">${group}</h3><div class="space-y-3">`;
+        for (const key of keys) {
+          const s = settingsMap[key] || { setting_key: key, setting_value: '', description: '' };
+          const label = s.description || key.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+          html += `<div>
+            <label class="block text-sm font-semibold text-gray-600 mb-1">${label}</label>
+            <input name="${key}" value="${s.setting_value||''}" class="w-full border rounded-lg px-3 py-2 text-sm" />
+          </div>`;
+        }
+        html += '</div></div>';
+      }
+      html += `<button onclick="saveSettings()" class="bg-accent text-white px-6 py-2.5 rounded-lg font-semibold hover:bg-red-700">Save Settings</button>`;
+      document.getElementById('settings-form').innerHTML = html;
+    }
+
+    async function saveSettings() {
+      const form = document.getElementById('settings-form');
+      const inputs = form.querySelectorAll('input[name]');
+      const updates = [];
+      inputs.forEach(inp => {
+        updates.push(
+          supabase.from('site_settings').upsert(
+            { setting_key: inp.name, setting_value: inp.value },
+            { onConflict: 'setting_key' }
+          )
+        );
+      });
+      try {
+        const results = await Promise.all(updates);
+        const failed = results.find(r => r.error);
+        if (failed) throw failed.error;
+        showToast('Settings saved');
+      } catch (err) { showToast(err.message, 'error'); }
+    }
+
+    // ===== DELETE HELPER =====
+    async function deleteRow(table, id, reloadFn) {
+      if (!confirm('Are you sure you want to delete this item?')) return;
+      const { error } = await supabase.from(table).delete().eq('id', id);
+      if (error) return showToast(error.message, 'error');
+      showToast('Item deleted');
+      if (reloadFn) reloadFn();
+    }
+  </script>
+</body>
+</html>

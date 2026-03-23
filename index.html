@@ -1104,7 +1104,7 @@
   </div>
 
   <!-- ====== HERO SLIDER ====== -->
-  <section class="hero" id="hero">
+  <section class="hero" id="hero-slider">
     <div class="hero-slide active">
       <div class="overlay"></div>
       <div class="hero-content">
@@ -1158,7 +1158,7 @@
         <div class="line"></div>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div id="services-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         <!-- Service 1: Weddings -->
         <div class="service-card fade-up">
           <div class="card-bg" style="background: linear-gradient(135deg, #831843, #be185d);">
@@ -1359,7 +1359,7 @@
         <div class="line"></div>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div id="values-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         <div class="value-card fade-up">
           <div class="icon-wrap"><ion-icon name="bulb-outline"></ion-icon></div>
           <h3>Creativity</h3>
@@ -1403,7 +1403,7 @@
         <div class="line"></div>
       </div>
 
-      <div class="form-container fade-up">
+      <div id="contact-form" class="form-container fade-up">
         <div class="form-header">
           <h3>Get in Touch</h3>
           <p>Tell us about your event and we will craft the perfect package for you.</p>
@@ -1493,7 +1493,7 @@
         <div class="line"></div>
       </div>
 
-      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 fade-up">
+      <div id="partners-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 fade-up">
         <div class="partner-box">Partner Logo</div>
         <div class="partner-box">Partner Logo</div>
         <div class="partner-box">Partner Logo</div>
@@ -1532,7 +1532,7 @@
         <div class="line"></div>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div id="reviews-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         <div class="review-card fade-up">
           <div class="stars">
             <i class="fa-solid fa-star"></i>
@@ -1582,7 +1582,7 @@
         <div class="line"></div>
       </div>
 
-      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 fade-up">
+      <div id="instagram-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 fade-up">
         <div class="insta-box" style="background: linear-gradient(135deg, #831843, #be185d);">
           <div class="insta-overlay"><i class="fa-brands fa-instagram"></i></div>
         </div>
@@ -1632,7 +1632,7 @@
         <div class="line"></div>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div id="discover-grid" class="grid grid-cols-1 md:grid-cols-3 gap-8">
         <div class="discover-card fade-up">
           <div class="bg"></div>
           <div class="card-overlay">
@@ -1780,7 +1780,7 @@
     let slideInterval = setInterval(nextSlide, 5000);
 
     // Pause on hover
-    const heroSection = document.getElementById('hero');
+    const heroSection = document.getElementById('hero-slider');
     heroSection.addEventListener('mouseenter', () => clearInterval(slideInterval));
     heroSection.addEventListener('mouseleave', () => {
       slideInterval = setInterval(nextSlide, 5000);
@@ -1876,6 +1876,11 @@
       }
     });
   </script>
+
+  <!-- Supabase + Dynamic Content -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-config.js"></script>
+  <script src="js/content-loader.js"></script>
 
   <!-- External JS -->
   <script src="script.js"></script>
