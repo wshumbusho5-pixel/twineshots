@@ -706,33 +706,8 @@ async function loadSiteSettings() {
 // GSAP SCROLL ANIMATIONS
 // ============================================================
 function initScrollAnimations() {
-  if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
-
-  gsap.registerPlugin(ScrollTrigger);
-
-  // Kill existing ScrollTriggers to avoid duplicates
-  ScrollTrigger.getAll().forEach(t => t.kill());
-
-  const fadeUpElements = document.querySelectorAll('.fade-up');
-  fadeUpElements.forEach((el, index) => {
-    gsap.fromTo(el,
-      { y: 60, opacity: 0 },
-      {
-        y: 0,
-        opacity: 1,
-        duration: 0.8,
-        ease: 'power3.out',
-        scrollTrigger: {
-          trigger: el,
-          start: 'top 85%',
-          toggleActions: 'play none none none',
-        },
-        delay: (index % 6) * 0.1,
-      }
-    );
-  });
-
-  ScrollTrigger.refresh();
+  // No card animations — everything is static and visible immediately
+  // The Apple-style depth effect is handled purely by CSS (background-size transitions on hover)
 }
 
 

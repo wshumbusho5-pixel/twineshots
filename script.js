@@ -180,56 +180,9 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // ============================================================
-  // 5. Scroll Animations (GSAP + ScrollTrigger)
+  // 5. No scroll animations on cards — all static
+  // Only Apple-style depth parallax on card background images
   // ============================================================
-  if (typeof gsap !== "undefined" && typeof ScrollTrigger !== "undefined") {
-    gsap.registerPlugin(ScrollTrigger);
-
-    const cardSelectors = [
-      ".service-card",
-      ".value-card",
-      ".review-card",
-      ".discover-card",
-    ];
-
-    cardSelectors.forEach((selector) => {
-      const elements = document.querySelectorAll(selector);
-      if (elements.length > 0) {
-        // No slide-in animation — cards are static/visible immediately
-        // Only a very gentle image zoom when card enters viewport
-        elements.forEach((card) => {
-          gsap.fromTo(card,
-            { backgroundSize: "108%" },
-            {
-              backgroundSize: "100%",
-              duration: 1.8,
-              ease: "power1.out",
-              scrollTrigger: {
-                trigger: card,
-                start: "top 90%",
-              },
-            }
-          );
-        });
-      }
-    });
-
-    // Section titles — no movement animation, just visible
-
-    const formContainer = document.querySelector(".form-container");
-    if (formContainer) {
-      gsap.from(formContainer, {
-        y: 40,
-        opacity: 0,
-        duration: 0.8,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: formContainer,
-          start: "top 85%",
-        },
-      });
-    }
-  }
 
   // ============================================================
   // 6. Navbar Scroll Effect
