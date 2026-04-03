@@ -195,31 +195,18 @@ document.addEventListener("DOMContentLoaded", () => {
     cardSelectors.forEach((selector) => {
       const elements = document.querySelectorAll(selector);
       if (elements.length > 0) {
-        // Subtle card reveal — barely any movement
-        gsap.from(elements, {
-          y: 15,
-          opacity: 0.3,
-          duration: 0.6,
-          stagger: 0.06,
-          ease: "power1.out",
-          scrollTrigger: {
-            trigger: elements[0].parentElement || elements[0],
-            start: "top 88%",
-          },
-        });
-
-        // Image inside card zooms out (scales from 1.15 to 1) — the "peek out" effect
+        // No slide-in animation — cards are static/visible immediately
+        // Only a very gentle image zoom when card enters viewport
         elements.forEach((card) => {
-          // Target the background image via the card itself (for service-card) or an inner img/thumb-img
           gsap.fromTo(card,
-            { backgroundSize: "115%" },
+            { backgroundSize: "108%" },
             {
               backgroundSize: "100%",
-              duration: 1.2,
-              ease: "power2.out",
+              duration: 1.8,
+              ease: "power1.out",
               scrollTrigger: {
                 trigger: card,
-                start: "top 85%",
+                start: "top 90%",
               },
             }
           );
@@ -227,19 +214,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
-    const sectionTitles = document.querySelectorAll(".section-title");
-    sectionTitles.forEach((title) => {
-      gsap.from(title, {
-        y: 10,
-        opacity: 0.2,
-        duration: 0.5,
-        ease: "power1.out",
-        scrollTrigger: {
-          trigger: title,
-          start: "top 90%",
-        },
-      });
-    });
+    // Section titles — no movement animation, just visible
 
     const formContainer = document.querySelector(".form-container");
     if (formContainer) {
