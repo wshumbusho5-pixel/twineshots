@@ -928,17 +928,36 @@ section.hero + section {
   }
 
   .hero-thumbnails {
-    display: none;
+    width: 100%;
+    bottom: 12px;
+    right: 0;
+    mask-image: linear-gradient(to right, transparent 0%, black 5%, black 85%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 5%, black 85%, transparent 100%);
+  }
+
+  .hero-thumb {
+    width: 110px;
+    height: 130px;
+    border-radius: 12px;
   }
 
   .hero-content {
-    bottom: 40px;
-    left: 24px;
+    bottom: 160px;
+    left: 20px;
+    max-width: 70%;
+  }
+
+  .hero-content h1 {
+    font-size: 2rem;
+  }
+
+  .hero-content p {
+    font-size: 0.9rem;
   }
 
   .hero {
-    margin-left: 1rem;
-    margin-right: 1rem;
+    margin-left: 0.75rem;
+    margin-right: 0.75rem;
   }
 }
 
