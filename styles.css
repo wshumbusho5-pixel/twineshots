@@ -126,7 +126,7 @@ body {
   margin-top: 95px;
   margin-left: 1.5rem;
   margin-right: 1.5rem;
-  margin-bottom: 3rem;
+  margin-bottom: 5rem;
   border-radius: 24px;
   position: relative;
   overflow: hidden;
@@ -302,14 +302,15 @@ section.hero + section {
   position: relative;
   height: 380px;
   cursor: pointer;
-  transition: all 0.4s;
-  background-size: cover;
+  transition: transform 0.4s ease, box-shadow 0.4s ease, background-size 1s ease;
+  background-size: 100%;
   background-position: center;
 }
 
 .service-card:hover {
   transform: scale(1.02);
   box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+  background-size: 110%;
 }
 
 .service-card .card-overlay {
