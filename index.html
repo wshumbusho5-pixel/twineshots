@@ -778,20 +778,26 @@
       color: #172554;
     }
 
-    /* ====== FLOATING BUTTONS ====== */
-    .float-whatsapp {
+    /* ====== FLOATING BUTTONS (horizontal) ====== */
+    .float-btns-row {
       position: fixed;
       bottom: 2rem;
       right: 2rem;
-      width: 60px;
-      height: 60px;
+      display: flex;
+      flex-direction: row;
+      gap: 12px;
+      z-index: 900;
+    }
+
+    .float-whatsapp {
+      width: 55px;
+      height: 55px;
       border-radius: 50%;
       background: #25D366;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      z-index: 900;
       box-shadow: 0 4px 15px rgba(37,211,102,0.4);
       transition: transform 0.3s;
     }
@@ -800,18 +806,14 @@
     .float-whatsapp i { color: #fff; font-size: 1.8rem; }
 
     .float-review {
-      position: fixed;
-      bottom: 6.5rem;
-      right: 2rem;
-      width: 60px;
-      height: 60px;
+      width: 55px;
+      height: 55px;
       border-radius: 50%;
       background: linear-gradient(135deg, #1e3a8a, #93c5fd);
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      z-index: 900;
       box-shadow: 0 4px 15px rgba(30,58,138,0.3);
       transition: transform 0.3s;
     }
@@ -1637,13 +1639,14 @@
     </div>
   </section>
 
-  <!-- ====== FLOATING BUTTONS ====== -->
-  <div class="float-review" onclick="window.location.href='#reviews'" title="Leave a Review">
-    <i class="fa-solid fa-star"></i>
-  </div>
-
-  <div class="float-whatsapp" onclick="openWhatsAppModal()" title="Chat on WhatsApp">
-    <i class="fa-brands fa-whatsapp"></i>
+  <!-- ====== FLOATING BUTTONS (horizontal) ====== -->
+  <div class="float-btns-row">
+    <div class="float-review" onclick="window.location.href='#reviews'" title="Leave a Review">
+      <i class="fa-solid fa-star"></i>
+    </div>
+    <div class="float-whatsapp" onclick="openWhatsAppModal()" title="Chat on WhatsApp">
+      <i class="fa-brands fa-whatsapp"></i>
+    </div>
   </div>
 
   <!-- WhatsApp Modal -->

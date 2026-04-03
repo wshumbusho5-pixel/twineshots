@@ -47,6 +47,37 @@ document.addEventListener("DOMContentLoaded", () => {
     startSlider();
   }
 
+  // Detect which thumbnail is in the center and lift it up
+  function updateCenterThumb() {
+    const container = document.querySelector('.hero-thumbnails');
+    const track = document.querySelector('.hero-thumb-track');
+    if (!container || !track) return;
+
+    const containerRect = container.getBoundingClientRect();
+    const centerX = containerRect.left + containerRect.width / 2;
+    const thumbs = track.querySelectorAll('.hero-thumb');
+    let closestThumb = null;
+    let closestDist = Infinity;
+
+    thumbs.forEach(thumb => {
+      const rect = thumb.getBoundingClientRect();
+      const thumbCenterX = rect.left + rect.width / 2;
+      const dist = Math.abs(thumbCenterX - centerX);
+      if (dist < closestDist) {
+        closestDist = dist;
+        closestThumb = thumb;
+      }
+    });
+
+    thumbs.forEach(t => t.classList.remove('active'));
+    if (closestThumb && closestDist < 120) {
+      closestThumb.classList.add('active');
+    }
+
+    requestAnimationFrame(updateCenterThumb);
+  }
+  requestAnimationFrame(updateCenterThumb);
+
   // ============================================================
   // 2. Mobile Menu
   // ============================================================
