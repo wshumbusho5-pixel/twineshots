@@ -50,7 +50,7 @@ async function loadHeroSlides() {
 
     const container = document.getElementById('hero-slider');
 
-    // Build slides HTML with thumbnails
+    // Build slides HTML (without thumbnails inside each slide)
     let slidesHTML = '';
 
     data.forEach((slide, index) => {
@@ -58,38 +58,44 @@ async function loadHeroSlides() {
         ? `background-image: url('${slide.image_url}');`
         : `background: linear-gradient(135deg, #1e3a8a, #172554);`;
 
-      // Build thumbnail cards for OTHER slides
-      let thumbsHTML = '';
-      data.forEach((otherSlide, otherIndex) => {
-        if (otherIndex === index) return; // skip current slide
-        const thumbBg = otherSlide.image_url
-          ? `background-image: url('${otherSlide.image_url}');`
-          : `background: linear-gradient(135deg, #1e3a8a, #172554);`;
-
-        thumbsHTML += `
-          <div class="hero-thumb" data-slide="${otherIndex}">
-            <div class="thumb-img" style="${thumbBg}"></div>
-            <div class="thumb-text">
-              <h4>${escapeHTML(otherSlide.title)}</h4>
-              <p>${escapeHTML(otherSlide.description || '').substring(0, 40)}</p>
-            </div>
-          </div>
-        `;
-      });
-
       slidesHTML += `
-        <div class="hero-slide${index === 0 ? ' active' : ''}" style="${bgStyle}">
+        <div class="hero-slide${index === 0 ? ' active' : ''}" style="${bgStyle} background-size:cover; background-position:center;">
           <div class="hero-overlay"></div>
           <div class="hero-content">
             <h1>${escapeHTML(slide.title)}</h1>
             ${slide.description ? `<p>${escapeHTML(slide.description)}</p>` : ''}
           </div>
-          <div class="hero-thumbnails">
-            ${thumbsHTML}
-          </div>
         </div>
       `;
     });
+
+    // Build shared floating thumbnail carousel (duplicated for infinite scroll)
+    let thumbsHTML = '';
+    for (let dup = 0; dup < 2; dup++) {
+      data.forEach((slide, index) => {
+        const thumbBg = slide.image_url
+          ? `background-image: url('${slide.image_url}'); background-size:cover; background-position:center;`
+          : `background: linear-gradient(135deg, #1e3a8a, #172554);`;
+
+        thumbsHTML += `
+          <div class="hero-thumb" data-slide="${index}">
+            <div class="thumb-img" style="${thumbBg}"></div>
+            <div class="thumb-text">
+              <h4>${escapeHTML(slide.title)}</h4>
+              <p>${escapeHTML(slide.description || '').substring(0, 50)}</p>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    slidesHTML += `
+      <div class="hero-thumbnails">
+        <div class="hero-thumb-track">
+          ${thumbsHTML}
+        </div>
+      </div>
+    `;
 
     // Replace all content in the hero container
     container.innerHTML = slidesHTML;
