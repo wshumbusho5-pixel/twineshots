@@ -317,27 +317,18 @@
     .hero-dots { display: none; }
 
     @media (max-width: 992px) {
-      .hero-thumbnails {
-        width: 100%;
-        bottom: 12px;
-        right: 0;
-      }
-      .hero-thumb {
-        width: 110px;
-        height: 130px;
-        border-radius: 12px;
-      }
-      .hero-content { bottom: 160px; left: 20px; max-width: 70%; }
-      .hero { margin-left: 0.75rem; margin-right: 0.75rem; }
-    }
-
-    @media (max-width: 768px) {
-      .hero-content h1 { font-size: 2rem; }
-      .hero-content p { font-size: 0.9rem; }
+      .hero-thumbnails { width: 100%; bottom: 10px; left: 0; right: auto; }
+      .hero-thumb { width: 140px; height: 180px; border-radius: 14px; }
+      .hero-content { bottom: auto; top: 30%; transform: translateY(-50%); left: 24px; max-width: 80%; }
+      .hero { margin-left: 0.75rem; margin-right: 0.75rem; height: 85vh; }
+      .float-btns-row { flex-direction: column; }
     }
 
     @media (max-width: 480px) {
-      .hero { margin-left: 0.5rem; margin-right: 0.5rem; height: calc(100vh - 110px); margin-top: 95px; }
+      .hero { margin-left: 0.5rem; margin-right: 0.5rem; height: 88vh; margin-top: 95px; margin-bottom: 2rem; }
+      .hero-content { top: 28%; left: 20px; max-width: 85%; }
+      .hero-content h1 { font-size: 1.8rem; font-weight: 400; }
+      .hero-thumb { width: 130px; height: 165px; }
     }
 
     /* ====== SECTION STYLES ====== */
