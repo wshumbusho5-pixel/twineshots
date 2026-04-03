@@ -211,120 +211,124 @@
 
     /* ====== HERO SLIDER ====== */
     .hero {
-      margin-top: 90px;
+      height: calc(100vh - 130px);
+      margin-top: 100px;
+      margin-left: 2rem;
+      margin-right: 2rem;
+      border-radius: 24px;
       position: relative;
-      height: 85vh;
-      min-height: 500px;
       overflow: hidden;
     }
 
     .hero-slide {
       position: absolute;
       inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
+      background-size: cover;
+      background-position: center;
       opacity: 0;
       transition: opacity 1s ease;
     }
 
     .hero-slide.active { opacity: 1; }
 
-    .hero-slide .overlay {
+    .hero-overlay {
       position: absolute;
       inset: 0;
-      background: linear-gradient(135deg, rgba(1,11,19,0.85), rgba(30,58,138,0.7));
+      background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.2) 100%);
     }
-
-    .hero-slide:nth-child(1) { background: linear-gradient(135deg, #1e3a8a, #172554); }
-    .hero-slide:nth-child(2) { background: linear-gradient(135deg, #172554, #0f172a); }
-    .hero-slide:nth-child(3) { background: linear-gradient(135deg, #0c4a6e, #1e3a8a); }
-    .hero-slide:nth-child(4) { background: linear-gradient(135deg, #1e3a8a, #7c3aed); }
 
     .hero-content {
-      position: relative;
-      z-index: 2;
-      color: #fff;
-      max-width: 800px;
-      padding: 0 2rem;
-    }
-
-    .hero-content .badge {
-      display: inline-block;
-      background: rgba(229,9,20,0.9);
-      color: #fff;
-      font-size: 0.8rem;
-      font-weight: 700;
-      padding: 0.4rem 1.2rem;
-      border-radius: 50px;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      margin-bottom: 1.5rem;
+      position: absolute;
+      bottom: 80px;
+      left: 40px;
+      color: white;
+      z-index: 5;
     }
 
     .hero-content h1 {
       font-size: 3.5rem;
-      font-weight: 900;
-      line-height: 1.1;
-      margin-bottom: 1rem;
+      font-weight: 300;
+      margin-bottom: 0.5rem;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.3);
     }
 
     .hero-content p {
-      font-size: 1.2rem;
-      color: #cbd5e1;
-      margin-bottom: 2rem;
-      max-width: 600px;
-      margin-left: auto;
-      margin-right: auto;
+      font-size: 1.1rem;
+      font-weight: 300;
+      opacity: 0.9;
     }
 
-    .hero-content .btn-hero {
-      display: inline-block;
-      padding: 0.9rem 2.5rem;
-      background: linear-gradient(135deg, #22C55E, #16A34A);
-      color: #fff;
-      font-weight: 700;
-      font-size: 1rem;
-      border-radius: 50px;
-      text-decoration: none;
-      transition: transform 0.3s, box-shadow 0.3s;
-      box-shadow: 0 4px 15px rgba(34,197,94,0.4);
-    }
-
-    .hero-content .btn-hero:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(34,197,94,0.5);
-    }
-
-    .hero-dots {
+    .hero-thumbnails {
       position: absolute;
-      bottom: 2rem;
-      left: 50%;
-      transform: translateX(-50%);
+      bottom: 30px;
+      right: 30px;
       display: flex;
-      gap: 0.75rem;
+      gap: 12px;
       z-index: 10;
     }
 
-    .hero-dots .dot {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.4);
+    .hero-thumb {
+      width: 150px;
+      height: 180px;
+      border-radius: 16px;
+      overflow: hidden;
       cursor: pointer;
+      position: relative;
       transition: all 0.3s;
+      border: 2px solid transparent;
+      flex-shrink: 0;
     }
 
-    .hero-dots .dot.active {
-      background: #e50914;
-      transform: scale(1.3);
+    .hero-thumb:hover, .hero-thumb.active {
+      border-color: rgba(255,255,255,0.6);
+      transform: translateY(-4px);
+    }
+
+    .hero-thumb .thumb-img {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+    }
+
+    .hero-thumb .thumb-text {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 10px;
+      background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+      color: white;
+    }
+
+    .hero-thumb .thumb-text h4 {
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .hero-thumb .thumb-text p {
+      font-size: 0.65rem;
+      opacity: 0.8;
+      line-height: 1.3;
+    }
+
+    /* Legacy hero dots (hidden, replaced by thumbnails) */
+    .hero-dots { display: none; }
+
+    @media (max-width: 992px) {
+      .hero-thumbnails { display: none; }
+      .hero-content { bottom: 40px; left: 24px; }
+      .hero { margin-left: 1rem; margin-right: 1rem; }
     }
 
     @media (max-width: 768px) {
       .hero-content h1 { font-size: 2.2rem; }
       .hero-content p { font-size: 1rem; }
-      .hero { height: 70vh; min-height: 400px; }
+    }
+
+    @media (max-width: 480px) {
+      .hero { margin-left: 0.5rem; margin-right: 0.5rem; height: calc(100vh - 110px); margin-top: 95px; }
     }
 
     /* ====== SECTION STYLES ====== */
@@ -335,9 +339,10 @@
 
     .section-title h2 {
       font-size: 2.5rem;
-      font-weight: 900;
-      color: #172554;
+      font-weight: 700;
+      color: #e50914;
       margin-bottom: 0.5rem;
+      font-style: italic;
     }
 
     .section-title p {
@@ -357,63 +362,62 @@
 
     /* ====== SERVICE CARDS ====== */
     .service-card {
-      position: relative;
       border-radius: 24px;
       overflow: hidden;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.12);
-      transition: transform 0.4s, box-shadow 0.4s;
+      position: relative;
+      height: 380px;
       cursor: pointer;
+      transition: all 0.4s;
+      background-size: cover;
+      background-position: center;
     }
 
     .service-card:hover {
-      transform: translateY(-8px) scale(1.02);
-      box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+      transform: scale(1.02);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
     }
 
-    .service-card .card-bg {
-      width: 100%;
-      aspect-ratio: 4/3;
-      background: linear-gradient(135deg, #334155, #1e293b);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .service-card .card-bg ion-icon {
-      font-size: 3rem;
-      color: rgba(255,255,255,0.2);
+    .service-card .card-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.1) 50%, transparent 100%);
     }
 
     .service-card .card-badge {
       position: absolute;
-      top: 1rem;
-      left: 1rem;
-      background: rgba(229,9,20,0.9);
-      color: #fff;
-      font-size: 0.7rem;
+      top: 16px;
+      right: 16px;
+      background: rgba(255,255,255,0.2);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 6px 16px;
+      font-size: 0.75rem;
+      color: white;
+      font-weight: 600;
+      z-index: 2;
+    }
+
+    .service-card .card-content {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 24px;
+      color: white;
+      z-index: 2;
+    }
+
+    .service-card .card-content h3 {
+      font-size: 1.4rem;
       font-weight: 700;
-      padding: 0.3rem 0.8rem;
-      border-radius: 50px;
-      letter-spacing: 1px;
-      text-transform: uppercase;
+      margin-bottom: 6px;
     }
 
-    .service-card .card-body {
-      padding: 1.25rem;
-      background: #fff;
-    }
-
-    .service-card .card-body h3 {
-      font-size: 1.15rem;
-      font-weight: 700;
-      color: #172554;
-      margin-bottom: 0.4rem;
-    }
-
-    .service-card .card-body p {
+    .service-card .card-content p {
       font-size: 0.85rem;
-      color: var(--muted);
-      line-height: 1.5;
+      opacity: 0.85;
+      line-height: 1.4;
     }
 
     /* ====== WHY CHOOSE US ====== */
@@ -1105,47 +1109,129 @@
 
   <!-- ====== HERO SLIDER ====== -->
   <section class="hero" id="hero-slider">
-    <div class="hero-slide active">
-      <div class="overlay"></div>
+    <!-- Slide 1 -->
+    <div class="hero-slide active" style="background: linear-gradient(135deg, #1e3a8a, #172554);">
+      <div class="hero-overlay"></div>
       <div class="hero-content">
-        <span class="badge">Photography &amp; Videography</span>
         <h1>Corporate Events</h1>
         <p>Capture the atmosphere, interactions, and moments that define your corporate gatherings.</p>
-        <a href="services.html" class="btn-hero">Explore Services</a>
+      </div>
+      <div class="hero-thumbnails">
+        <div class="hero-thumb" data-slide="1">
+          <div class="thumb-img" style="background: linear-gradient(135deg, #172554, #0f172a);"></div>
+          <div class="thumb-text">
+            <h4>Conferences</h4>
+            <p>Cinematic precision</p>
+          </div>
+        </div>
+        <div class="hero-thumb" data-slide="2">
+          <div class="thumb-img" style="background: linear-gradient(135deg, #0c4a6e, #1e3a8a);"></div>
+          <div class="thumb-text">
+            <h4>Real Estate</h4>
+            <p>Architectural photography</p>
+          </div>
+        </div>
+        <div class="hero-thumb" data-slide="3">
+          <div class="thumb-img" style="background: linear-gradient(135deg, #1e3a8a, #7c3aed);"></div>
+          <div class="thumb-text">
+            <h4>Live Stream</h4>
+            <p>Professional streaming</p>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="hero-slide">
-      <div class="overlay"></div>
+    <!-- Slide 2 -->
+    <div class="hero-slide" style="background: linear-gradient(135deg, #172554, #0f172a);">
+      <div class="hero-overlay"></div>
       <div class="hero-content">
-        <span class="badge">Professional Coverage</span>
         <h1>Conferences</h1>
         <p>Real stories through a powerful lens. We document conferences with cinematic precision.</p>
-        <a href="gallery.html" class="btn-hero">View Gallery</a>
+      </div>
+      <div class="hero-thumbnails">
+        <div class="hero-thumb" data-slide="0">
+          <div class="thumb-img" style="background: linear-gradient(135deg, #1e3a8a, #172554);"></div>
+          <div class="thumb-text">
+            <h4>Corporate Events</h4>
+            <p>Corporate gatherings</p>
+          </div>
+        </div>
+        <div class="hero-thumb" data-slide="2">
+          <div class="thumb-img" style="background: linear-gradient(135deg, #0c4a6e, #1e3a8a);"></div>
+          <div class="thumb-text">
+            <h4>Real Estate</h4>
+            <p>Architectural photography</p>
+          </div>
+        </div>
+        <div class="hero-thumb" data-slide="3">
+          <div class="thumb-img" style="background: linear-gradient(135deg, #1e3a8a, #7c3aed);"></div>
+          <div class="thumb-text">
+            <h4>Live Stream</h4>
+            <p>Professional streaming</p>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="hero-slide">
-      <div class="overlay"></div>
+    <!-- Slide 3 -->
+    <div class="hero-slide" style="background: linear-gradient(135deg, #0c4a6e, #1e3a8a);">
+      <div class="hero-overlay"></div>
       <div class="hero-content">
-        <span class="badge">Architectural Excellence</span>
         <h1>Real Estate Coverage</h1>
         <p>High-end architectural and interior photography that showcases properties at their finest.</p>
-        <a href="contact.html" class="btn-hero">Get a Quote</a>
+      </div>
+      <div class="hero-thumbnails">
+        <div class="hero-thumb" data-slide="0">
+          <div class="thumb-img" style="background: linear-gradient(135deg, #1e3a8a, #172554);"></div>
+          <div class="thumb-text">
+            <h4>Corporate Events</h4>
+            <p>Corporate gatherings</p>
+          </div>
+        </div>
+        <div class="hero-thumb" data-slide="1">
+          <div class="thumb-img" style="background: linear-gradient(135deg, #172554, #0f172a);"></div>
+          <div class="thumb-text">
+            <h4>Conferences</h4>
+            <p>Cinematic precision</p>
+          </div>
+        </div>
+        <div class="hero-thumb" data-slide="3">
+          <div class="thumb-img" style="background: linear-gradient(135deg, #1e3a8a, #7c3aed);"></div>
+          <div class="thumb-text">
+            <h4>Live Stream</h4>
+            <p>Professional streaming</p>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="hero-slide">
-      <div class="overlay"></div>
+    <!-- Slide 4 -->
+    <div class="hero-slide" style="background: linear-gradient(135deg, #1e3a8a, #7c3aed);">
+      <div class="hero-overlay"></div>
       <div class="hero-content">
-        <span class="badge">Live Broadcasting</span>
         <h1>Live Stream</h1>
         <p>Capturing every moment. Professional live streaming for events of all sizes.</p>
-        <a href="services.html" class="btn-hero">Learn More</a>
       </div>
-    </div>
-    <div class="hero-dots">
-      <div class="dot active" onclick="goToSlide(0)"></div>
-      <div class="dot" onclick="goToSlide(1)"></div>
-      <div class="dot" onclick="goToSlide(2)"></div>
-      <div class="dot" onclick="goToSlide(3)"></div>
+      <div class="hero-thumbnails">
+        <div class="hero-thumb" data-slide="0">
+          <div class="thumb-img" style="background: linear-gradient(135deg, #1e3a8a, #172554);"></div>
+          <div class="thumb-text">
+            <h4>Corporate Events</h4>
+            <p>Corporate gatherings</p>
+          </div>
+        </div>
+        <div class="hero-thumb" data-slide="1">
+          <div class="thumb-img" style="background: linear-gradient(135deg, #172554, #0f172a);"></div>
+          <div class="thumb-text">
+            <h4>Conferences</h4>
+            <p>Cinematic precision</p>
+          </div>
+        </div>
+        <div class="hero-thumb" data-slide="2">
+          <div class="thumb-img" style="background: linear-gradient(135deg, #0c4a6e, #1e3a8a);"></div>
+          <div class="thumb-text">
+            <h4>Real Estate</h4>
+            <p>Architectural photography</p>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -1158,192 +1244,141 @@
         <div class="line"></div>
       </div>
 
-      <div id="services-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        <!-- Service 1: Weddings -->
-        <div class="service-card fade-up">
-          <div class="card-bg" style="background: linear-gradient(135deg, #831843, #be185d);">
-            <ion-icon name="heart-outline"></ion-icon>
-          </div>
-          <span class="card-badge">Popular</span>
-          <div class="card-body">
+      <div id="services-grid" class="services-grid">
+        <div class="service-card fade-up" style="background: linear-gradient(135deg, #831843, #be185d);">
+          <div class="card-overlay"></div>
+          <div class="card-badge">Weddings</div>
+          <div class="card-content">
             <h3>Weddings</h3>
-            <p>Professional photography and videography services tailored to your needs.</p>
+            <p>Professional coverage for weddings</p>
           </div>
         </div>
-        <!-- Service 2: Corporate -->
-        <div class="service-card fade-up">
-          <div class="card-bg" style="background: linear-gradient(135deg, #1e3a8a, #2563eb);">
-            <ion-icon name="business-outline"></ion-icon>
-          </div>
-          <span class="card-badge">Featured</span>
-          <div class="card-body">
+        <div class="service-card fade-up" style="background: linear-gradient(135deg, #1e3a8a, #2563eb);">
+          <div class="card-overlay"></div>
+          <div class="card-badge">Corporate</div>
+          <div class="card-content">
             <h3>Corporate</h3>
-            <p>Professional photography and videography services tailored to your needs.</p>
+            <p>Professional coverage for corporate events</p>
           </div>
         </div>
-        <!-- Service 3: Portraits -->
-        <div class="service-card fade-up">
-          <div class="card-bg" style="background: linear-gradient(135deg, #065f46, #059669);">
-            <ion-icon name="person-outline"></ion-icon>
-          </div>
-          <span class="card-badge">Studio</span>
-          <div class="card-body">
+        <div class="service-card fade-up" style="background: linear-gradient(135deg, #065f46, #059669);">
+          <div class="card-overlay"></div>
+          <div class="card-badge">Portraits</div>
+          <div class="card-content">
             <h3>Portraits</h3>
-            <p>Professional photography and videography services tailored to your needs.</p>
+            <p>Professional portrait photography</p>
           </div>
         </div>
-        <!-- Service 4: Kwanjula -->
-        <div class="service-card fade-up">
-          <div class="card-bg" style="background: linear-gradient(135deg, #92400e, #d97706);">
-            <ion-icon name="flower-outline"></ion-icon>
-          </div>
-          <span class="card-badge">Cultural</span>
-          <div class="card-body">
+        <div class="service-card fade-up" style="background: linear-gradient(135deg, #92400e, #d97706);">
+          <div class="card-overlay"></div>
+          <div class="card-badge">Kwanjula</div>
+          <div class="card-content">
             <h3>Kwanjula</h3>
-            <p>Professional photography and videography services tailored to your needs.</p>
+            <p>Professional coverage for kwanjula ceremonies</p>
           </div>
         </div>
-        <!-- Service 5: Live Feed -->
-        <div class="service-card fade-up">
-          <div class="card-bg" style="background: linear-gradient(135deg, #7c3aed, #a855f7);">
-            <ion-icon name="radio-outline"></ion-icon>
-          </div>
-          <span class="card-badge">Live</span>
-          <div class="card-body">
+        <div class="service-card fade-up" style="background: linear-gradient(135deg, #7c3aed, #a855f7);">
+          <div class="card-overlay"></div>
+          <div class="card-badge">Live Feed</div>
+          <div class="card-content">
             <h3>Live Feed</h3>
-            <p>Professional photography and videography services tailored to your needs.</p>
+            <p>Professional live feed services</p>
           </div>
         </div>
-        <!-- Service 6: Live Stream -->
-        <div class="service-card fade-up">
-          <div class="card-bg" style="background: linear-gradient(135deg, #dc2626, #f87171);">
-            <ion-icon name="videocam-outline"></ion-icon>
-          </div>
-          <span class="card-badge">Streaming</span>
-          <div class="card-body">
+        <div class="service-card fade-up" style="background: linear-gradient(135deg, #dc2626, #f87171);">
+          <div class="card-overlay"></div>
+          <div class="card-badge">Live Stream</div>
+          <div class="card-content">
             <h3>Live Stream</h3>
-            <p>Professional photography and videography services tailored to your needs.</p>
+            <p>Professional live streaming for events</p>
           </div>
         </div>
-        <!-- Service 7: Real Estate -->
-        <div class="service-card fade-up">
-          <div class="card-bg" style="background: linear-gradient(135deg, #0e7490, #06b6d4);">
-            <ion-icon name="home-outline"></ion-icon>
-          </div>
-          <span class="card-badge">Property</span>
-          <div class="card-body">
+        <div class="service-card fade-up" style="background: linear-gradient(135deg, #0e7490, #06b6d4);">
+          <div class="card-overlay"></div>
+          <div class="card-badge">Real Estate</div>
+          <div class="card-content">
             <h3>Real Estate</h3>
-            <p>Professional photography and videography services tailored to your needs.</p>
+            <p>Professional real estate photography</p>
           </div>
         </div>
-        <!-- Service 8: Conference -->
-        <div class="service-card fade-up">
-          <div class="card-bg" style="background: linear-gradient(135deg, #1e40af, #3b82f6);">
-            <ion-icon name="mic-outline"></ion-icon>
-          </div>
-          <span class="card-badge">Events</span>
-          <div class="card-body">
+        <div class="service-card fade-up" style="background: linear-gradient(135deg, #1e40af, #3b82f6);">
+          <div class="card-overlay"></div>
+          <div class="card-badge">Conference</div>
+          <div class="card-content">
             <h3>Conference</h3>
-            <p>Professional photography and videography services tailored to your needs.</p>
+            <p>Professional conference coverage</p>
           </div>
         </div>
-        <!-- Service 9: Workshops -->
-        <div class="service-card fade-up">
-          <div class="card-bg" style="background: linear-gradient(135deg, #4338ca, #6366f1);">
-            <ion-icon name="school-outline"></ion-icon>
-          </div>
-          <span class="card-badge">Training</span>
-          <div class="card-body">
+        <div class="service-card fade-up" style="background: linear-gradient(135deg, #4338ca, #6366f1);">
+          <div class="card-overlay"></div>
+          <div class="card-badge">Workshops</div>
+          <div class="card-content">
             <h3>Workshops</h3>
-            <p>Professional photography and videography services tailored to your needs.</p>
+            <p>Professional workshop coverage</p>
           </div>
         </div>
-        <!-- Service 10: Documentaries -->
-        <div class="service-card fade-up">
-          <div class="card-bg" style="background: linear-gradient(135deg, #374151, #6b7280);">
-            <ion-icon name="film-outline"></ion-icon>
-          </div>
-          <span class="card-badge">Film</span>
-          <div class="card-body">
+        <div class="service-card fade-up" style="background: linear-gradient(135deg, #374151, #6b7280);">
+          <div class="card-overlay"></div>
+          <div class="card-badge">Documentaries</div>
+          <div class="card-content">
             <h3>Documentaries</h3>
-            <p>Professional photography and videography services tailored to your needs.</p>
+            <p>Professional documentary filmmaking</p>
           </div>
         </div>
-        <!-- Service 11: Trainings -->
-        <div class="service-card fade-up">
-          <div class="card-bg" style="background: linear-gradient(135deg, #166534, #22c55e);">
-            <ion-icon name="clipboard-outline"></ion-icon>
-          </div>
-          <span class="card-badge">Education</span>
-          <div class="card-body">
+        <div class="service-card fade-up" style="background: linear-gradient(135deg, #166534, #22c55e);">
+          <div class="card-overlay"></div>
+          <div class="card-badge">Trainings</div>
+          <div class="card-content">
             <h3>Trainings</h3>
-            <p>Professional photography and videography services tailored to your needs.</p>
+            <p>Professional training event coverage</p>
           </div>
         </div>
-        <!-- Service 12: Equipment Hire -->
-        <div class="service-card fade-up">
-          <div class="card-bg" style="background: linear-gradient(135deg, #78350f, #a16207);">
-            <ion-icon name="camera-outline"></ion-icon>
-          </div>
-          <span class="card-badge">Rental</span>
-          <div class="card-body">
+        <div class="service-card fade-up" style="background: linear-gradient(135deg, #78350f, #a16207);">
+          <div class="card-overlay"></div>
+          <div class="card-badge">Equipment Hire</div>
+          <div class="card-content">
             <h3>Equipment Hire</h3>
-            <p>Professional photography and videography services tailored to your needs.</p>
+            <p>Professional equipment rental services</p>
           </div>
         </div>
-        <!-- Service 13: Commercials -->
-        <div class="service-card fade-up">
-          <div class="card-bg" style="background: linear-gradient(135deg, #9f1239, #e11d48);">
-            <ion-icon name="megaphone-outline"></ion-icon>
-          </div>
-          <span class="card-badge">Advertising</span>
-          <div class="card-body">
+        <div class="service-card fade-up" style="background: linear-gradient(135deg, #9f1239, #e11d48);">
+          <div class="card-overlay"></div>
+          <div class="card-badge">Commercials</div>
+          <div class="card-content">
             <h3>Commercials</h3>
-            <p>Professional photography and videography services tailored to your needs.</p>
+            <p>Professional commercial production</p>
           </div>
         </div>
-        <!-- Service 14: Studio Hire -->
-        <div class="service-card fade-up">
-          <div class="card-bg" style="background: linear-gradient(135deg, #1f2937, #4b5563);">
-            <ion-icon name="easel-outline"></ion-icon>
-          </div>
-          <span class="card-badge">Studio</span>
-          <div class="card-body">
+        <div class="service-card fade-up" style="background: linear-gradient(135deg, #1f2937, #4b5563);">
+          <div class="card-overlay"></div>
+          <div class="card-badge">Studio Hire</div>
+          <div class="card-content">
             <h3>Studio Hire</h3>
-            <p>Professional photography and videography services tailored to your needs.</p>
+            <p>Professional studio space for hire</p>
           </div>
         </div>
-        <!-- Service 15: Kukyaala -->
-        <div class="service-card fade-up">
-          <div class="card-bg" style="background: linear-gradient(135deg, #b45309, #f59e0b);">
-            <ion-icon name="rose-outline"></ion-icon>
-          </div>
-          <span class="card-badge">Cultural</span>
-          <div class="card-body">
+        <div class="service-card fade-up" style="background: linear-gradient(135deg, #b45309, #f59e0b);">
+          <div class="card-overlay"></div>
+          <div class="card-badge">Kukyaala</div>
+          <div class="card-content">
             <h3>Kukyaala</h3>
-            <p>Professional photography and videography services tailored to your needs.</p>
+            <p>Professional coverage for kukyaala ceremonies</p>
           </div>
         </div>
-        <!-- Service 16: Birthdays -->
-        <div class="service-card fade-up">
-          <div class="card-bg" style="background: linear-gradient(135deg, #c026d3, #e879f9);">
-            <ion-icon name="gift-outline"></ion-icon>
-          </div>
-          <span class="card-badge">Celebration</span>
-          <div class="card-body">
+        <div class="service-card fade-up" style="background: linear-gradient(135deg, #c026d3, #e879f9);">
+          <div class="card-overlay"></div>
+          <div class="card-badge">Birthdays</div>
+          <div class="card-content">
             <h3>Birthdays</h3>
-            <p>Professional photography and videography services tailored to your needs.</p>
+            <p>Professional birthday event coverage</p>
           </div>
         </div>
-        <!-- Service 17: Social Events -->
-        <div class="service-card fade-up">
-          <div class="card-bg" style="background: linear-gradient(135deg, #0369a1, #38bdf8);">
-            <ion-icon name="sparkles-outline"></ion-icon>
-          </div>
-          <span class="card-badge">Social</span>
-          <div class="card-body">
+        <div class="service-card fade-up" style="background: linear-gradient(135deg, #0369a1, #38bdf8);">
+          <div class="card-overlay"></div>
+          <div class="card-badge">Social Events</div>
+          <div class="card-content">
             <h3>Social Events</h3>
-            <p>Professional photography and videography services tailored to your needs.</p>
+            <p>Professional social event coverage</p>
           </div>
         </div>
       </div>
@@ -1760,17 +1795,15 @@
 
   <!-- ====== JAVASCRIPT ====== -->
   <script>
-    // === Hero Slider ===
+    // === Hero Slider with Thumbnails ===
     let currentSlide = 0;
     const slides = document.querySelectorAll('.hero-slide');
-    const dots = document.querySelectorAll('.hero-dots .dot');
 
     function goToSlide(index) {
+      if (index === currentSlide) return;
       slides[currentSlide].classList.remove('active');
-      dots[currentSlide].classList.remove('active');
       currentSlide = index;
       slides[currentSlide].classList.add('active');
-      dots[currentSlide].classList.add('active');
     }
 
     function nextSlide() {
@@ -1778,6 +1811,16 @@
     }
 
     let slideInterval = setInterval(nextSlide, 5000);
+
+    // Thumbnail click handlers
+    document.querySelectorAll('.hero-thumb').forEach(thumb => {
+      thumb.addEventListener('click', () => {
+        const slideIndex = parseInt(thumb.getAttribute('data-slide'));
+        goToSlide(slideIndex);
+        clearInterval(slideInterval);
+        slideInterval = setInterval(nextSlide, 5000);
+      });
+    });
 
     // Pause on hover
     const heroSection = document.getElementById('hero-slider');

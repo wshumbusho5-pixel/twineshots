@@ -49,45 +49,52 @@ async function loadHeroSlides() {
     if (!data || data.length === 0) return;
 
     const container = document.getElementById('hero-slider');
-    const dotsContainer = container.querySelector('.hero-dots') || container.parentElement.querySelector('.hero-dots');
 
-    // Build slides HTML
+    // Build slides HTML with thumbnails
     let slidesHTML = '';
-    let dotsHTML = '';
 
     data.forEach((slide, index) => {
       const bgStyle = slide.image_url
-        ? `background: url('${slide.image_url}') center/cover no-repeat;`
+        ? `background-image: url('${slide.image_url}');`
         : `background: linear-gradient(135deg, #1e3a8a, #172554);`;
+
+      // Build thumbnail cards for OTHER slides
+      let thumbsHTML = '';
+      data.forEach((otherSlide, otherIndex) => {
+        if (otherIndex === index) return; // skip current slide
+        const thumbBg = otherSlide.image_url
+          ? `background-image: url('${otherSlide.image_url}');`
+          : `background: linear-gradient(135deg, #1e3a8a, #172554);`;
+
+        thumbsHTML += `
+          <div class="hero-thumb" data-slide="${otherIndex}">
+            <div class="thumb-img" style="${thumbBg}"></div>
+            <div class="thumb-text">
+              <h4>${escapeHTML(otherSlide.title)}</h4>
+              <p>${escapeHTML(otherSlide.description || '').substring(0, 40)}</p>
+            </div>
+          </div>
+        `;
+      });
 
       slidesHTML += `
         <div class="hero-slide${index === 0 ? ' active' : ''}" style="${bgStyle}">
-          <div class="overlay"></div>
+          <div class="hero-overlay"></div>
           <div class="hero-content">
-            ${slide.badge ? `<span class="badge">${escapeHTML(slide.badge)}</span>` : ''}
             <h1>${escapeHTML(slide.title)}</h1>
             ${slide.description ? `<p>${escapeHTML(slide.description)}</p>` : ''}
-            ${slide.button_text ? `<a href="${slide.button_link || '#'}" class="btn-hero">${escapeHTML(slide.button_text)}</a>` : ''}
+          </div>
+          <div class="hero-thumbnails">
+            ${thumbsHTML}
           </div>
         </div>
       `;
-
-      dotsHTML += `<div class="dot${index === 0 ? ' active' : ''}" onclick="goToSlide(${index})"></div>`;
     });
 
-    // Find all existing slides and remove them, keep dots container reference
-    const existingSlides = container.querySelectorAll('.hero-slide');
-    existingSlides.forEach(s => s.remove());
+    // Replace all content in the hero container
+    container.innerHTML = slidesHTML;
 
-    // Insert new slides before the dots
-    if (dotsContainer) {
-      dotsContainer.insertAdjacentHTML('beforebegin', slidesHTML);
-      dotsContainer.innerHTML = dotsHTML;
-    } else {
-      container.innerHTML = slidesHTML + `<div class="hero-dots">${dotsHTML}</div>`;
-    }
-
-    // Re-initialize slider JS
+    // Re-initialize slider JS with thumbnail support
     reinitHeroSlider();
   } catch (err) {
     console.error('Error loading hero slides:', err);
@@ -96,18 +103,33 @@ async function loadHeroSlides() {
 
 function reinitHeroSlider() {
   const slides = document.querySelectorAll('.hero-slide');
-  const dots = document.querySelectorAll('.hero-dots .dot');
   if (slides.length === 0) return;
 
   let current = 0;
 
   window.goToSlide = function(index) {
+    if (index === current) return;
     slides[current].classList.remove('active');
-    dots[current].classList.remove('active');
     current = index;
+    if (current >= slides.length) current = 0;
+    if (current < 0) current = slides.length - 1;
     slides[current].classList.add('active');
-    dots[current].classList.add('active');
   };
+
+  // Thumbnail click handlers
+  document.querySelectorAll('.hero-thumb').forEach(thumb => {
+    thumb.addEventListener('click', () => {
+      const slideIndex = parseInt(thumb.getAttribute('data-slide'));
+      if (!isNaN(slideIndex)) {
+        window.goToSlide(slideIndex);
+        // Reset auto-rotate
+        clearInterval(window._heroInterval);
+        window._heroInterval = setInterval(() => {
+          window.goToSlide((current + 1) % slides.length);
+        }, 5000);
+      }
+    });
+  });
 
   // Clear any existing interval
   if (window._heroInterval) clearInterval(window._heroInterval);
@@ -116,7 +138,7 @@ function reinitHeroSlider() {
     window.goToSlide((current + 1) % slides.length);
   }, 5000);
 
-  const heroSection = document.getElementById('hero') || slides[0].parentElement;
+  const heroSection = document.getElementById('hero-slider') || slides[0].parentElement;
   heroSection.addEventListener('mouseenter', () => clearInterval(window._heroInterval));
   heroSection.addEventListener('mouseleave', () => {
     window._heroInterval = setInterval(() => {
@@ -144,24 +166,18 @@ async function loadServices() {
 
     let html = '';
     data.forEach(service => {
+      const name = escapeHTML(service.title || service.name || '');
       const bgStyle = service.image_url
-        ? `background: url('${service.image_url}') center/cover no-repeat;`
+        ? `background-image: url('${service.image_url}');`
         : `background: linear-gradient(135deg, ${service.gradient_from || '#334155'}, ${service.gradient_to || '#1e293b'});`;
 
-      const iconHTML = service.icon
-        ? `<ion-icon name="${service.icon}"></ion-icon>`
-        : '';
-
       html += `
-        <div class="service-card fade-up">
-          <div class="card-bg" style="${bgStyle}">
-            ${!service.image_url ? iconHTML : ''}
-          </div>
-          ${service.badge ? `<span class="card-badge">${escapeHTML(service.badge)}</span>` : ''}
-          <div class="card-body">
-            <h3>${escapeHTML(service.title)}</h3>
-            <p>${escapeHTML(service.description)}</p>
-            ${service.price ? `<p style="margin-top: 0.5rem; font-weight: 700; color: #1e3a8a;">${escapeHTML(service.price)}</p>` : ''}
+        <div class="service-card fade-up" style="${bgStyle}">
+          <div class="card-overlay"></div>
+          <div class="card-badge">${name}</div>
+          <div class="card-content">
+            <h3>${name}</h3>
+            <p>${escapeHTML(service.description || 'Professional coverage for ' + (service.title || service.name || '').toLowerCase())}</p>
           </div>
         </div>
       `;

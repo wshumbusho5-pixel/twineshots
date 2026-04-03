@@ -1,22 +1,22 @@
 document.addEventListener("DOMContentLoaded", () => {
   // ============================================================
-  // 1. Hero Slider
+  // 1. Hero Slider with Thumbnails
   // ============================================================
   const heroSlides = document.querySelectorAll(".hero-slide");
-  const dots = document.querySelectorAll(".dot");
+  const heroThumbs = document.querySelectorAll(".hero-thumb");
   let currentSlide = 0;
   let slideInterval;
 
   function goToSlide(index) {
+    if (index === currentSlide && heroSlides[currentSlide] && heroSlides[currentSlide].classList.contains("active")) return;
+
     heroSlides.forEach((slide) => slide.classList.remove("active"));
-    dots.forEach((dot) => dot.classList.remove("active"));
 
     currentSlide = index;
     if (currentSlide >= heroSlides.length) currentSlide = 0;
     if (currentSlide < 0) currentSlide = heroSlides.length - 1;
 
     if (heroSlides[currentSlide]) heroSlides[currentSlide].classList.add("active");
-    if (dots[currentSlide]) dots[currentSlide].classList.add("active");
   }
 
   function nextSlide() {
@@ -32,10 +32,14 @@ document.addEventListener("DOMContentLoaded", () => {
     startSlider();
   }
 
-  dots.forEach((dot, index) => {
-    dot.addEventListener("click", () => {
-      goToSlide(index);
-      resetSlider();
+  // Thumbnail click handlers
+  heroThumbs.forEach((thumb) => {
+    thumb.addEventListener("click", () => {
+      const slideIndex = parseInt(thumb.getAttribute("data-slide"));
+      if (!isNaN(slideIndex)) {
+        goToSlide(slideIndex);
+        resetSlider();
+      }
     });
   });
 
