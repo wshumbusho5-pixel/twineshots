@@ -178,7 +178,7 @@ async function loadServices() {
         : `background: linear-gradient(135deg, ${service.gradient_from || '#334155'}, ${service.gradient_to || '#1e293b'});`;
 
       html += `
-        <div class="service-card fade-up" style="${bgStyle}">
+        <div class="service-card" style="${bgStyle}">
           <div class="card-overlay"></div>
           <div class="card-badge">${name}</div>
           <div class="card-content">
@@ -228,7 +228,7 @@ async function loadTeamMembers() {
       }
 
       html += `
-        <div class="team-card fade-up">
+        <div class="team-card">
           ${avatarHTML}
           <h3>${escapeHTML(member.name)}</h3>
           <p class="role">${escapeHTML(member.role)}</p>
@@ -272,7 +272,7 @@ async function loadGalleryItems() {
         : '';
 
       html += `
-        <div class="gallery-card fade-up" data-category="${escapeHTML(item.category || '')}">
+        <div class="gallery-card" data-category="${escapeHTML(item.category || '')}">
           <div class="card-bg" style="${bgStyle}">
             ${!item.image_url ? iconHTML : ''}
           </div>
@@ -319,7 +319,7 @@ async function loadReviews() {
     let html = '';
     data.forEach(review => {
       html += `
-        <div class="review-card fade-up">
+        <div class="review-card">
           <div class="stars">${generateStars(review.rating || 5)}</div>
           <p class="quote">"${escapeHTML(review.content)}"</p>
           <p class="reviewer">${escapeHTML(review.author_name)}</p>
@@ -391,7 +391,7 @@ async function loadValues() {
     let html = '';
     data.forEach(value => {
       html += `
-        <div class="value-card fade-up">
+        <div class="value-card">
           <div class="icon-wrap"><ion-icon name="${value.icon || 'star-outline'}"></ion-icon></div>
           <h3>${escapeHTML(value.title)}</h3>
           <p>${escapeHTML(value.description)}</p>
@@ -425,7 +425,7 @@ async function loadJobListings() {
     let html = '';
     data.forEach(job => {
       html += `
-        <div class="job-card fade-up">
+        <div class="job-card">
           <h3>${escapeHTML(job.title)}</h3>
           <div class="badges">
             ${job.job_type ? `<span class="badge badge-type">${escapeHTML(job.job_type)}</span>` : ''}
@@ -474,7 +474,7 @@ async function loadStats() {
     let html = '';
     data.forEach(stat => {
       html += `
-        <div class="stat-card fade-up">
+        <div class="stat-card">
           <div class="number">${escapeHTML(stat.value)}</div>
           <div class="label">${escapeHTML(stat.label)}</div>
         </div>
@@ -560,7 +560,7 @@ async function loadDiscoverCards() {
         : `background: linear-gradient(135deg, ${card.gradient_from || '#1e3a8a'}, ${card.gradient_to || '#3b82f6'});`;
 
       html += `
-        <div class="discover-card fade-up">
+        <div class="discover-card">
           <div class="bg" style="${bgStyle}"></div>
           <div class="card-overlay">
             <h3>${escapeHTML(card.title)}</h3>

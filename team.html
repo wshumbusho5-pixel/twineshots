@@ -680,10 +680,6 @@
     .welcome-popup .dismiss:hover { color: #94a3b8; }
 
     /* ====== ANIMATIONS ====== */
-    .fade-up {
-      opacity: 0;
-      transform: translateY(40px);
-    }
   </style>
 </head>
 <body>
@@ -736,14 +732,14 @@
   <!-- ====== TEAM HERO ====== -->
   <section class="team-hero">
     <div class="team-hero-content">
-      <h1 class="fade-up">Meet Our Team</h1>
-      <p class="fade-up">The creative minds behind every shot</p>
+      <h1 >Meet Our Team</h1>
+      <p >The creative minds behind every shot</p>
     </div>
   </section>
 
   <!-- ====== TEAM GRID ====== -->
   <section class="py-20 px-4" style="background: var(--light-bg);">
-    <div class="section-title fade-up">
+    <div class="section-title">
       <h2>Our Creative Crew</h2>
       <p>Passionate professionals dedicated to capturing your most important moments</p>
       <div class="line"></div>
@@ -752,7 +748,7 @@
     <div id="team-grid" class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
 
       <!-- Gilbert O. -->
-      <div class="team-card fade-up">
+      <div class="team-card">
         <div class="avatar">GO</div>
         <h3>Gilbert O.</h3>
         <p class="role">Founder & Lead Photographer</p>
@@ -765,7 +761,7 @@
       </div>
 
       <!-- Sarah K. -->
-      <div class="team-card fade-up">
+      <div class="team-card">
         <div class="avatar">SK</div>
         <h3>Sarah K.</h3>
         <p class="role">Creative Director</p>
@@ -778,7 +774,7 @@
       </div>
 
       <!-- David M. -->
-      <div class="team-card fade-up">
+      <div class="team-card">
         <div class="avatar">DM</div>
         <h3>David M.</h3>
         <p class="role">Senior Videographer</p>
@@ -791,7 +787,7 @@
       </div>
 
       <!-- Grace N. -->
-      <div class="team-card fade-up">
+      <div class="team-card">
         <div class="avatar">GN</div>
         <h3>Grace N.</h3>
         <p class="role">Studio Manager</p>
@@ -804,7 +800,7 @@
       </div>
 
       <!-- Peter A. -->
-      <div class="team-card fade-up">
+      <div class="team-card">
         <div class="avatar">PA</div>
         <h3>Peter A.</h3>
         <p class="role">Drone & Aerial Specialist</p>
@@ -817,7 +813,7 @@
       </div>
 
       <!-- Monica W. -->
-      <div class="team-card fade-up">
+      <div class="team-card">
         <div class="avatar">MW</div>
         <h3>Monica W.</h3>
         <p class="role">Post-Production Editor</p>
@@ -834,7 +830,7 @@
 
   <!-- ====== JOIN OUR TEAM CTA ====== -->
   <section class="py-20 px-4" style="background: var(--light-bg);">
-    <div class="cta-card fade-up">
+    <div class="cta-card">
       <h2>Join Our Team</h2>
       <p>We're always looking for talented photographers, videographers, and creatives to join our growing family. If you're passionate about visual storytelling, we'd love to hear from you.</p>
       <a href="careers.html" class="btn-cta">View Open Positions</a>
@@ -1006,7 +1002,7 @@
     // === GSAP ScrollTrigger Animations ===
     gsap.registerPlugin(ScrollTrigger);
 
-    gsap.utils.toArray('.fade-up').forEach((el) => {
+    
       gsap.fromTo(el,
         { opacity: 0, y: 40 },
         {

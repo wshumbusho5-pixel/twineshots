@@ -743,10 +743,6 @@
     }
 
     /* ====== ANIMATIONS ====== */
-    .fade-up {
-      opacity: 0;
-      transform: translateY(40px);
-    }
   </style>
 </head>
 <body>
@@ -807,7 +803,7 @@
   <!-- ====== WHY WORK WITH US ====== -->
   <section class="py-20 px-4" style="background: var(--light-bg);">
     <div class="max-w-6xl mx-auto">
-      <div class="section-title fade-up">
+      <div class="section-title">
         <h2>Why Work With Us</h2>
         <p>Discover what makes Twineshots a great place to grow your creative career</p>
         <div class="line"></div>
@@ -815,7 +811,7 @@
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
         <!-- Card 1 -->
-        <div class="benefit-card fade-up">
+        <div class="benefit-card">
           <div class="icon-wrap">
             <ion-icon name="brush-outline"></ion-icon>
           </div>
@@ -823,7 +819,7 @@
           <p>Express your artistic vision and bring fresh ideas to every project. We believe the best work comes from empowered creatives who are free to experiment and innovate.</p>
         </div>
         <!-- Card 2 -->
-        <div class="benefit-card fade-up">
+        <div class="benefit-card">
           <div class="icon-wrap">
             <ion-icon name="trending-up-outline"></ion-icon>
           </div>
@@ -831,7 +827,7 @@
           <p>Continuous skill development through mentorship, workshops, and hands-on experience with the latest tools and techniques in photography and videography.</p>
         </div>
         <!-- Card 3 -->
-        <div class="benefit-card fade-up">
+        <div class="benefit-card">
           <div class="icon-wrap">
             <ion-icon name="camera-outline"></ion-icon>
           </div>
@@ -839,7 +835,7 @@
           <p>Work on diverse, exciting projects ranging from high-profile weddings and corporate events to creative brand campaigns and documentary storytelling.</p>
         </div>
         <!-- Card 4 -->
-        <div class="benefit-card fade-up">
+        <div class="benefit-card">
           <div class="icon-wrap">
             <ion-icon name="people-outline"></ion-icon>
           </div>
@@ -853,7 +849,7 @@
   <!-- ====== OPEN POSITIONS ====== -->
   <section class="py-20 px-4" style="background: #fff;">
     <div class="max-w-5xl mx-auto">
-      <div class="section-title fade-up">
+      <div class="section-title">
         <h2>Open Positions</h2>
         <p>Explore our current openings and find the role that fits you</p>
         <div class="line"></div>
@@ -861,7 +857,7 @@
 
       <div id="jobs-list" class="grid grid-cols-1 gap-8">
         <!-- Job 1 -->
-        <div class="job-card fade-up">
+        <div class="job-card">
           <h3>Junior Photographer</h3>
           <div class="badges">
             <span class="badge badge-type">Full-time</span>
@@ -871,7 +867,7 @@
           <button class="btn-apply">Apply Now</button>
         </div>
         <!-- Job 2 -->
-        <div class="job-card fade-up">
+        <div class="job-card">
           <h3>Video Editor</h3>
           <div class="badges">
             <span class="badge badge-type">Full-time</span>
@@ -881,7 +877,7 @@
           <button class="btn-apply">Apply Now</button>
         </div>
         <!-- Job 3 -->
-        <div class="job-card fade-up">
+        <div class="job-card">
           <h3>Social Media Manager</h3>
           <div class="badges">
             <span class="badge badge-type">Part-time</span>
@@ -897,13 +893,13 @@
   <!-- ====== APPLICATION FORM ====== -->
   <section class="py-20 px-4" style="background: var(--light-bg);">
     <div class="max-w-5xl mx-auto">
-      <div class="section-title fade-up">
+      <div class="section-title">
         <h2>Apply Now</h2>
         <p>Fill in the form below to submit your application</p>
         <div class="line"></div>
       </div>
 
-      <div class="form-container fade-up">
+      <div class="form-container">
         <div class="form-header">
           <h3>Career Application</h3>
           <p>Tell us about yourself and why you'd be a great fit</p>
@@ -942,7 +938,7 @@
 
   <!-- ====== SPECULATIVE CTA ====== -->
   <section class="py-16 px-4" style="background: #fff;">
-    <div class="max-w-3xl mx-auto text-center fade-up">
+    <div class="max-w-3xl mx-auto text-center">
       <h2 style="font-size: 2rem; font-weight: 900; color: #172554; margin-bottom: 1rem;">No Suitable Position?</h2>
       <p style="font-size: 1.05rem; color: var(--muted); line-height: 1.7; margin-bottom: 1rem;">
         We're always on the lookout for talented individuals. If none of the current openings match your skills, feel free to send a speculative application with your CV and portfolio to
@@ -1116,7 +1112,7 @@
     // === GSAP ScrollTrigger Animations ===
     gsap.registerPlugin(ScrollTrigger);
 
-    gsap.utils.toArray('.fade-up').forEach((el) => {
+    
       gsap.fromTo(el,
         { opacity: 0, y: 40 },
         {

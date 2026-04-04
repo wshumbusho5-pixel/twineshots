@@ -720,10 +720,6 @@
     .welcome-popup .dismiss:hover { color: #94a3b8; }
 
     /* ====== ANIMATIONS ====== */
-    .fade-up {
-      opacity: 0;
-      transform: translateY(40px);
-    }
   </style>
 </head>
 <body>
@@ -789,7 +785,7 @@
         <!-- Left Column: Contact Info Cards -->
         <div class="flex flex-col gap-6">
           <!-- Location Card -->
-          <div class="contact-info-card fade-up">
+          <div class="contact-info-card">
             <div class="icon-circle">
               <ion-icon name="map-outline"></ion-icon>
             </div>
@@ -800,7 +796,7 @@
           </div>
 
           <!-- Phone Card -->
-          <div class="contact-info-card fade-up">
+          <div class="contact-info-card">
             <div class="icon-circle">
               <ion-icon name="call-outline"></ion-icon>
             </div>
@@ -812,7 +808,7 @@
           </div>
 
           <!-- Email Card -->
-          <div class="contact-info-card fade-up">
+          <div class="contact-info-card">
             <div class="icon-circle">
               <ion-icon name="mail-outline"></ion-icon>
             </div>
@@ -824,7 +820,7 @@
         </div>
 
         <!-- Right Column: Contact Form -->
-        <div class="fade-up">
+        <div >
           <div class="form-container">
             <div class="form-header">
               <h3>Book Your Session</h3>
@@ -912,12 +908,12 @@
   <!-- ====== GOOGLE MAPS PLACEHOLDER ====== -->
   <section class="py-20 px-4" style="background: #fff;">
     <div class="max-w-7xl mx-auto">
-      <div class="section-title fade-up">
+      <div class="section-title">
         <h2>Find Us</h2>
         <p>Visit our studio in Kampala, Uganda.</p>
         <div class="line"></div>
       </div>
-      <div class="map-placeholder fade-up">
+      <div class="map-placeholder">
         <span><i class="fa-solid fa-map-location-dot" style="margin-right: 0.5rem;"></i> Map Placeholder</span>
       </div>
     </div>
@@ -926,12 +922,12 @@
   <!-- ====== BUSINESS HOURS ====== -->
   <section class="py-20 px-4" style="background: var(--light-bg);">
     <div class="max-w-7xl mx-auto">
-      <div class="section-title fade-up">
+      <div class="section-title">
         <h2>Business Hours</h2>
         <p>We are available during the following hours.</p>
         <div class="line"></div>
       </div>
-      <div class="max-w-2xl mx-auto grid grid-cols-1 gap-4 fade-up">
+      <div class="max-w-2xl mx-auto grid grid-cols-1 gap-4">
         <div class="hours-card">
           <span class="day">Monday</span>
           <span class="time">8:00 AM - 6:00 PM</span>
@@ -1129,7 +1125,7 @@
     // === GSAP ScrollTrigger Animations ===
     gsap.registerPlugin(ScrollTrigger);
 
-    gsap.utils.toArray('.fade-up').forEach((el) => {
+    
       gsap.fromTo(el,
         { opacity: 0, y: 40 },
         {

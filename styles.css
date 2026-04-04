@@ -122,12 +122,12 @@ body {
 
 /* --- Hero Slider --- */
 .hero {
-  height: calc(100vh - 180px);
-  margin-top: 140px;
-  margin-left: 1.5rem;
-  margin-right: 1.5rem;
+  height: calc(100vh - 220px);
+  margin-top: 160px;
+  margin-left: 2.5rem;
+  margin-right: 2.5rem;
   margin-bottom: 3rem;
-  border-radius: 24px;
+  border-radius: 28px;
   position: relative;
   overflow: hidden;
 }
@@ -261,7 +261,7 @@ body {
 
 /* --- Section Styles --- */
 section {
-  padding: 4rem 2rem;
+  padding: 4rem 3.5rem;
 }
 
 section.hero + section {
@@ -297,10 +297,10 @@ section.hero + section {
 }
 
 .service-card {
-  border-radius: 28px;
+  border-radius: 30px;
   overflow: hidden;
   position: relative;
-  height: 280px;
+  height: 250px;
   cursor: pointer;
   transition: transform 0.5s ease, box-shadow 0.5s ease;
   background-size: 110%;
@@ -987,14 +987,14 @@ section.hero + section {
   }
 
   .hero {
-    margin-left: 0.75rem;
-    margin-right: 0.75rem;
-    height: 75vh;
-    margin-top: 130px;
+    margin-left: 1rem;
+    margin-right: 1rem;
+    height: 70vh;
+    margin-top: 140px;
   }
 
   .service-card {
-    height: 300px;
+    height: 260px;
   }
 
   /* Float buttons vertical on mobile */
@@ -1039,8 +1039,8 @@ section.hero + section {
   }
 
   .service-card {
-    height: 340px;
-    border-radius: 28px;
+    height: 300px;
+    border-radius: 30px;
   }
 
   .service-card .card-content h3 {
@@ -1091,10 +1091,14 @@ section.hero + section {
   }
 
   .hero {
-    margin-left: 0.5rem;
-    margin-right: 0.5rem;
-    height: 75vh;
-    margin-top: 120px;
+    margin-left: 0.75rem;
+    margin-right: 0.75rem;
+    height: 68vh;
+    margin-top: 130px;
     margin-bottom: 2rem;
+  }
+
+  section {
+    padding: 3rem 1.25rem;
   }
 }
