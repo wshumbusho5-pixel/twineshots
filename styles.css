@@ -989,8 +989,8 @@ section.hero + section {
   .hero {
     margin-left: 0.75rem;
     margin-right: 0.75rem;
-    height: 55vh;
-    margin-top: 150px;
+    height: 75vh;
+    margin-top: 160px;
   }
 
   .hero-thumb {
@@ -1099,8 +1099,8 @@ section.hero + section {
   .hero {
     margin-left: 0.5rem;
     margin-right: 0.5rem;
-    height: 52vh;
-    margin-top: 140px;
+    height: 72vh;
+    margin-top: 155px;
     margin-bottom: 1.5rem;
   }
 
